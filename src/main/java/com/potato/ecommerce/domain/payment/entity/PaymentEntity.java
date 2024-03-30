@@ -28,13 +28,13 @@ public class PaymentEntity {
     @Column(nullable = false)
     private Long totalPrice;
 
-    @Column
+    @Column(nullable = false)
     private Long discountPrice;
 
     @Enumerated(EnumType.STRING)
     private PaymentMethod method;
 
-
+    @Column(nullable = false)
     private LocalDateTime installmentPeriod;
 
     @Builder

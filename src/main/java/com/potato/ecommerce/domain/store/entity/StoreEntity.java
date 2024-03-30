@@ -10,17 +10,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import java.time.LocalDateTime;
-import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
-@Builder
 public class StoreEntity {
 
     @Id
@@ -49,7 +47,20 @@ public class StoreEntity {
     @CreatedDate
     @Column(updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
+
+    @Builder
+    private StoreEntity(String email, String password, String name, String description,
+        String phone,
+        String licenseNumber, LocalDateTime createdAt) {
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.description = description;
+        this.phone = phone;
+        this.licenseNumber = licenseNumber;
+        this.createdAt = createdAt;
+    }
 
     public static StoreEntity fromModel(Store store) {
         return StoreEntity.builder()
@@ -59,7 +70,7 @@ public class StoreEntity {
             .description(store.getDescription())
             .phone(store.getPhone())
             .licenseNumber(store.getLicenseNumber())
-            .createAt(store.getCreateAt())
+            .createdAt(store.getCreatedAt())
             .build();
     }
 
@@ -73,7 +84,7 @@ public class StoreEntity {
             .description(this.description)
             .phone(this.phone)
             .licenseNumber(this.licenseNumber)
-            .createAt(this.createAt)
+            .createdAt(this.createdAt)
             .build();
     }
 }

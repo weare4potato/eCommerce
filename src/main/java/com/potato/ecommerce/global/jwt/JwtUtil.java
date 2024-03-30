@@ -29,6 +29,8 @@ public class JwtUtil {
 
     public static final String BEARER_PREFIX = "Bearer ";
 
+    private final long TOKEN_TIME = 30 * 60 * 1000L; // 30 분
+
     @Value("${jwt.secret.key}")
     private String secretKey;
 
@@ -75,17 +77,34 @@ public class JwtUtil {
     }
 
     public String createToken(String username, UserRoleEnum role) {
-        Date date = new Date();
+        Date expireDate = createExpireDate(TOKEN_TIME);
 
-        // 토큰 만료시간 60분
-        long TOKEN_TIME = 60 * 60 * 1000;
         return BEARER_PREFIX +
             Jwts.builder()
                 .setSubject(username)
                 .claim(AUTHORIZATION_KEY, role) // 사용자 권한
-                .setExpiration(new Date(date.getTime() + TOKEN_TIME))
-                .setIssuedAt(date)
+                .setExpiration(expireDate)
+                .setIssuedAt(new Date())
                 .signWith(key, signatureAlgorithm)
                 .compact();
+    }
+
+    public String createSellerToken(String businessNumber, UserRoleEnum role) {
+        Date expireDate = createExpireDate(TOKEN_TIME);
+
+        return BEARER_PREFIX +
+            Jwts.builder()
+                .setSubject(businessNumber)
+                .claim(AUTHORIZATION_KEY, role) // 사용자 권한
+                .setExpiration(expireDate)
+                .setIssuedAt(new Date())
+                .signWith(key, signatureAlgorithm)
+                .compact();
+    }
+
+    // Seller 토큰과 Member 토큰의 정책 차별 가능성
+    private Date createExpireDate(long expireDate) {
+        long curTime = (new Date()).getTime();
+        return new Date(curTime + expireDate);
     }
 }

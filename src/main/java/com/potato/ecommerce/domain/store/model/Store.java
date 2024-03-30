@@ -17,7 +17,7 @@ public class Store {
     private String description;
     private String phone;
     private String licenseNumber;
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
 
 
 }

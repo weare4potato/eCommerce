@@ -13,11 +13,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import java.time.LocalDateTime;
-import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -25,8 +26,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "orders")
 public class OrderEntity {
@@ -40,11 +40,11 @@ public class OrderEntity {
     @JoinColumn(name = "member_id")
     private MemberEntity member;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "receiver_id")
     private ReceiverEntity receiver;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "payment_id")
     private PaymentEntity payment;
 
@@ -64,7 +64,7 @@ public class OrderEntity {
     private LocalDateTime orderedAt;
 
     @Builder
-    public OrderEntity(MemberEntity member, ReceiverEntity receiver, PaymentEntity payment,
+    private OrderEntity(MemberEntity member, ReceiverEntity receiver, PaymentEntity payment,
         String orderNum, OrderStatus status, LocalDateTime orderedAt) {
         this.member = member;
         this.receiver = receiver;
@@ -84,15 +84,15 @@ public class OrderEntity {
             .build();
     }
 
-//    public Order toModel(){
-//        return Order.builder()
-//            .id(id)
-//            .member(member.toModel())
-//            .receiver(receiver)
-//            .payment(payment)
-//            .orderNum(orderNum)
-//            .status(status)
-//            .orderedAt(orderedAt)
-//            .build();
-//    }
+    public Order toModel() {
+        return Order.builder()
+            .id(id)
+            .member(member.toModel())
+            .receiver(receiver.toModel())
+            .payment(payment.toModel())
+            .orderNum(orderNum)
+            .status(status)
+            .orderedAt(orderedAt)
+            .build();
+    }
 }

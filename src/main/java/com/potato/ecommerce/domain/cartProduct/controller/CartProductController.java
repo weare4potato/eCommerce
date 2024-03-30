@@ -1,8 +1,8 @@
 package com.potato.ecommerce.domain.cartProduct.controller;
 
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 public class CartProductController {
 
 }
