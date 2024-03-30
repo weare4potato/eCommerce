@@ -12,14 +12,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
 
 @Entity
-@Builder
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "payments")
 public class PaymentEntity {
@@ -41,7 +37,16 @@ public class PaymentEntity {
 
     private LocalDateTime installmentPeriod;
 
-    public static PaymentEntity fromModel(Payment payment){
+    @Builder
+    private PaymentEntity(Long totalPrice, Long discountPrice, PaymentMethod method,
+        LocalDateTime installmentPeriod) {
+        this.totalPrice = totalPrice;
+        this.discountPrice = discountPrice;
+        this.method = method;
+        this.installmentPeriod = installmentPeriod;
+    }
+
+    public static PaymentEntity fromModel(Payment payment) {
         return PaymentEntity.builder()
             .totalPrice(payment.getTotalPrice())
             .discountPrice(payment.getDiscountPrice())
@@ -50,7 +55,7 @@ public class PaymentEntity {
             .build();
     }
 
-    public Payment toModel(){
+    public Payment toModel() {
         return Payment.builder()
             .id(this.id)
             .totalPrice(this.totalPrice)

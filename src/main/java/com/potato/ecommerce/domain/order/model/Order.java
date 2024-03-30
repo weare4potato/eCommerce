@@ -5,7 +5,6 @@ import com.potato.ecommerce.domain.order.entity.OrderStatus;
 import com.potato.ecommerce.domain.payment.model.Payment;
 import com.potato.ecommerce.domain.receiver.model.Receiver;
 import java.time.LocalDateTime;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

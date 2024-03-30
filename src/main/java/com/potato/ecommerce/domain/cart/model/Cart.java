@@ -2,7 +2,6 @@ package com.potato.ecommerce.domain.cart.model;
 
 import com.potato.ecommerce.domain.cartProduct.entity.CartProductEntity;
 import com.potato.ecommerce.domain.member.entity.MemberEntity;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

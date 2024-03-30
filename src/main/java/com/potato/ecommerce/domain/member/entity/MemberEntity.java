@@ -36,14 +36,14 @@ public class MemberEntity {
 
 
     @Builder
-    public MemberEntity(String email, String userName, String password, String phone){
+    public MemberEntity(String email, String userName, String password, String phone) {
         this.email = email;
         this.userName = userName;
         this.password = password;
         this.phone = phone;
     }
 
-    public static MemberEntity fromModel(Member member){
+    public static MemberEntity fromModel(Member member) {
         return MemberEntity.builder()
             .email(member.getEmail())
             .userName(member.getUserName())
@@ -52,7 +52,7 @@ public class MemberEntity {
             .build();
     }
 
-    public Member toModel(){
+    public Member toModel() {
         return Member.builder()
             .id(this.id)
             .email(this.email)

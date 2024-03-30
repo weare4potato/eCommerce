@@ -21,7 +21,7 @@ public class Member {
         String userName,
         String password,
         String phone
-    ){
+    ) {
         this.id = id;
         this.email = email;
         this.userName = userName;

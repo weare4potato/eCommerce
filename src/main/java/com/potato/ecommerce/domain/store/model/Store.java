@@ -9,6 +9,7 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor
 public class Store {
+
     private Long id;
     private String email;
     private String password;

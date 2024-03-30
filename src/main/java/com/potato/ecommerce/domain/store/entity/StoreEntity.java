@@ -22,7 +22,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @EntityListeners(AuditingEntityListener.class)
 @Builder
 public class StoreEntity {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "store_id")
@@ -51,7 +51,7 @@ public class StoreEntity {
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createAt;
 
-    public static StoreEntity fromModel(Store store){
+    public static StoreEntity fromModel(Store store) {
         return StoreEntity.builder()
             .email(store.getEmail())
             .password(store.getPassword())
@@ -64,7 +64,7 @@ public class StoreEntity {
     }
 
 
-    public Store toModel(){
+    public Store toModel() {
         return Store.builder()
             .id(this.id)
             .email(this.email)

@@ -1,6 +1,5 @@
 package com.potato.ecommerce.domain.cart.entity;
 
-import com.potato.ecommerce.domain.cart.model.Cart;
 import com.potato.ecommerce.domain.cartProduct.entity.CartProductEntity;
 import com.potato.ecommerce.domain.member.entity.MemberEntity;
 import jakarta.persistence.Column;
@@ -12,14 +11,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
-@Table(name="cart")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "cart")
 public class CartEntity {
 
     @Id

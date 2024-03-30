@@ -1,7 +1,6 @@
 package com.potato.ecommerce.domain.receiver.entity;
 
 import com.potato.ecommerce.domain.member.entity.MemberEntity;
-import com.potato.ecommerce.domain.member.model.Member;
 import com.potato.ecommerce.domain.receiver.model.Receiver;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -22,6 +21,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Table(name = "receivers")
 public class ReceiverEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "receiver_id")
@@ -61,7 +61,7 @@ public class ReceiverEntity {
         String street,
         String detail,
         String zipcode
-    ){
+    ) {
         this.member = member;
         this.name = name;
         this.phone = phone;
@@ -72,7 +72,7 @@ public class ReceiverEntity {
         this.zipcode = zipcode;
     }
 
-    public static ReceiverEntity fromModel(Receiver receiver){
+    public static ReceiverEntity fromModel(Receiver receiver) {
         return ReceiverEntity.builder()
             .id(receiver.getId())
             .member(receiver.getMember())
@@ -86,7 +86,7 @@ public class ReceiverEntity {
             .build();
     }
 
-    public Receiver toModel(){
+    public Receiver toModel() {
         return Receiver.builder()
             .id(this.id)
             .member(this.member)
