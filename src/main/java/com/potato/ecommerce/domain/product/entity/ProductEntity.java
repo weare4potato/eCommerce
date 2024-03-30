@@ -15,14 +15,14 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "products")
 public class ProductEntity {
 
@@ -55,7 +55,19 @@ public class ProductEntity {
     private Boolean isDelete;
 
     @Column(name = "creat_at")
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
 
-
+    @Builder
+    private ProductEntity(StoreEntity store, CategoryEntity category, String name,
+        String description,
+        Integer price, Integer stock, Boolean isDelete, LocalDateTime createdAt) {
+        this.store = store;
+        this.category = category;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.stock = stock;
+        this.isDelete = isDelete;
+        this.createdAt = createdAt;
+    }
 }
