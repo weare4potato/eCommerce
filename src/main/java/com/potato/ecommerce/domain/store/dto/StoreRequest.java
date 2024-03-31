@@ -15,7 +15,7 @@ public class StoreRequest {
 
     @NotBlank
     @Size(min = 8, max = 15)
-    @Pattern(regexp = "^[a-zA-Z0-9.!@#$]$")
+    @Pattern(regexp = "^[a-zA-Z0-9.!@#$]*$")
     private String password;
 
     @NotBlank
@@ -29,10 +29,10 @@ public class StoreRequest {
     private String description;
 
     @NotBlank
-    @Pattern(regexp = "^[0-9]$")
+    @Pattern(regexp = "^01(0)([0-9]{4})([0-9]{4})$")
     private String phone;
 
     @NotBlank
-    @Pattern(regexp = "^[0-9]$")
+    @Pattern(regexp = "^[0-9]{9}+$")
     private String businessNumber;
 }
