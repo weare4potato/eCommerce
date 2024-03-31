@@ -1,8 +1,8 @@
 package com.potato.ecommerce.domain.member.service;
 
 import com.potato.ecommerce.domain.member.dto.ResponseMember;
-import com.potato.ecommerce.domain.member.dto.SignUp;
-import com.potato.ecommerce.domain.member.dto.SignIn;
+import com.potato.ecommerce.domain.member.dto.SignUpDto;
+import com.potato.ecommerce.domain.member.dto.SignInDto;
 import com.potato.ecommerce.domain.member.entity.MemberEntity;
 import com.potato.ecommerce.domain.member.entity.UserRoleEnum;
 import com.potato.ecommerce.domain.member.model.Member;
@@ -25,7 +25,7 @@ public class MemberService {
     private final JwtUtil jwtUtil;
 
     @Transactional
-    public void signUp(SignUp dto) {
+    public void signUp(SignUpDto dto) {
         Member member = Member.builder()
             .email(dto.getEmail())
             .password(passwordEncoder.encode(dto.getPassword()))
@@ -38,7 +38,7 @@ public class MemberService {
     }
 
     @Transactional
-    public String signIn(SignIn dto) {
+    public String signIn(SignInDto dto) {
         Member member = findBy(dto.getEmail());
 
         validatePassword(dto, member);
@@ -57,7 +57,7 @@ public class MemberService {
             () -> new EntityNotFoundException("해당 유저가 존재하지 않습니다.")).toModel();
     }
 
-    private void validatePassword(SignIn dto, Member member) {
+    private void validatePassword(SignInDto dto, Member member) {
         if (member.isNotMatchPassword(passwordEncoder, dto.getPassword())) {
             throw new ValidationException("패스워드가 일치하지 않습니다.");
         }
