@@ -6,7 +6,7 @@ import lombok.Getter;
 public class Revenue {
 
     private Long id;
-    private String number;
+    private final String number;
 
     public Revenue(Long number) {
         this.number = String.format("%09d", number);

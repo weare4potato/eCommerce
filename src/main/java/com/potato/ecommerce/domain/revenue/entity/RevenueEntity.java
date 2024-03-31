@@ -24,11 +24,11 @@ public class RevenueEntity {
         this.number = number;
     }
 
-    public static RevenueEntity fromModel(Revenue revenue){
+    public static RevenueEntity fromModel(Revenue revenue) {
         return new RevenueEntity(revenue.getNumber());
     }
 
-    public Revenue toModel(){
+    public Revenue toModel() {
         return new Revenue(id, number);
     }
 }
