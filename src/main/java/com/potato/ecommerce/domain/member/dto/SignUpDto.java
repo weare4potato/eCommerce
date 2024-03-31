@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class SignUp {
+public class SignUpDto {
 
     @NotBlank
     @Email
