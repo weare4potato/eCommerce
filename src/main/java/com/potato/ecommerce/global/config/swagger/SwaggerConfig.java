@@ -3,6 +3,7 @@ package com.potato.ecommerce.global.config.swagger;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.security.SecurityScheme.Type;
 import lombok.RequiredArgsConstructor;
@@ -17,17 +18,19 @@ public class SwaggerConfig {
 
     @Bean
     public OpenAPI customOpenAPI() {
-        return new OpenAPI()
-            .info(new Info()
+        SecurityScheme auth = new SecurityScheme()
+            .type(SecurityScheme.Type.APIKEY).in(SecurityScheme.In.COOKIE).name("Authorization");
+
+        return new OpenAPI().info(new Info()
                 .title("openAPI")
                 .version("1.0")
                 .description("swagger-ui 화면입니다"))
             .components(new Components()
-                .addSecuritySchemes("bearer-key", new SecurityScheme()
+                .addSecuritySchemes("JWT", auth
                     .type(Type.HTTP)
                     .scheme("bearer")
                     .bearerFormat("JWT"))
-            );
+            ).addSecurityItem(new SecurityRequirement().addList("JWT"));
     }
 
     @Bean
