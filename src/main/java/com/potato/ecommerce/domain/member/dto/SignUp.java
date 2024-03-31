@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class CreateMember {
+public class SignUp {
 
     @NotBlank
     @Email
@@ -23,7 +23,7 @@ public class CreateMember {
 
     @NotBlank
     @Size(min = 8, max = 15)
-    @Pattern(regexp = "^[a-zA-Z0-9.!@#$]$")
+    @Pattern(regexp = "^[a-zA-Z0-9.!@#$]*$")
     private String password;
 
     @NotBlank
