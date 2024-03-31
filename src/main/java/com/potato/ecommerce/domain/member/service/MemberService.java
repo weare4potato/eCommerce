@@ -11,7 +11,6 @@ import com.potato.ecommerce.global.jwt.JwtUtil;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -63,5 +62,4 @@ public class MemberService {
             throw new ValidationException("패스워드가 일치하지 않습니다.");
         }
     }
-
 }
