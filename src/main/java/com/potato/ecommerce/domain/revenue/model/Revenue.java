@@ -1,5 +1,6 @@
 package com.potato.ecommerce.domain.revenue.model;
 
+import com.potato.ecommerce.domain.revenue.entity.RevenueEntity;
 import lombok.Getter;
 
 @Getter
@@ -17,5 +18,13 @@ public class Revenue {
         this.id = id;
         this.number = number;
         this.isUsed = isUsed;
+    }
+
+    public void use() {
+        isUsed = true;
+    }
+
+    public RevenueEntity toEntity(){
+        return new RevenueEntity(id, number, isUsed);
     }
 }
