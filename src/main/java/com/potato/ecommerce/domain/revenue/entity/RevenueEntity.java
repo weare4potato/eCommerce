@@ -22,6 +22,8 @@ public class RevenueEntity {
 
     private String number;
 
+    private boolean isUsed;
+
     private RevenueEntity(String number) {
         this.number = number;
     }
@@ -31,6 +33,6 @@ public class RevenueEntity {
     }
 
     public Revenue toModel() {
-        return new Revenue(id, number);
+        return new Revenue(id, number, isUsed);
     }
 }
