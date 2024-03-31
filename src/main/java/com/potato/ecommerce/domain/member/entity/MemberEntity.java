@@ -4,6 +4,8 @@ import com.potato.ecommerce.domain.member.model.Member;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -45,13 +47,18 @@ public class MemberEntity {
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createdAt;
 
+    @Enumerated(EnumType.STRING)
+    private UserRoleEnum role;
+
 
     @Builder
-    private MemberEntity(String email, String userName, String password, String phone) {
+    private MemberEntity(String email, String userName, String password, String phone,
+        UserRoleEnum role) {
         this.email = email;
         this.userName = userName;
         this.password = password;
         this.phone = phone;
+        this.role = role;
     }
 
     public static MemberEntity fromModel(Member member) {
@@ -60,6 +67,7 @@ public class MemberEntity {
             .userName(member.getUserName())
             .password(member.getPassword())
             .phone(member.getPhone())
+            .role(member.getRole())
             .build();
     }
 
@@ -70,6 +78,7 @@ public class MemberEntity {
             .userName(this.userName)
             .password(this.password)
             .phone(this.phone)
+            .role(this.role)
             .build();
     }
 
