@@ -15,7 +15,7 @@ public class RevenueController {
     private final RevenueService revenueService;
 
     @PostMapping("api/v1/revenue")
-    public ResponseEntity<ResponseRevenue> getBusinessNumber(){
+    public ResponseEntity<ResponseRevenue> getBusinessNumber() {
         return new ResponseEntity<>(revenueService.getBusinessNumber(), HttpStatus.CREATED);
     }
 }
