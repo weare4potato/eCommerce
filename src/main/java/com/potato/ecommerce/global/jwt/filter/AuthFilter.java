@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.StringUtils;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -21,6 +22,9 @@ public class AuthFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         String token = jwtUtil.getTokenFromRequest(httpServletRequest);
+
+        if(!StringUtils.hasText(token)){chain.doFilter(request, response);}
+
         String subject = jwtUtil.getUserInfoFromToken(token).getSubject();
 
         log.info("필터 진입");
