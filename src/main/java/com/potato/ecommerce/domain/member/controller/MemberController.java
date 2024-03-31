@@ -1,8 +1,8 @@
 package com.potato.ecommerce.domain.member.controller;
 
 import com.potato.ecommerce.domain.member.dto.ResponseMember;
-import com.potato.ecommerce.domain.member.dto.SignUp;
-import com.potato.ecommerce.domain.member.dto.SignIn;
+import com.potato.ecommerce.domain.member.dto.SignUpDto;
+import com.potato.ecommerce.domain.member.dto.SignInDto;
 import com.potato.ecommerce.domain.member.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,7 +31,7 @@ public class MemberController {
     @Tag(name = "Member API")
     @Operation(summary = "회원가입", description = "회원가입입니다.")
     public ResponseEntity<Void> signUp(
-        @RequestBody @Validated SignUp dto
+        @RequestBody @Validated SignUpDto dto
     ) {
         memberService.signUp(dto);
         return ResponseEntity.status(201).build();
@@ -41,7 +41,7 @@ public class MemberController {
     @Tag(name = "Member API")
     @Operation(summary = "로그인", description = "로그인입니다.")
     public ResponseEntity<Void> signIn(
-        @RequestBody @Validated SignIn dto
+        @RequestBody @Validated SignInDto dto
     ) {
         String token = memberService.signIn(dto);
         ResponseCookie cookie = ResponseCookie
