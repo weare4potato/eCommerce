@@ -34,7 +34,7 @@ public class MemberController {
         @RequestBody @Validated SignUp dto
     ) {
         memberService.signUp(dto);
-        return ResponseEntity.status(204).build();
+        return ResponseEntity.status(201).build();
     }
 
     @PostMapping("/signin")
