@@ -1,5 +1,6 @@
 package com.potato.ecommerce.domain.store.model;
 
+import com.potato.ecommerce.domain.store.entity.StoreEntity;
 import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
@@ -7,26 +8,39 @@ import lombok.Getter;
 @Getter
 public class Store {
 
-    private final Long id;
-    private final String email;
-    private final String password;
-    private final String name;
-    private final String description;
-    private final String phone;
-    private final String licenseNumber;
-    private final LocalDateTime createdAt;
+    private Long id;
+    private String email;
+    private String password;
+    private String name;
+    private String description;
+    private String phone;
+    private String businessNumber;
+    private LocalDateTime createdAt;
 
     @Builder
     public Store(Long id, String email, String password, String name, String description,
         String phone,
-        String licenseNumber, LocalDateTime createdAt) {
+        String businessNumber, LocalDateTime createdAt) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.name = name;
         this.description = description;
         this.phone = phone;
-        this.licenseNumber = licenseNumber;
+        this.businessNumber = businessNumber;
         this.createdAt = createdAt;
+    }
+
+    public StoreEntity toEntity(){
+        return StoreEntity.builder()
+            .id(id)
+            .email(email)
+            .password(password)
+            .name(name)
+            .description(description)
+            .phone(phone)
+            .businessNumber(businessNumber)
+            .createdAt(createdAt)
+            .build();
     }
 }

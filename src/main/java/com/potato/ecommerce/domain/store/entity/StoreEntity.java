@@ -7,6 +7,7 @@ import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import java.time.LocalDateTime;
@@ -19,6 +20,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
+@Table(name = "stores")
 public class StoreEntity {
 
     @Id
@@ -42,7 +44,7 @@ public class StoreEntity {
     private String phone;
 
     @Column(nullable = false)
-    private String licenseNumber;
+    private String businessNumber;
 
     @CreatedDate
     @Column(updatable = false)
@@ -50,15 +52,16 @@ public class StoreEntity {
     private LocalDateTime createdAt;
 
     @Builder
-    private StoreEntity(String email, String password, String name, String description,
+    private StoreEntity(Long id, String email, String password, String name, String description,
         String phone,
-        String licenseNumber, LocalDateTime createdAt) {
+        String businessNumber, LocalDateTime createdAt) {
+        this.id = id;
         this.email = email;
         this.password = password;
         this.name = name;
         this.description = description;
         this.phone = phone;
-        this.licenseNumber = licenseNumber;
+        this.businessNumber = businessNumber;
         this.createdAt = createdAt;
     }
 
@@ -69,7 +72,7 @@ public class StoreEntity {
             .name(store.getName())
             .description(store.getDescription())
             .phone(store.getPhone())
-            .licenseNumber(store.getLicenseNumber())
+            .businessNumber(store.getBusinessNumber())
             .createdAt(store.getCreatedAt())
             .build();
     }
@@ -77,14 +80,14 @@ public class StoreEntity {
 
     public Store toModel() {
         return Store.builder()
-            .id(this.id)
-            .email(this.email)
-            .password(this.password)
-            .name(this.name)
-            .description(this.description)
-            .phone(this.phone)
-            .licenseNumber(this.licenseNumber)
-            .createdAt(this.createdAt)
+            .id(id)
+            .email(email)
+            .password(password)
+            .name(name)
+            .description(description)
+            .phone(phone)
+            .businessNumber(businessNumber)
+            .createdAt(createdAt)
             .build();
     }
 }
