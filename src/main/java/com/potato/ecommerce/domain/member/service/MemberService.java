@@ -47,10 +47,15 @@ public class MemberService {
         return jwtUtil.createToken(member.getEmail(), member.getRole());
     }
 
-    public ResponseMember getMember(String subject) {
+    @Transactional
+    public void updatePassword(UpdatePasswordDto dto, String subject) {
         Member member = findBy(subject);
 
-        return member.createResponseDTO();
+        validateMemberPassword(member, dto.getPassword());
+        validateNewPassword(dto);
+
+        member.updatePassword(passwordEncoder.encode(dto.getNewPassword()));
+        memberRepository.update(member);
     }
 
     @Transactional
@@ -63,29 +68,18 @@ public class MemberService {
         return member.createResponseDTO();
     }
 
-    @Transactional
     public void passwordCheck(String subject, String password) {
         Member member = findBy(subject);
 
         validateMemberPassword(member, password);
     }
 
-    @Transactional
-    public void updatePassword(UpdatePasswordDto dto, String subject) {
+    public ResponseMember getMember(String subject) {
         Member member = findBy(subject);
 
-        validateMemberPassword(member, dto.getPassword());
-        validateNewPassword(dto);
-
-        member.updatePassword(passwordEncoder.encode(dto.getNewPassword()));
-        memberRepository.update(member);
+        return member.createResponseDTO();
     }
 
-    private static void validateNewPassword(UpdatePasswordDto dto) {
-        if(!dto.getPassword().equals(dto.getNewPassword())){
-            throw new ValidationException(ExceptionMessage.PASSWORD_NOT_MATCH.toString());
-        }
-    }
 
     private Member findBy(String email) {
         return memberRepository.findMemberBy(email);
@@ -94,6 +88,11 @@ public class MemberService {
     private void validateMemberPassword(Member member, String password) {
         if (member.isNotMatchPassword(passwordEncoder, password)) {
             throw new ValidationException(ExceptionMessage.PASSWORD_NOT_MATCH.toString());
+        }
+    }
+    private void validateNewPassword(UpdatePasswordDto dto) {
+        if(dto.getPassword().equals(dto.getNewPassword())){
+            throw new ValidationException(ExceptionMessage.CHANGE_PASSWORD_CHECK.toString());
         }
     }
 
