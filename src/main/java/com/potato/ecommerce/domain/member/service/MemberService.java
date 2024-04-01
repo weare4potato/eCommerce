@@ -4,13 +4,10 @@ import com.potato.ecommerce.domain.member.dto.ResponseMember;
 import com.potato.ecommerce.domain.member.dto.SignUpDto;
 import com.potato.ecommerce.domain.member.dto.SignInDto;
 import com.potato.ecommerce.domain.member.dto.UpdateMemberDto;
-import com.potato.ecommerce.domain.member.entity.MemberEntity;
 import com.potato.ecommerce.domain.member.entity.UserRoleEnum;
 import com.potato.ecommerce.domain.member.model.Member;
-import com.potato.ecommerce.domain.member.repository.MemberJpaRepository;
 import com.potato.ecommerce.domain.member.repository.MemberRepository;
 import com.potato.ecommerce.global.jwt.JwtUtil;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -43,7 +40,7 @@ public class MemberService {
     public String signIn(SignInDto dto) {
         Member member = findBy(dto.getEmail());
 
-        validatePassword(dto, member);
+        validatePassword(member, dto.getPassword());
 
         return jwtUtil.createToken(member.getEmail(), member.getRole());
     }
@@ -64,12 +61,18 @@ public class MemberService {
         return member.createResponseDTO();
     }
 
+    @Transactional
+    public void passwordCheck(String subject, String password) {
+        Member member = findBy(subject);
+        validatePassword(member, password);
+    }
+
     private Member findBy(String email) {
         return memberRepository.findMemberBy(email);
     }
 
-    private void validatePassword(SignInDto dto, Member member) {
-        if (member.isNotMatchPassword(passwordEncoder, dto.getPassword())) {
+    private void validatePassword(Member member, String password) {
+        if (member.isNotMatchPassword(passwordEncoder, password)) {
             throw new ValidationException("패스워드가 일치하지 않습니다.");
         }
     }
