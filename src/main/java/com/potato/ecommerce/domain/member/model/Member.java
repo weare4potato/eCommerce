@@ -41,6 +41,10 @@ public class Member {
         this.phone = dto.getPhone();
     }
 
+    public void updatePassword(String newPassword){
+        this.password = newPassword;
+    }
+
     public ResponseMember createResponseDTO() {
         return ResponseMember.builder()
             .username(this.userName)
