@@ -13,4 +13,7 @@ public interface CategoryRepository extends JpaRepository<CategoryEntity, Long> 
     @Query("SELECT DISTINCT c.oneDepth FROM CategoryEntity c")
     List<String> findDistinctOneDepth();
 
+    @Query("SELECT DISTINCT c.twoDepth FROM CategoryEntity c")
+    List<String> findDistinctTwoDepth();
+
 }

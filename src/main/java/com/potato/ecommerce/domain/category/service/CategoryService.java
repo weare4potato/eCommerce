@@ -19,4 +19,9 @@ public class CategoryService {
         return categoryRepository.findDistinctOneDepth();
     }
 
+    public List<String> getAllTwoDepthCategories() {
+        return categoryRepository.findDistinctTwoDepth();
+    }
+
+
 }
