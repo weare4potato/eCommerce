@@ -11,7 +11,7 @@ public class Revenue {
     private boolean isUsed;
 
     public Revenue(Long number) {
-        this.number = String.format("%09d", number);
+        this.number = String.format("%010d", number);
     }
 
     public Revenue(Long id, String number, boolean isUsed) {
