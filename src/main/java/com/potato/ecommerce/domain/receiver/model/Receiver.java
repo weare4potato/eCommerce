@@ -1,6 +1,7 @@
 package com.potato.ecommerce.domain.receiver.model;
 
 import com.potato.ecommerce.domain.member.entity.MemberEntity;
+import com.potato.ecommerce.domain.member.model.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,7 +12,7 @@ import lombok.Getter;
 public class Receiver {
 
     private Long id;
-    private MemberEntity member;
+    private Member member;
     private String name;
     private String phone;
     private String addressName;
