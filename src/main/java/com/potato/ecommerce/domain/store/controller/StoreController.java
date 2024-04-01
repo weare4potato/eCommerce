@@ -2,6 +2,7 @@ package com.potato.ecommerce.domain.store.controller;
 
 import com.potato.ecommerce.domain.store.dto.DeleteStoreRequest;
 import com.potato.ecommerce.domain.store.dto.LoginRequest;
+import com.potato.ecommerce.domain.store.dto.OrderAcceptResponse;
 import com.potato.ecommerce.domain.store.dto.StoreRequest;
 import com.potato.ecommerce.domain.store.dto.StoreResponse;
 import com.potato.ecommerce.domain.store.dto.UpdateStoreRequest;
@@ -20,6 +21,7 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -92,7 +94,7 @@ public class StoreController {
     @PostMapping("/password")
     @Tag(name = "Store API")
     @Operation(summary = "비밀번호 확인")
-    public ResponseEntity<Void> validatePassword(
+    public ResponseEntity<String> validatePassword(
         HttpServletRequest request,
         @Valid @RequestBody ValidatePasswordRequest validatePasswordRequest
     ) {
@@ -101,13 +103,13 @@ public class StoreController {
 
         storeService.validatePassword(subject, validatePasswordRequest);
 
-        return ResponseEntity.ok().build();
+        return new ResponseEntity<>("비밀번호 확인 성공", HttpStatus.OK);
     }
 
     @DeleteMapping
     @Tag(name = "Store API")
     @Operation(summary = "상점 탈퇴")
-    public ResponseEntity<Void> deleteStore(
+    public ResponseEntity<String> deleteStore(
         HttpServletRequest request,
         @Valid @RequestBody DeleteStoreRequest deleteStoreRequest
     ){
@@ -115,8 +117,19 @@ public class StoreController {
 
         storeService.deleteStore(subject, deleteStoreRequest);
 
-        return ResponseEntity.noContent().build();
+        return new ResponseEntity<>("상점 탈퇴 완료", HttpStatus.NO_CONTENT);
     }
+
+    /*todo
+    @PostMapping("/order/{orderId}/accept")
+    public ResponseEntity<OrderAcceptResponse> acceptOrder(
+        HttpServletRequest request,
+        @PathVariable Long orderId,
+        @RequestBody AcceptOrderRequest acceptOrderRequest
+    ){
+
+    }
+     */
 
     private static String getSubject(HttpServletRequest request) {
         return (String) request.getAttribute("subject");
