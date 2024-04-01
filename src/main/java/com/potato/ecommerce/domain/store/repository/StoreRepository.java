@@ -11,4 +11,6 @@ public interface StoreRepository extends JpaRepository<StoreEntity, Long> {
     boolean existsByEmail(String email);
 
     Optional<StoreEntity> findByBusinessNumber(String subject);
+
+    boolean existsByBusinessNumber(String subject);
 }

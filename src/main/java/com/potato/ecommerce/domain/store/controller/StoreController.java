@@ -1,5 +1,6 @@
 package com.potato.ecommerce.domain.store.controller;
 
+import com.potato.ecommerce.domain.store.dto.DeleteStoreRequest;
 import com.potato.ecommerce.domain.store.dto.LoginRequest;
 import com.potato.ecommerce.domain.store.dto.StoreRequest;
 import com.potato.ecommerce.domain.store.dto.StoreResponse;
@@ -17,6 +18,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -100,6 +102,20 @@ public class StoreController {
         storeService.validatePassword(subject, validatePasswordRequest);
 
         return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping
+    @Tag(name = "Store API")
+    @Operation(summary = "상점 탈퇴")
+    public ResponseEntity<Void> deleteStore(
+        HttpServletRequest request,
+        @Valid @RequestBody DeleteStoreRequest deleteStoreRequest
+    ){
+        String subject = getSubject(request);
+
+        storeService.deleteStore(subject, deleteStoreRequest);
+
+        return ResponseEntity.noContent().build();
     }
 
     private static String getSubject(HttpServletRequest request) {
