@@ -104,13 +104,12 @@ public class JwtUtil {
                 .compact();
     }
 
-    public String createSellerToken(String businessNumber, UserRoleEnum role) {
+    public String createSellerToken(String businessNumber) {
         Date expireDate = createExpireDate(TOKEN_TIME);
 
         return BEARER_PREFIX +
             Jwts.builder()
                 .setSubject(businessNumber)
-                .claim(AUTHORIZATION_KEY, role) // 사용자 권한
                 .setExpiration(expireDate)
                 .setIssuedAt(new Date())
                 .signWith(key, signatureAlgorithm)
