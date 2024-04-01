@@ -2,6 +2,7 @@ package com.potato.ecommerce.domain.receiver.model;
 
 import com.potato.ecommerce.domain.member.entity.MemberEntity;
 import com.potato.ecommerce.domain.member.model.Member;
+import com.potato.ecommerce.domain.receiver.dto.ReceiverForm;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,6 +19,17 @@ public class Receiver {
     private String addressName;
     private String city;
     private String street;
-    private String detail;
     private String zipcode;
+    private String detail;
+
+    public ReceiverForm createReceiverForm(){
+        return ReceiverForm.builder()
+            .name(this.name)
+            .phone(this.phone)
+            .addressName(this.addressName)
+            .city(this.city)
+            .street(this.street)
+            .zipcode(this.zipcode)
+            .detail(this.detail).build();
+    }
 }
