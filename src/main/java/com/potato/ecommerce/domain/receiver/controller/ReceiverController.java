@@ -5,6 +5,7 @@ import com.potato.ecommerce.domain.receiver.service.ReceiverService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -40,7 +41,15 @@ public class ReceiverController {
         return ResponseEntity.status(201).build();
     }
     @GetMapping
+    @Tag(name = "Receiver API")
+    @Operation(summary = "배송지 조회")
+    public ResponseEntity<List<ReceiverForm>> findAllReceiver(
+        HttpServletRequest request
+    ){
+        String subject = getSubject(request);;
 
+        return ResponseEntity.ok(receiverService.findAllReceiver(subject));
+    }
     @PutMapping("/{receiverId}")
 
     @DeleteMapping("/{receiverId}")
