@@ -4,6 +4,8 @@ import com.potato.ecommerce.domain.store.dto.LoginRequest;
 import com.potato.ecommerce.domain.store.dto.StoreRequest;
 import com.potato.ecommerce.domain.store.dto.StoreResponse;
 import com.potato.ecommerce.domain.store.service.StoreService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import java.time.Duration;
@@ -26,6 +28,8 @@ public class StoreController {
     private final StoreService storeService;
 
     @PostMapping("/signup")
+    @Tag(name = "Store API")
+    @Operation(summary = "상점 등록", description = "상점 등록입니다.")
     public ResponseEntity<Void> signup(@Valid @RequestBody StoreRequest storeRequest) {
         storeService.signup(storeRequest);
 
@@ -33,6 +37,8 @@ public class StoreController {
     }
 
     @PostMapping("/signin")
+    @Tag(name = "Store API")
+    @Operation(summary = "상점 로그인", description = "상점 로그인입니다.")
     public ResponseEntity<Void> signin(@Valid @RequestBody LoginRequest loginRequest){
         String token = storeService.signin(loginRequest);
         ResponseCookie cookie = ResponseCookie
@@ -49,6 +55,8 @@ public class StoreController {
     }
 
     @GetMapping
+    @Tag(name = "Store API")
+    @Operation(summary = "판매자 상점 조회", description = "판매자 상점 조회입니다.")
     public ResponseEntity<StoreResponse> getStores(
         HttpServletRequest request
     ){
