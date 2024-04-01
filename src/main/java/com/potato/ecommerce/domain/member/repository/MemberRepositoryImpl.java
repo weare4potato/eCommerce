@@ -2,6 +2,7 @@ package com.potato.ecommerce.domain.member.repository;
 
 import com.potato.ecommerce.domain.member.entity.MemberEntity;
 import com.potato.ecommerce.domain.member.model.Member;
+import com.potato.ecommerce.global.exception.ExceptionMessage;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,7 @@ public class MemberRepositoryImpl implements MemberRepository{
     @Override
     public Member findMemberBy(String email) {
         return memberJpaRepository.findByEmail(email).orElseThrow(
-            () -> new EntityNotFoundException("해당 유저가 존재하지 않습니다.")
+            () -> new EntityNotFoundException(ExceptionMessage.MEMBER_NOT_FOUND.toString())
         ).toModel();
     }
 
