@@ -6,6 +6,7 @@ import com.potato.ecommerce.domain.store.dto.LoginRequest;
 import com.potato.ecommerce.domain.store.dto.StoreRequest;
 import com.potato.ecommerce.domain.store.dto.StoreResponse;
 import com.potato.ecommerce.domain.store.dto.UpdateStoreRequest;
+import com.potato.ecommerce.domain.store.dto.ValidatePasswordRequest;
 import com.potato.ecommerce.domain.store.entity.StoreEntity;
 import com.potato.ecommerce.domain.store.model.Store;
 import com.potato.ecommerce.domain.store.repository.StoreRepository;
@@ -99,6 +100,19 @@ public class StoreService {
             .build();
     }
 
+    @Transactional
+    public void validatePassword(String subject, ValidatePasswordRequest validatePasswordRequest) {
+        Store store = findBySubject(subject);
+
+        if(!passwordEncoder.matches(validatePasswordRequest.getFirstPassword(), store.getPassword())){
+            throw new ValidationException("비밀번호가 회원 정보와 일치하지 않습니다.");
+        }
+
+        if(!validatePasswordRequest.getFirstPassword().equals(validatePasswordRequest.getSecondPassword())){
+            throw new ValidationException("비밀번호가 일치하지 않습니다.");
+        }
+    }
+
     private void validationBusinessNumber(String businessNumber){
         Revenue revenue = revenueRepository.findByNumber(businessNumber)
             .orElseThrow(
@@ -128,5 +142,6 @@ public class StoreService {
             () -> new NoSuchElementException("상점이 존재하지 않습니다.")
         ).toModel();
     }
+
 
 }

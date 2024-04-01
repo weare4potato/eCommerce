@@ -4,6 +4,7 @@ import com.potato.ecommerce.domain.store.dto.LoginRequest;
 import com.potato.ecommerce.domain.store.dto.StoreRequest;
 import com.potato.ecommerce.domain.store.dto.StoreResponse;
 import com.potato.ecommerce.domain.store.dto.UpdateStoreRequest;
+import com.potato.ecommerce.domain.store.dto.ValidatePasswordRequest;
 import com.potato.ecommerce.domain.store.service.StoreService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -11,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/shops")
 @RequiredArgsConstructor
@@ -63,6 +66,7 @@ public class StoreController {
         HttpServletRequest request
     ){
         String subject = getSubject(request);
+        log.info(subject);
 
         StoreResponse storeResponse = storeService.getStores(subject);
 
@@ -74,13 +78,29 @@ public class StoreController {
     @Operation(summary = "상점 수정")
     public ResponseEntity<StoreResponse> updateStore(
         HttpServletRequest request,
-        @RequestBody UpdateStoreRequest updateRequest
+        @Valid @RequestBody UpdateStoreRequest updateRequest
     ){
         String subject = getSubject(request);
 
         StoreResponse storeResponse = storeService.updateStore(subject, updateRequest);
 
         return ResponseEntity.ok().body(storeResponse);
+    }
+
+    @PostMapping("/password")
+    @Tag(name = "Store API")
+    @Operation(summary = "비밀번호 확인")
+    public ResponseEntity<Void> validatePassword(
+        HttpServletRequest request,
+        @Valid @RequestBody ValidatePasswordRequest validatePasswordRequest
+    ){
+        String subject = getSubject(request);
+        log.info(subject);
+
+
+        storeService.validatePassword(subject, validatePasswordRequest);
+
+        return ResponseEntity.ok().build();
     }
 
     private static String getSubject(HttpServletRequest request) {
