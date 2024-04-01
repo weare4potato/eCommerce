@@ -12,9 +12,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UpdateMemberDto {
 
-    @Email
     @NotBlank
-    private String email;
+    private String username;
 
     @NotBlank
     @Pattern(regexp = "^01(0)-([0-9]{4})-([0-9]{4})$")
