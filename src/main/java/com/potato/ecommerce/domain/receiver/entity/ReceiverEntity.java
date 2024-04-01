@@ -12,11 +12,14 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
 @Table(name = "receivers")
 public class ReceiverEntity {
 
@@ -50,30 +53,10 @@ public class ReceiverEntity {
     @Column(nullable = false)
     private String zipcode;
 
-    @Builder
-    private ReceiverEntity(
-        MemberEntity member,
-        String name,
-        String phone,
-        String addressName,
-        String city,
-        String street,
-        String detail,
-        String zipcode
-    ) {
-        this.member = member;
-        this.name = name;
-        this.phone = phone;
-        this.addressName = addressName;
-        this.city = city;
-        this.street = street;
-        this.detail = detail;
-        this.zipcode = zipcode;
-    }
-
     public static ReceiverEntity fromModel(Receiver receiver) {
         return ReceiverEntity.builder()
-            .member(receiver.getMember())
+            .id(receiver.getId())
+            .member(MemberEntity.fromModel(receiver.getMember()))
             .name(receiver.getName())
             .phone(receiver.getPhone())
             .addressName(receiver.getAddressName())
@@ -87,7 +70,7 @@ public class ReceiverEntity {
     public Receiver toModel() {
         return Receiver.builder()
             .id(this.id)
-            .member(this.member)
+            .member(this.member.toModel())
             .name(this.name)
             .phone(this.phone)
             .addressName(this.addressName)
