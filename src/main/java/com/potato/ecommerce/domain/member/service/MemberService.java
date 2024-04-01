@@ -3,6 +3,7 @@ package com.potato.ecommerce.domain.member.service;
 import com.potato.ecommerce.domain.member.dto.ResponseMember;
 import com.potato.ecommerce.domain.member.dto.SignUpDto;
 import com.potato.ecommerce.domain.member.dto.SignInDto;
+import com.potato.ecommerce.domain.member.dto.UpdateMemberDto;
 import com.potato.ecommerce.domain.member.entity.MemberEntity;
 import com.potato.ecommerce.domain.member.entity.UserRoleEnum;
 import com.potato.ecommerce.domain.member.model.Member;
@@ -52,6 +53,10 @@ public class MemberService {
         return member.createResponseDTO();
     }
 
+    public void updateMember(UpdateMemberDto dto, String subject) {
+        Member member = findBy(subject);
+    }
+
     private Member findBy(String email) {
         return memberRepository.findByEmail(email).orElseThrow(
             () -> new EntityNotFoundException("해당 유저가 존재하지 않습니다.")).toModel();
@@ -62,5 +67,6 @@ public class MemberService {
             throw new ValidationException("패스워드가 일치하지 않습니다.");
         }
     }
+
 
 }

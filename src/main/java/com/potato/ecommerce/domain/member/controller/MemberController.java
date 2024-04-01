@@ -3,6 +3,7 @@ package com.potato.ecommerce.domain.member.controller;
 import com.potato.ecommerce.domain.member.dto.ResponseMember;
 import com.potato.ecommerce.domain.member.dto.SignUpDto;
 import com.potato.ecommerce.domain.member.dto.SignInDto;
+import com.potato.ecommerce.domain.member.dto.UpdateMemberDto;
 import com.potato.ecommerce.domain.member.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -63,7 +65,20 @@ public class MemberController {
     public ResponseEntity<ResponseMember> getMember(
         HttpServletRequest request
     ) {
-        ResponseMember dto = memberService.getMember((String) request.getAttribute("subject"));
+        String subject = (String) request.getAttribute("subject");
+        ResponseMember dto = memberService.getMember(subject);
         return ResponseEntity.ok(dto);
+    }
+
+
+    @PutMapping
+    @Tag(name = "Member API")
+    @Operation(summary = "정보 수정", description = "유저 정보 수정")
+    public ResponseEntity<ResponseMember> updateMember(
+        @RequestBody @Validated UpdateMemberDto dto,
+        HttpServletRequest request
+    ){
+        memberService.updateMember(dto, (String)request.getAttribute("subject"));
+
     }
 }
