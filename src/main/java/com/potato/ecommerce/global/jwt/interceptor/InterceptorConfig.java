@@ -22,7 +22,8 @@ public class InterceptorConfig implements WebMvcConfigurer {
                 "/api/v1/signup",
                 "/api/v1/signin",
                 "/api/v1/shops/signup",
-                "/api/v1/shops/signin"
+                "/api/v1/shops/signin",
+                "/api/v1/revenue"
                 );
 
     }
