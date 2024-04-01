@@ -27,5 +27,10 @@ public class CategoryController {
         return ResponseEntity.ok(twoDepthCategories);
     }
 
+    @GetMapping("/threeDepth")
+    public ResponseEntity<List<String>> getAllThreeDepthCategories() {
+        List<String> threeDepthCategories = categoryService.getAllThreeDepthCategories();
+        return ResponseEntity.ok(threeDepthCategories);
+    }
 
 }

@@ -23,5 +23,8 @@ public class CategoryService {
         return categoryRepository.findDistinctTwoDepth();
     }
 
+    public List<String> getAllThreeDepthCategories() {
+        return categoryRepository.findDistinctThreeDepth();
+    }
 
 }
