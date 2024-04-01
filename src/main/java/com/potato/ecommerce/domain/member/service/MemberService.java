@@ -4,9 +4,11 @@ import com.potato.ecommerce.domain.member.dto.ResponseMember;
 import com.potato.ecommerce.domain.member.dto.SignUpDto;
 import com.potato.ecommerce.domain.member.dto.SignInDto;
 import com.potato.ecommerce.domain.member.dto.UpdateMemberDto;
+import com.potato.ecommerce.domain.member.dto.UpdatePasswordDto;
 import com.potato.ecommerce.domain.member.entity.UserRoleEnum;
 import com.potato.ecommerce.domain.member.model.Member;
 import com.potato.ecommerce.domain.member.repository.MemberRepository;
+import com.potato.ecommerce.global.exception.ExceptionMessage;
 import com.potato.ecommerce.global.jwt.JwtUtil;
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +42,7 @@ public class MemberService {
     public String signIn(SignInDto dto) {
         Member member = findBy(dto.getEmail());
 
-        validatePassword(member, dto.getPassword());
+        validateMemberPassword(member, dto.getPassword());
 
         return jwtUtil.createToken(member.getEmail(), member.getRole());
     }
@@ -64,16 +66,34 @@ public class MemberService {
     @Transactional
     public void passwordCheck(String subject, String password) {
         Member member = findBy(subject);
-        validatePassword(member, password);
+
+        validateMemberPassword(member, password);
+    }
+
+    @Transactional
+    public void updatePassword(UpdatePasswordDto dto, String subject) {
+        Member member = findBy(subject);
+
+        validateMemberPassword(member, dto.getPassword());
+        validateNewPassword(dto);
+
+        member.updatePassword(passwordEncoder.encode(dto.getNewPassword()));
+        memberRepository.update(member);
+    }
+
+    private static void validateNewPassword(UpdatePasswordDto dto) {
+        if(!dto.getPassword().equals(dto.getNewPassword())){
+            throw new ValidationException(ExceptionMessage.PASSWORD_NOT_MATCH.toString());
+        }
     }
 
     private Member findBy(String email) {
         return memberRepository.findMemberBy(email);
     }
 
-    private void validatePassword(Member member, String password) {
+    private void validateMemberPassword(Member member, String password) {
         if (member.isNotMatchPassword(passwordEncoder, password)) {
-            throw new ValidationException("패스워드가 일치하지 않습니다.");
+            throw new ValidationException(ExceptionMessage.PASSWORD_NOT_MATCH.toString());
         }
     }
 

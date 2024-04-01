@@ -4,6 +4,7 @@ import com.potato.ecommerce.domain.member.dto.ResponseMember;
 import com.potato.ecommerce.domain.member.dto.SignUpDto;
 import com.potato.ecommerce.domain.member.dto.SignInDto;
 import com.potato.ecommerce.domain.member.dto.UpdateMemberDto;
+import com.potato.ecommerce.domain.member.dto.UpdatePasswordDto;
 import com.potato.ecommerce.domain.member.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -30,7 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MemberController {
 
     /*
-    TODO : 로그아웃, 비밀번호 확인, 비밀번호 수정, 회원 탈퇴
+    TODO : 로그아웃, 비밀번호 수정, 회원 탈퇴
      */
 
 
@@ -38,7 +39,7 @@ public class MemberController {
 
     @PostMapping("/signup")
     @Tag(name = "Member API")
-    @Operation(summary = "회원가입", description = "회원가입입니다.")
+    @Operation(summary = "회원가입")
     public ResponseEntity<Void> signUp(
         @RequestBody @Validated SignUpDto dto
     ) {
@@ -48,7 +49,7 @@ public class MemberController {
 
     @PostMapping("/signin")
     @Tag(name = "Member API")
-    @Operation(summary = "로그인", description = "로그인입니다.")
+    @Operation(summary = "로그인")
     public ResponseEntity<Void> signIn(
         @RequestBody @Validated SignInDto dto
     ) {
@@ -68,39 +69,53 @@ public class MemberController {
 
     @GetMapping
     @Tag(name = "Member API")
-    @Operation(summary = "정보 조회", description = "유저 조회입니다.")
+    @Operation(summary = "정보 조회")
     public ResponseEntity<ResponseMember> getMember(
         HttpServletRequest request
     ) {
-        String subject = (String) request.getAttribute("subject");
+        String subject = getSubject(request);
         ResponseMember dto = memberService.getMember(subject);
         return ResponseEntity.ok(dto);
     }
 
     @PostMapping
     @Tag(name = "Member API")
-    @Operation(summary = "비밀번호 확인", description = "비밀번호 확인입니다.")
+    @Operation(summary = "비밀번호 확인")
     public ResponseEntity<Void> passwordCheck(
         @RequestBody String password,
         HttpServletRequest request
-    ){
-        log.info(password);
-        memberService.passwordCheck((String)request.getAttribute("subject"),password);
+    ) {
+        memberService.passwordCheck(getSubject(request), password);
         return ResponseEntity.ok().build();
     }
 
 
     @PutMapping
     @Tag(name = "Member API")
-    @Operation(summary = "정보 수정", description = "유저 정보 수정")
+    @Operation(summary = "정보 수정")
     public ResponseEntity<ResponseMember> updateMember(
         @RequestBody @Validated UpdateMemberDto dto,
         HttpServletRequest request
-    ){
+    ) {
         return ResponseEntity.ok(
             memberService.updateMember(
                 dto,
-                (String)request.getAttribute("subject"))
+                getSubject(request))
         );
+    }
+
+    @PutMapping("/password")
+    @Tag(name = "Member API")
+    @Operation(summary = "비밀번호 수정")
+    public ResponseEntity<String> updatePassword(
+        @RequestBody @Validated UpdatePasswordDto dto,
+        HttpServletRequest request
+    ) {
+        memberService.updatePassword(dto, getSubject(request));
+        return ResponseEntity.ok("비밀번호 변경이 완료되었습니다.");
+    }
+
+    private String getSubject(HttpServletRequest request) {
+        return (String) request.getAttribute("subject");
     }
 }
