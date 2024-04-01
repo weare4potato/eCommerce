@@ -3,6 +3,7 @@ package com.potato.ecommerce.domain.store.controller;
 import com.potato.ecommerce.domain.store.dto.LoginRequest;
 import com.potato.ecommerce.domain.store.dto.StoreRequest;
 import com.potato.ecommerce.domain.store.dto.StoreResponse;
+import com.potato.ecommerce.domain.store.dto.UpdateStoreRequest;
 import com.potato.ecommerce.domain.store.service.StoreService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -16,6 +17,7 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -60,10 +62,28 @@ public class StoreController {
     public ResponseEntity<StoreResponse> getStores(
         HttpServletRequest request
     ){
-        String subject = (String) request.getAttribute("subject");
+        String subject = getSubject(request);
 
         StoreResponse storeResponse = storeService.getStores(subject);
 
         return ResponseEntity.ok().body(storeResponse);
+    }
+
+    @PutMapping
+    @Tag(name = "Store API")
+    @Operation(summary = "상점 수정")
+    public ResponseEntity<StoreResponse> updateStore(
+        HttpServletRequest request,
+        @RequestBody UpdateStoreRequest updateRequest
+    ){
+        String subject = getSubject(request);
+
+        StoreResponse storeResponse = storeService.updateStore(subject, updateRequest);
+
+        return ResponseEntity.ok().body(storeResponse);
+    }
+
+    private static String getSubject(HttpServletRequest request) {
+        return (String) request.getAttribute("subject");
     }
 }

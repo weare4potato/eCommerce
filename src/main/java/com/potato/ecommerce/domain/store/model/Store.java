@@ -43,4 +43,10 @@ public class Store {
             .createdAt(createdAt)
             .build();
     }
+
+    public void update(String name, String description, String phone) {
+        this.name = name;
+        this.description = description;
+        this.phone = phone;
+    }
 }

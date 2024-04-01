@@ -5,10 +5,12 @@ import com.potato.ecommerce.domain.revenue.repository.RevenueRepository;
 import com.potato.ecommerce.domain.store.dto.LoginRequest;
 import com.potato.ecommerce.domain.store.dto.StoreRequest;
 import com.potato.ecommerce.domain.store.dto.StoreResponse;
+import com.potato.ecommerce.domain.store.dto.UpdateStoreRequest;
 import com.potato.ecommerce.domain.store.entity.StoreEntity;
 import com.potato.ecommerce.domain.store.model.Store;
 import com.potato.ecommerce.domain.store.repository.StoreRepository;
 import com.potato.ecommerce.global.jwt.JwtUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ValidationException;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
@@ -65,11 +67,31 @@ public class StoreService {
     }
 
     public StoreResponse getStores(String subject) {
-        Store store = storeRepository.findByBusinessNumber(subject).orElseThrow(
-            () -> new NoSuchElementException("상점이 존재하지 않습니다.")
-        ).toModel();
+        Store store = findBySubject(subject);
 
         return StoreResponse.builder()
+            .email(store.getEmail())
+            .name(store.getName())
+            .description(store.getDescription())
+            .phone(store.getPhone())
+            .businessNumber(store.getBusinessNumber())
+            .build();
+    }
+
+    @Transactional
+    public StoreResponse updateStore(String subject, UpdateStoreRequest updateRequest) {
+        Store store = findBySubject(subject);
+
+        store.update(
+            updateRequest.getName(),
+            updateRequest.getDescription(),
+            updateRequest.getPhone()
+        );
+
+        storeRepository.save(StoreEntity.fromModel(store));
+
+        return StoreResponse.builder()
+            .email(store.getEmail())
             .name(store.getName())
             .description(store.getDescription())
             .phone(store.getPhone())
@@ -98,6 +120,12 @@ public class StoreService {
     private Store findByEmail(String email){
         return storeRepository.findByEmail(email).orElseThrow(
             () -> new DataIntegrityViolationException("등록되지 않은 이메일입니다.")
+        ).toModel();
+    }
+
+    private Store findBySubject(String subject) {
+        return storeRepository.findByBusinessNumber(subject).orElseThrow(
+            () -> new NoSuchElementException("상점이 존재하지 않습니다.")
         ).toModel();
     }
 
