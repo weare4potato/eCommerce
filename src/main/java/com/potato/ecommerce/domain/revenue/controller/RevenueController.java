@@ -1,6 +1,6 @@
 package com.potato.ecommerce.domain.revenue.controller;
 
-import com.potato.ecommerce.domain.revenue.dto.ResponseRevenue;
+import com.potato.ecommerce.domain.revenue.dto.RevenueResponse;
 import com.potato.ecommerce.domain.revenue.service.RevenueService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,7 +15,7 @@ public class RevenueController {
     private final RevenueService revenueService;
 
     @PostMapping("api/v1/revenue")
-    public ResponseEntity<ResponseRevenue> getBusinessNumber() {
+    public ResponseEntity<RevenueResponse> getBusinessNumber() {
         return new ResponseEntity<>(revenueService.getBusinessNumber(), HttpStatus.CREATED);
     }
 }

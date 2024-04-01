@@ -2,15 +2,20 @@ package com.potato.ecommerce.domain.store.service;
 
 import com.potato.ecommerce.domain.revenue.model.Revenue;
 import com.potato.ecommerce.domain.revenue.repository.RevenueRepository;
+import com.potato.ecommerce.domain.store.dto.LoginRequest;
 import com.potato.ecommerce.domain.store.dto.StoreRequest;
 import com.potato.ecommerce.domain.store.entity.StoreEntity;
 import com.potato.ecommerce.domain.store.model.Store;
 import com.potato.ecommerce.domain.store.repository.StoreRepository;
+import com.potato.ecommerce.global.jwt.JwtUtil;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.ValidationException;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,20 +27,20 @@ public class StoreService {
 
     private final StoreRepository storeRepository;
     private final RevenueRepository revenueRepository;
+    private final JwtUtil jwtUtil;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public void signup(StoreRequest storeRequest) {
 
-        if(!storeRequest.getPassword().equals(storeRequest.getValidatePassword())){
-            throw new ValidationException("패스워드가 일치하지 않습니다.");
-        }
+        if (storeRepository.existsByEmail(storeRequest.getEmail()))
+            throw new ValidationException("이미 존재하는 email 입니다.");
 
-        validationEmail(storeRequest.getEmail());
         validationBusinessNumber(storeRequest.getBusinessNumber());
 
         Store store = Store.builder()
             .email(storeRequest.getEmail())
-            .password(storeRequest.getPassword())
+            .password(passwordEncoder.encode(storeRequest.getPassword()))
             .name(storeRequest.getName())
             .phone(storeRequest.getPhone())
             .description(storeRequest.getDescription())
@@ -44,6 +49,18 @@ public class StoreService {
 
         storeRepository.save(StoreEntity.fromModel(store));
     }
+
+    @Transactional
+    public String signin(LoginRequest loginRequest) {
+        Store store = findByEmail(loginRequest.getEmail());
+
+        if(!passwordEncoder.matches(loginRequest.getPassword(), store.getPassword())){
+            throw new ValidationException("비밀번호가 일치하지 않습니다.");
+        }
+
+        return jwtUtil.createSellerToken(store.getBusinessNumber());
+    }
+
 
     private void validationBusinessNumber(String businessNumber){
         Revenue revenue = revenueRepository.findByNumber(businessNumber)
@@ -58,15 +75,14 @@ public class StoreService {
         use(revenue);
     }
 
-    private void validationEmail(String email){
-        storeRepository.findByEmail(email).ifPresent(
-            s -> {
-                throw new DataIntegrityViolationException("이미 존재하는 이메일입니다.");
-            });
-    }
-
     private void use(Revenue revenue){
         revenue.use();
         revenueRepository.save(revenue.toEntity());
+    }
+
+    private Store findByEmail(String email){
+        return storeRepository.findByEmail(email).orElseThrow(
+            () -> new DataIntegrityViolationException("등록되지 않은 이메일입니다.")
+        ).toModel();
     }
 }
