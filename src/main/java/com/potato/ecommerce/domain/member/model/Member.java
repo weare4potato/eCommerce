@@ -57,5 +57,8 @@ public class Member {
         return !encoder.matches(password, this.password);
     }
 
+    public boolean isNotMatchMember(Long id){
+        return !this.id.equals(id);
+    }
 
 }

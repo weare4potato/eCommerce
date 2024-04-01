@@ -32,4 +32,18 @@ public class Receiver {
             .zipcode(this.zipcode)
             .detail(this.detail).build();
     }
+
+    public void update(ReceiverForm dto){
+        this.name = dto.getName();
+        this.phone = dto.getPhone();
+        this.addressName = dto.getAddressName();
+        this.city = dto.getCity();
+        this.street = dto.getStreet();
+        this.zipcode = dto.getZipcode();
+        this.detail = dto.getDetail();
+    }
+
+    public boolean isMemberNotMatch(Long memberId){
+        return this.member.isNotMatchMember(memberId);
+    }
 }
