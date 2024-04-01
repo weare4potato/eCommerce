@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @Tag(name = "Member API", description = "Member API 입니다.")
 @RequestMapping("/api/v1/users")
+@Slf4j
 public class MemberController {
+
+    /*
+    TODO : 로그아웃, 비밀번호 확인, 비밀번호 수정, 회원 탈퇴
+     */
+
 
     private final MemberService memberService;
 
@@ -68,6 +75,18 @@ public class MemberController {
         String subject = (String) request.getAttribute("subject");
         ResponseMember dto = memberService.getMember(subject);
         return ResponseEntity.ok(dto);
+    }
+
+    @PostMapping
+    @Tag(name = "Member API")
+    @Operation(summary = "비밀번호 확인", description = "비밀번호 확인입니다.")
+    public ResponseEntity<Void> passwordCheck(
+        @RequestBody String password,
+        HttpServletRequest request
+    ){
+        log.info(password);
+        memberService.passwordCheck((String)request.getAttribute("subject"),password);
+        return ResponseEntity.ok().build();
     }
 
 
