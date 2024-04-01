@@ -2,6 +2,7 @@ package com.potato.ecommerce.domain.store.service;
 
 import com.potato.ecommerce.domain.revenue.model.Revenue;
 import com.potato.ecommerce.domain.revenue.repository.RevenueRepository;
+import com.potato.ecommerce.domain.store.dto.DeleteStoreRequest;
 import com.potato.ecommerce.domain.store.dto.LoginRequest;
 import com.potato.ecommerce.domain.store.dto.StoreRequest;
 import com.potato.ecommerce.domain.store.dto.StoreResponse;
@@ -115,6 +116,25 @@ public class StoreService {
         }
     }
 
+    @Transactional
+    public void deleteStore(String subject, DeleteStoreRequest deleteStoreRequest) {
+        Store store = findBySubject(subject);
+
+        if(!store.getEmail().equals(deleteStoreRequest.getEmail())){
+            throw new ValidationException("이메일이 일치하지 않습니다.");
+        }
+
+        if(!passwordEncoder.matches(deleteStoreRequest.getPassword(), store.getPassword())){
+            throw new ValidationException("비밀번호가 일치하지 않습니다.");
+        }
+
+        if(!store.getBusinessNumber().equals(deleteStoreRequest.getBusinessNumber())){
+            throw new ValidationException("사업자 등록 번호가 일치하지 않습니다.");
+        }
+
+        storeRepository.delete(store.toEntity());
+    }
+
     private void validationBusinessNumber(String businessNumber) {
         Revenue revenue = revenueRepository.findByNumber(businessNumber)
             .orElseThrow(
@@ -144,6 +164,5 @@ public class StoreService {
             () -> new NoSuchElementException("상점이 존재하지 않습니다.")
         ).toModel();
     }
-
 
 }
