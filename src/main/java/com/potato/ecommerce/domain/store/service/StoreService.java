@@ -35,6 +35,10 @@ public class StoreService {
         if (storeRepository.existsByEmail(storeRequest.getEmail()))
             throw new ValidationException("이미 존재하는 email 입니다.");
 
+        if(!storeRequest.getPassword().equals(storeRequest.getValidatePassword())){
+            throw new ValidationException("패스워드가 일치하지 않습니다.");
+        }
+
         validationBusinessNumber(storeRequest.getBusinessNumber());
 
         Store store = Store.builder()
