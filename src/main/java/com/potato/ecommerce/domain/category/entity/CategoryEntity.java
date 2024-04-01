@@ -1,6 +1,9 @@
 package com.potato.ecommerce.domain.category.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -19,12 +22,18 @@ public class CategoryEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "one_depth")
     @NotNull
-    private String oneDepth;
+    private CategoryType oneDepth;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "two_depth")
     @NotNull
-    private String twoDepth;
+    private CategoryType twoDepth;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "three_depth")
     @NotNull
-    private String threeDepth;
+    private CategoryType threeDepth;
 }
