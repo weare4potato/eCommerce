@@ -67,6 +67,7 @@ public class StoreEntity {
 
     public static StoreEntity fromModel(Store store) {
         return StoreEntity.builder()
+            .id(store.getId())
             .email(store.getEmail())
             .password(store.getPassword())
             .name(store.getName())
