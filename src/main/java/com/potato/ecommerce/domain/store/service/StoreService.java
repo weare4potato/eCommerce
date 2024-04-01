@@ -11,7 +11,6 @@ import com.potato.ecommerce.domain.store.entity.StoreEntity;
 import com.potato.ecommerce.domain.store.model.Store;
 import com.potato.ecommerce.domain.store.repository.StoreRepository;
 import com.potato.ecommerce.global.jwt.JwtUtil;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ValidationException;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
@@ -35,10 +34,11 @@ public class StoreService {
     @Transactional
     public void signup(StoreRequest storeRequest) {
 
-        if (storeRepository.existsByEmail(storeRequest.getEmail()))
+        if (storeRepository.existsByEmail(storeRequest.getEmail())) {
             throw new ValidationException("이미 존재하는 email 입니다.");
+        }
 
-        if(!storeRequest.getPassword().equals(storeRequest.getValidatePassword())){
+        if (!storeRequest.getPassword().equals(storeRequest.getValidatePassword())) {
             throw new ValidationException("패스워드가 일치하지 않습니다.");
         }
 
@@ -60,7 +60,7 @@ public class StoreService {
     public String signin(LoginRequest loginRequest) {
         Store store = findByEmail(loginRequest.getEmail());
 
-        if(!passwordEncoder.matches(loginRequest.getPassword(), store.getPassword())){
+        if (!passwordEncoder.matches(loginRequest.getPassword(), store.getPassword())) {
             throw new ValidationException("비밀번호가 일치하지 않습니다.");
         }
 
@@ -104,34 +104,36 @@ public class StoreService {
     public void validatePassword(String subject, ValidatePasswordRequest validatePasswordRequest) {
         Store store = findBySubject(subject);
 
-        if(!passwordEncoder.matches(validatePasswordRequest.getFirstPassword(), store.getPassword())){
+        if (!passwordEncoder.matches(validatePasswordRequest.getFirstPassword(),
+            store.getPassword())) {
             throw new ValidationException("비밀번호가 회원 정보와 일치하지 않습니다.");
         }
 
-        if(!validatePasswordRequest.getFirstPassword().equals(validatePasswordRequest.getSecondPassword())){
+        if (!validatePasswordRequest.getFirstPassword()
+            .equals(validatePasswordRequest.getSecondPassword())) {
             throw new ValidationException("비밀번호가 일치하지 않습니다.");
         }
     }
 
-    private void validationBusinessNumber(String businessNumber){
+    private void validationBusinessNumber(String businessNumber) {
         Revenue revenue = revenueRepository.findByNumber(businessNumber)
             .orElseThrow(
                 () -> new NoSuchElementException("등록된 사업자 번호가 아닙니다.")
             ).toModel();
 
-        if(revenue.isUsed()){
+        if (revenue.isUsed()) {
             throw new DataIntegrityViolationException("이미 사용된 사업자 번호입니다.");
         }
 
         use(revenue);
     }
 
-    private void use(Revenue revenue){
+    private void use(Revenue revenue) {
         revenue.use();
         revenueRepository.save(revenue.toEntity());
     }
 
-    private Store findByEmail(String email){
+    private Store findByEmail(String email) {
         return storeRepository.findByEmail(email).orElseThrow(
             () -> new DataIntegrityViolationException("등록되지 않은 이메일입니다.")
         ).toModel();

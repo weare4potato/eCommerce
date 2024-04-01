@@ -24,7 +24,7 @@ public class Revenue {
         isUsed = true;
     }
 
-    public RevenueEntity toEntity(){
+    public RevenueEntity toEntity() {
         return new RevenueEntity(id, number, isUsed);
     }
 }

@@ -5,6 +5,7 @@ import lombok.Getter;
 
 @Getter
 public class UpdateStoreRequest {
+
     @NotBlank
     private String name;
     @NotBlank

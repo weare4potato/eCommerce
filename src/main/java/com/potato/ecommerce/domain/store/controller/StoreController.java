@@ -44,7 +44,7 @@ public class StoreController {
     @PostMapping("/signin")
     @Tag(name = "Store API")
     @Operation(summary = "상점 로그인", description = "상점 로그인입니다.")
-    public ResponseEntity<Void> signin(@Valid @RequestBody LoginRequest loginRequest){
+    public ResponseEntity<Void> signin(@Valid @RequestBody LoginRequest loginRequest) {
         String token = storeService.signin(loginRequest);
         ResponseCookie cookie = ResponseCookie
             .from("Authorization", token)
@@ -64,7 +64,7 @@ public class StoreController {
     @Operation(summary = "판매자 상점 조회", description = "판매자 상점 조회입니다.")
     public ResponseEntity<StoreResponse> getStores(
         HttpServletRequest request
-    ){
+    ) {
         String subject = getSubject(request);
         log.info(subject);
 
@@ -79,7 +79,7 @@ public class StoreController {
     public ResponseEntity<StoreResponse> updateStore(
         HttpServletRequest request,
         @Valid @RequestBody UpdateStoreRequest updateRequest
-    ){
+    ) {
         String subject = getSubject(request);
 
         StoreResponse storeResponse = storeService.updateStore(subject, updateRequest);
@@ -93,10 +93,9 @@ public class StoreController {
     public ResponseEntity<Void> validatePassword(
         HttpServletRequest request,
         @Valid @RequestBody ValidatePasswordRequest validatePasswordRequest
-    ){
+    ) {
         String subject = getSubject(request);
         log.info(subject);
-
 
         storeService.validatePassword(subject, validatePasswordRequest);
 
