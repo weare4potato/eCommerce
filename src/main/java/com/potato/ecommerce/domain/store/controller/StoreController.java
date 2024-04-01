@@ -2,7 +2,9 @@ package com.potato.ecommerce.domain.store.controller;
 
 import com.potato.ecommerce.domain.store.dto.LoginRequest;
 import com.potato.ecommerce.domain.store.dto.StoreRequest;
+import com.potato.ecommerce.domain.store.dto.StoreResponse;
 import com.potato.ecommerce.domain.store.service.StoreService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +12,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,5 +46,16 @@ public class StoreController {
         return ResponseEntity.ok()
             .header(HttpHeaders.SET_COOKIE, cookie.toString())
             .build();
+    }
+
+    @GetMapping
+    public ResponseEntity<StoreResponse> getStores(
+        HttpServletRequest request
+    ){
+        String subject = (String) request.getAttribute("subject");
+
+        StoreResponse storeResponse = storeService.getStores(subject);
+
+        return ResponseEntity.ok().body(storeResponse);
     }
 }

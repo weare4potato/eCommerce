@@ -4,12 +4,11 @@ import com.potato.ecommerce.domain.revenue.model.Revenue;
 import com.potato.ecommerce.domain.revenue.repository.RevenueRepository;
 import com.potato.ecommerce.domain.store.dto.LoginRequest;
 import com.potato.ecommerce.domain.store.dto.StoreRequest;
+import com.potato.ecommerce.domain.store.dto.StoreResponse;
 import com.potato.ecommerce.domain.store.entity.StoreEntity;
 import com.potato.ecommerce.domain.store.model.Store;
 import com.potato.ecommerce.domain.store.repository.StoreRepository;
 import com.potato.ecommerce.global.jwt.JwtUtil;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.ValidationException;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
@@ -61,6 +60,18 @@ public class StoreService {
         return jwtUtil.createSellerToken(store.getBusinessNumber());
     }
 
+    public StoreResponse getStores(String subject) {
+        Store store = storeRepository.findByBusinessNumber(subject).orElseThrow(
+            () -> new NoSuchElementException("상점이 존재하지 않습니다.")
+        ).toModel();
+
+        return StoreResponse.builder()
+            .name(store.getName())
+            .description(store.getDescription())
+            .phone(store.getPhone())
+            .businessNumber(store.getBusinessNumber())
+            .build();
+    }
 
     private void validationBusinessNumber(String businessNumber){
         Revenue revenue = revenueRepository.findByNumber(businessNumber)
@@ -85,4 +96,5 @@ public class StoreService {
             () -> new DataIntegrityViolationException("등록되지 않은 이메일입니다.")
         ).toModel();
     }
+
 }
