@@ -8,14 +8,14 @@ import lombok.Getter;
 @Getter
 public class Store {
 
-    private Long id;
-    private String email;
-    private String password;
+    private final Long id;
+    private final String email;
+    private final String password;
     private String name;
     private String description;
     private String phone;
-    private String businessNumber;
-    private LocalDateTime createdAt;
+    private final String businessNumber;
+    private final LocalDateTime createdAt;
 
     @Builder
     public Store(Long id, String email, String password, String name, String description,
@@ -31,7 +31,7 @@ public class Store {
         this.createdAt = createdAt;
     }
 
-    public StoreEntity toEntity(){
+    public StoreEntity toEntity() {
         return StoreEntity.builder()
             .id(id)
             .email(email)

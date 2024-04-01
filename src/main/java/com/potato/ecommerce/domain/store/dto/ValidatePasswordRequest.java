@@ -5,6 +5,7 @@ import lombok.Getter;
 
 @Getter
 public class ValidatePasswordRequest {
+
     @NotBlank
     private String firstPassword;
     @NotBlank
