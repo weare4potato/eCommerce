@@ -9,6 +9,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import java.security.Key;
 import java.util.Base64;
@@ -27,7 +28,9 @@ public class JwtUtil {
     // 사용자 권한 값의 KEY
     public static final String AUTHORIZATION_KEY = "auth";
 
-    public static final String BEARER_PREFIX = "Bearer ";
+    public static final String BEARER_PREFIX = "Bearer";
+
+    private final long TOKEN_TIME = 30 * 60 * 1000L; // 30 분
 
     @Value("${jwt.secret.key}")
     private String secretKey;
@@ -43,15 +46,29 @@ public class JwtUtil {
         key = Keys.hmacShaKeyFor(bytes);
     }
 
-    // 토큰 뽑아오기
-    public String getJwtFromHeader(HttpServletRequest request) {
-        String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
-            return bearerToken.substring(7);
+    public String getTokenFromRequest(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        if(cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals(AUTHORIZATION_HEADER)) { // 쿠키 이름에 따라 수정
+                    String token = cookie.getValue();
+                    if (token != null && token.startsWith(BEARER_PREFIX)) {
+                        return substringToken(token);
+                    }
+                }
+            }
         }
         return null;
     }
 
+    // 토큰 뽑아오기
+    public String substringToken(String tokenValue) {
+        if(StringUtils.hasText(tokenValue) && tokenValue.startsWith(BEARER_PREFIX)) {
+            return tokenValue.substring(6);
+        }
+        log.info("Not Found Token");
+        throw new NullPointerException("Not found Token");
+    }
     // 토큰 검증
     public boolean validateToken(String token) {
         try {
@@ -74,18 +91,35 @@ public class JwtUtil {
             .getBody();
     }
 
-    public String createToken(String username, UserRoleEnum role) {
-        Date date = new Date();
+    public String createToken(String email, UserRoleEnum role) {
+        Date expireDate = createExpireDate(TOKEN_TIME);
 
-        // 토큰 만료시간 60분
-        long TOKEN_TIME = 60 * 60 * 1000;
         return BEARER_PREFIX +
             Jwts.builder()
-                .setSubject(username)
+                .setSubject(email)
                 .claim(AUTHORIZATION_KEY, role) // 사용자 권한
-                .setExpiration(new Date(date.getTime() + TOKEN_TIME))
-                .setIssuedAt(date)
+                .setExpiration(expireDate)
+                .setIssuedAt(new Date())
                 .signWith(key, signatureAlgorithm)
                 .compact();
+    }
+
+    public String createSellerToken(String businessNumber, UserRoleEnum role) {
+        Date expireDate = createExpireDate(TOKEN_TIME);
+
+        return BEARER_PREFIX +
+            Jwts.builder()
+                .setSubject(businessNumber)
+                .claim(AUTHORIZATION_KEY, role) // 사용자 권한
+                .setExpiration(expireDate)
+                .setIssuedAt(new Date())
+                .signWith(key, signatureAlgorithm)
+                .compact();
+    }
+
+    // Seller 토큰과 Member 토큰의 정책 차별 가능성
+    private Date createExpireDate(long expireDate) {
+        long curTime = (new Date()).getTime();
+        return new Date(curTime + expireDate);
     }
 }
