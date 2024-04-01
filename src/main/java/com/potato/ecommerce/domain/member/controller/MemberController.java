@@ -78,7 +78,10 @@ public class MemberController {
         @RequestBody @Validated UpdateMemberDto dto,
         HttpServletRequest request
     ){
-        memberService.updateMember(dto, (String)request.getAttribute("subject"));
-
+        return ResponseEntity.ok(
+            memberService.updateMember(
+                dto,
+                (String)request.getAttribute("subject"))
+        );
     }
 }

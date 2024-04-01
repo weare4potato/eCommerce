@@ -1,6 +1,7 @@
 package com.potato.ecommerce.domain.member.model;
 
 import com.potato.ecommerce.domain.member.dto.ResponseMember;
+import com.potato.ecommerce.domain.member.dto.UpdateMemberDto;
 import com.potato.ecommerce.domain.member.entity.UserRoleEnum;
 import lombok.Builder;
 import lombok.Getter;
@@ -35,6 +36,11 @@ public class Member {
         this.role = role;
     }
 
+    public void update(UpdateMemberDto dto) {
+        this.userName = dto.getUsername();
+        this.phone = dto.getPhone();
+    }
+
     public ResponseMember createResponseDTO() {
         return ResponseMember.builder()
             .username(this.userName)
@@ -46,5 +52,6 @@ public class Member {
     public boolean isNotMatchPassword(PasswordEncoder encoder, String password) {
         return !encoder.matches(password, this.password);
     }
+
 
 }

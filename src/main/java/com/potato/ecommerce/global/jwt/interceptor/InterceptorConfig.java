@@ -10,8 +10,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @RequiredArgsConstructor
 public class InterceptorConfig implements WebMvcConfigurer {
 
-    private final JwtUtil jwtUtil;
-
     private final AuthInterceptor authInterceptor;
 
     @Override

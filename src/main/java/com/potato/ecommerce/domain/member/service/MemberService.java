@@ -7,6 +7,7 @@ import com.potato.ecommerce.domain.member.dto.UpdateMemberDto;
 import com.potato.ecommerce.domain.member.entity.MemberEntity;
 import com.potato.ecommerce.domain.member.entity.UserRoleEnum;
 import com.potato.ecommerce.domain.member.model.Member;
+import com.potato.ecommerce.domain.member.repository.MemberJpaRepository;
 import com.potato.ecommerce.domain.member.repository.MemberRepository;
 import com.potato.ecommerce.global.jwt.JwtUtil;
 import jakarta.persistence.EntityNotFoundException;
@@ -35,7 +36,7 @@ public class MemberService {
             .role(UserRoleEnum.USER)
             .build();
 
-        memberRepository.save(MemberEntity.fromModel(member));
+        memberRepository.save(member);
     }
 
     @Transactional
@@ -53,13 +54,18 @@ public class MemberService {
         return member.createResponseDTO();
     }
 
-    public void updateMember(UpdateMemberDto dto, String subject) {
+    @Transactional
+    public ResponseMember updateMember(UpdateMemberDto dto, String subject) {
         Member member = findBy(subject);
+
+        member.update(dto);
+
+        memberRepository.update(member);
+        return member.createResponseDTO();
     }
 
     private Member findBy(String email) {
-        return memberRepository.findByEmail(email).orElseThrow(
-            () -> new EntityNotFoundException("해당 유저가 존재하지 않습니다.")).toModel();
+        return memberRepository.findMemberBy(email);
     }
 
     private void validatePassword(SignInDto dto, Member member) {

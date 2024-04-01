@@ -14,15 +14,18 @@ import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "members")
+@Builder
 public class MemberEntity {
 
     @Id
@@ -51,18 +54,9 @@ public class MemberEntity {
     private UserRoleEnum role;
 
 
-    @Builder
-    private MemberEntity(String email, String userName, String password, String phone,
-        UserRoleEnum role) {
-        this.email = email;
-        this.userName = userName;
-        this.password = password;
-        this.phone = phone;
-        this.role = role;
-    }
-
     public static MemberEntity fromModel(Member member) {
         return MemberEntity.builder()
+            .id(member.getId())
             .email(member.getEmail())
             .userName(member.getUserName())
             .password(member.getPassword())
