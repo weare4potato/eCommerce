@@ -19,6 +19,6 @@ public class DeleteStoreRequest {
     private String password;
 
     @NotBlank
-    @Pattern(regexp = "^[0-9]{9}+$")
+    @Pattern(regexp = "^[0-9]{10}+$")
     private String businessNumber;
 }

@@ -33,6 +33,6 @@ public class StoreRequest {
     private String phone;
 
     @NotBlank
-    @Pattern(regexp = "^[0-9]{9}+$")
+    @Pattern(regexp = "^[0-9]{10}+$")
     private String businessNumber;
 }

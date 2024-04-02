@@ -1,6 +1,6 @@
 package com.potato.ecommerce.domain.store.service;
 
-import com.potato.ecommerce.domain.store.repository.StoreRepository;
+import com.potato.ecommerce.domain.store.repository.JpaStoreRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class StoreManagementService {
 
-    private final StoreRepository storeRepository;
+    private final JpaStoreRepository jpaStoreRepository;
 
 
 }
