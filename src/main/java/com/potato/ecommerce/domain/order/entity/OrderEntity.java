@@ -3,30 +3,38 @@ package com.potato.ecommerce.domain.order.entity;
 import com.potato.ecommerce.domain.member.entity.MemberEntity;
 import com.potato.ecommerce.domain.order.model.Order;
 import com.potato.ecommerce.domain.payment.entity.PaymentEntity;
+import com.potato.ecommerce.domain.payment.vo.PaymentType;
 import com.potato.ecommerce.domain.receiver.entity.ReceiverEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.Min;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 
-@Entity
+@Getter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "orders")
 public class OrderEntity {
@@ -40,23 +48,29 @@ public class OrderEntity {
     @JoinColumn(name = "member_id")
     private MemberEntity member;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "receiver_id")
     private ReceiverEntity receiver;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "payment_id")
-    private PaymentEntity payment;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "payment_type", nullable = false)
+    private PaymentType paymentType;
 
-    @Column(nullable = false)
+    @Column(name = "order_num", nullable = false)
     private String orderNum;
 
     /*
     TODO : 지금은 모든 주문을 완료상태로 처리
     TODO : READY는 추후에 뼈대를 다 만들고 추가
      */
+
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private OrderStatus status;
+
+    @Min(value = 0)
+    @Column(name = "total_price", nullable = false)
+    private Long totalPrice;
 
     @CreatedDate
     @Column(updatable = false)
@@ -64,35 +78,44 @@ public class OrderEntity {
     private LocalDateTime orderedAt;
 
     @Builder
-    private OrderEntity(MemberEntity member, ReceiverEntity receiver, PaymentEntity payment,
-        String orderNum, OrderStatus status, LocalDateTime orderedAt) {
+    public OrderEntity(
+        MemberEntity member,
+        ReceiverEntity receiver,
+        PaymentType paymentType,
+        String orderNum,
+        Long totalPrice
+    ) {
         this.member = member;
         this.receiver = receiver;
-        this.payment = payment;
+        this.paymentType = paymentType;
         this.orderNum = orderNum;
-        this.status = status;
-        this.orderedAt = orderedAt;
+        this.totalPrice = totalPrice;
+        this.status = OrderStatus.READY;
     }
 
-    public static OrderEntity fromModel(Order order) {
+    public OrderEntity complete() {
         return OrderEntity.builder()
-            .member(MemberEntity.fromModel(order.getMember()))
-            .receiver(ReceiverEntity.fromModel(order.getReceiver()))
-            .payment(PaymentEntity.fromModel(order.getPayment()))
-            .orderNum(order.getOrderNum())
-            .status(order.getStatus())
+            .id(this.id)
+            .member(this.member)
+            .receiver(this.receiver)
+            .paymentType(this.paymentType)
+            .orderNum(this.orderNum)
+            .status(OrderStatus.COMPLETE)
+            .orderedAt(this.orderedAt)
+            .totalPrice(this.totalPrice)
             .build();
     }
 
-    public Order toModel() {
-        return Order.builder()
-            .id(id)
-            .member(member.toModel())
-            .receiver(receiver.toModel())
-            .payment(payment.toModel())
-            .orderNum(orderNum)
-            .status(status)
-            .orderedAt(orderedAt)
+    public OrderEntity cancel() {
+        return OrderEntity.builder()
+            .id(this.id)
+            .member(this.member)
+            .receiver(this.receiver)
+            .paymentType(this.paymentType)
+            .orderNum(this.orderNum)
+            .status(OrderStatus.CANCEL)
+            .orderedAt(this.orderedAt)
+            .totalPrice(this.totalPrice)
             .build();
     }
 }
