@@ -1,7 +1,6 @@
 package com.potato.ecommerce.domain.revenue.service;
 
 import com.potato.ecommerce.domain.revenue.dto.RevenueResponse;
-import com.potato.ecommerce.domain.revenue.entity.RevenueEntity;
 import com.potato.ecommerce.domain.revenue.model.Revenue;
 import com.potato.ecommerce.domain.revenue.repository.RevenueRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +16,7 @@ public class RevenueService {
     public RevenueResponse getBusinessNumber() {
         Revenue revenue = new Revenue(number++);
 
-        Revenue model = revenueRepository.save(
-            RevenueEntity.fromModel(revenue)).toModel();
+        Revenue model = revenueRepository.save(revenue);
 
         return new RevenueResponse(model.getNumber());
     }

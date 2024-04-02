@@ -1,11 +1,5 @@
 package com.potato.ecommerce.domain.store.repository;
 
-import com.potato.ecommerce.domain.store.dto.DeleteStoreRequest;
-import com.potato.ecommerce.domain.store.dto.LoginRequest;
-import com.potato.ecommerce.domain.store.dto.StoreRequest;
-import com.potato.ecommerce.domain.store.dto.StoreResponse;
-import com.potato.ecommerce.domain.store.dto.UpdateStoreRequest;
-import com.potato.ecommerce.domain.store.dto.ValidatePasswordRequest;
 import com.potato.ecommerce.domain.store.entity.StoreEntity;
 import com.potato.ecommerce.domain.store.model.Store;
 import java.util.NoSuchElementException;
@@ -15,7 +9,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
-public class StoreRepositoryImpl implements StoreRepository{
+public class StoreRepositoryImpl implements StoreRepository {
 
     private final JpaStoreRepository jpaStoreRepository;
 

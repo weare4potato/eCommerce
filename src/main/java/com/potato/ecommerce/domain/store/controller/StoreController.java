@@ -2,7 +2,6 @@ package com.potato.ecommerce.domain.store.controller;
 
 import com.potato.ecommerce.domain.store.dto.DeleteStoreRequest;
 import com.potato.ecommerce.domain.store.dto.LoginRequest;
-import com.potato.ecommerce.domain.store.dto.OrderAcceptResponse;
 import com.potato.ecommerce.domain.store.dto.StoreRequest;
 import com.potato.ecommerce.domain.store.dto.StoreResponse;
 import com.potato.ecommerce.domain.store.dto.UpdateStoreRequest;
@@ -21,7 +20,6 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -112,7 +110,7 @@ public class StoreController {
     public ResponseEntity<String> deleteStore(
         HttpServletRequest request,
         @Valid @RequestBody DeleteStoreRequest deleteStoreRequest
-    ){
+    ) {
         String subject = getSubject(request);
 
         storeService.deleteStore(subject, deleteStoreRequest);

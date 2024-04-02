@@ -8,13 +8,10 @@ import com.potato.ecommerce.domain.store.dto.StoreRequest;
 import com.potato.ecommerce.domain.store.dto.StoreResponse;
 import com.potato.ecommerce.domain.store.dto.UpdateStoreRequest;
 import com.potato.ecommerce.domain.store.dto.ValidatePasswordRequest;
-import com.potato.ecommerce.domain.store.entity.StoreEntity;
 import com.potato.ecommerce.domain.store.model.Store;
-import com.potato.ecommerce.domain.store.repository.JpaStoreRepository;
 import com.potato.ecommerce.domain.store.repository.StoreRepository;
 import com.potato.ecommerce.global.jwt.JwtUtil;
 import jakarta.validation.ValidationException;
-import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -120,15 +117,15 @@ public class StoreService {
     public void deleteStore(String subject, DeleteStoreRequest deleteStoreRequest) {
         Store store = findBySubject(subject);
 
-        if(!store.emailMatches(deleteStoreRequest.getEmail())){
+        if (!store.emailMatches(deleteStoreRequest.getEmail())) {
             throw new ValidationException("이메일이 일치하지 않습니다.");
         }
 
-        if(!store.passwordMatches(deleteStoreRequest.getPassword(), passwordEncoder)){
+        if (!store.passwordMatches(deleteStoreRequest.getPassword(), passwordEncoder)) {
             throw new ValidationException("비밀번호가 일치하지 않습니다.");
         }
 
-        if(!store.businessNumberMatches(deleteStoreRequest.getBusinessNumber())){
+        if (!store.businessNumberMatches(deleteStoreRequest.getBusinessNumber())) {
             throw new ValidationException("사업자 등록 번호가 일치하지 않습니다.");
         }
 
@@ -136,10 +133,7 @@ public class StoreService {
     }
 
     private void validationBusinessNumber(String businessNumber) {
-        Revenue revenue = revenueRepository.findByNumber(businessNumber)
-            .orElseThrow(
-                () -> new NoSuchElementException("등록된 사업자 번호가 아닙니다.")
-            ).toModel();
+        Revenue revenue = revenueRepository.findByNumber(businessNumber);
 
         if (revenue.isUsedChecking()) {
             throw new DataIntegrityViolationException("이미 사용된 사업자 번호입니다.");
@@ -150,7 +144,7 @@ public class StoreService {
 
     private void use(Revenue revenue) {
         revenue.use();
-        revenueRepository.save(revenue.toEntity());
+        revenueRepository.save(revenue);
     }
 
     private Store findByEmail(String email) {
