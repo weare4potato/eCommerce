@@ -129,7 +129,7 @@ public class StoreController {
     }
      */
 
-    private static String getSubject(HttpServletRequest request) {
+    private String getSubject(HttpServletRequest request) {
         return (String) request.getAttribute("subject");
     }
 }
