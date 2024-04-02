@@ -10,6 +10,7 @@ import com.potato.ecommerce.domain.store.dto.UpdateStoreRequest;
 import com.potato.ecommerce.domain.store.dto.ValidatePasswordRequest;
 import com.potato.ecommerce.domain.store.entity.StoreEntity;
 import com.potato.ecommerce.domain.store.model.Store;
+import com.potato.ecommerce.domain.store.repository.JpaStoreRepository;
 import com.potato.ecommerce.domain.store.repository.StoreRepository;
 import com.potato.ecommerce.global.jwt.JwtUtil;
 import jakarta.validation.ValidationException;
@@ -54,7 +55,7 @@ public class StoreService {
             .businessNumber(storeRequest.getBusinessNumber())
             .build();
 
-        storeRepository.save(StoreEntity.fromModel(store));
+        storeRepository.save(store);
     }
 
     @Transactional
@@ -90,7 +91,7 @@ public class StoreService {
             updateRequest.getPhone()
         );
 
-        storeRepository.save(StoreEntity.fromModel(store));
+        storeRepository.save(store);
 
         return StoreResponse.builder()
             .email(store.getEmail())
@@ -132,7 +133,7 @@ public class StoreService {
             throw new ValidationException("사업자 등록 번호가 일치하지 않습니다.");
         }
 
-        storeRepository.delete(store.toEntity());
+        storeRepository.delete(store);
     }
 
     private void validationBusinessNumber(String businessNumber) {
@@ -154,15 +155,11 @@ public class StoreService {
     }
 
     private Store findByEmail(String email) {
-        return storeRepository.findByEmail(email).orElseThrow(
-            () -> new DataIntegrityViolationException("등록되지 않은 이메일입니다.")
-        ).toModel();
+        return storeRepository.findByEmail(email);
     }
 
     private Store findBySubject(String subject) {
-        return storeRepository.findByBusinessNumber(subject).orElseThrow(
-            () -> new NoSuchElementException("상점이 존재하지 않습니다.")
-        ).toModel();
+        return storeRepository.findBySubject(subject);
     }
 
 }
