@@ -62,7 +62,7 @@ public class StoreService {
     public String signin(LoginRequest loginRequest) {
         Store store = findByEmail(loginRequest.getEmail());
 
-        if (!passwordEncoder.matches(loginRequest.getPassword(), store.getPassword())) {
+        if (!store.passwordMatches(loginRequest.getPassword(), passwordEncoder)) {
             throw new ValidationException("비밀번호가 일치하지 않습니다.");
         }
 
@@ -106,8 +106,7 @@ public class StoreService {
     public void validatePassword(String subject, ValidatePasswordRequest validatePasswordRequest) {
         Store store = findBySubject(subject);
 
-        if (!passwordEncoder.matches(validatePasswordRequest.getFirstPassword(),
-            store.getPassword())) {
+        if (!store.passwordMatches(validatePasswordRequest.getFirstPassword(), passwordEncoder)) {
             throw new ValidationException("비밀번호가 회원 정보와 일치하지 않습니다.");
         }
 
@@ -121,15 +120,15 @@ public class StoreService {
     public void deleteStore(String subject, DeleteStoreRequest deleteStoreRequest) {
         Store store = findBySubject(subject);
 
-        if(!store.getEmail().equals(deleteStoreRequest.getEmail())){
+        if(!store.emailMatches(deleteStoreRequest.getEmail())){
             throw new ValidationException("이메일이 일치하지 않습니다.");
         }
 
-        if(!passwordEncoder.matches(deleteStoreRequest.getPassword(), store.getPassword())){
+        if(!store.passwordMatches(deleteStoreRequest.getPassword(), passwordEncoder)){
             throw new ValidationException("비밀번호가 일치하지 않습니다.");
         }
 
-        if(!store.getBusinessNumber().equals(deleteStoreRequest.getBusinessNumber())){
+        if(!store.businessNumberMatches(deleteStoreRequest.getBusinessNumber())){
             throw new ValidationException("사업자 등록 번호가 일치하지 않습니다.");
         }
 
@@ -142,7 +141,7 @@ public class StoreService {
                 () -> new NoSuchElementException("등록된 사업자 번호가 아닙니다.")
             ).toModel();
 
-        if (revenue.isUsed()) {
+        if (revenue.isUsedChecking()) {
             throw new DataIntegrityViolationException("이미 사용된 사업자 번호입니다.");
         }
 

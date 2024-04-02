@@ -27,4 +27,8 @@ public class Revenue {
     public RevenueEntity toEntity() {
         return new RevenueEntity(id, number, isUsed);
     }
+
+    public boolean isUsedChecking() {
+        return isUsed;
+    }
 }
