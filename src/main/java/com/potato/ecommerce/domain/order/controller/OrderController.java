@@ -7,6 +7,7 @@ import com.potato.ecommerce.domain.order.controller.dto.response.OrderInfoWithHi
 import com.potato.ecommerce.domain.order.dto.OrderInfo;
 import com.potato.ecommerce.domain.order.dto.OrderInfoWithHistory;
 import com.potato.ecommerce.domain.order.service.OrderService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/orders")
 @RequiredArgsConstructor
+@Tag(name = "Order API", description = "Order API 입니다.")
 public class OrderController {
     private final OrderService orderService;
 
