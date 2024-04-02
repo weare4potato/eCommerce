@@ -1,7 +1,7 @@
 package com.potato.ecommerce.domain.payment.entity;
 
 import com.potato.ecommerce.domain.payment.model.Payment;
-import com.potato.ecommerce.domain.payment.vo.PaymentMethod;
+import com.potato.ecommerce.domain.payment.vo.PaymentType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -32,17 +32,17 @@ public class PaymentEntity {
     private Long discountPrice;
 
     @Enumerated(EnumType.STRING)
-    private PaymentMethod method;
+    private PaymentType type;
 
     @Column(nullable = false)
     private LocalDateTime installmentPeriod;
 
     @Builder
-    private PaymentEntity(Long totalPrice, Long discountPrice, PaymentMethod method,
+    private PaymentEntity(Long totalPrice, Long discountPrice, PaymentType type,
         LocalDateTime installmentPeriod) {
         this.totalPrice = totalPrice;
         this.discountPrice = discountPrice;
-        this.method = method;
+        this.type = type;
         this.installmentPeriod = installmentPeriod;
     }
 
@@ -50,7 +50,7 @@ public class PaymentEntity {
         return PaymentEntity.builder()
             .totalPrice(payment.getTotalPrice())
             .discountPrice(payment.getDiscountPrice())
-            .method(payment.getMethod())
+            .type(payment.getType())
             .installmentPeriod(payment.getInstallmentPeriod())
             .build();
     }
@@ -60,7 +60,7 @@ public class PaymentEntity {
             .id(this.id)
             .totalPrice(this.totalPrice)
             .discountPrice(this.discountPrice)
-            .method(this.method)
+            .type(this.type)
             .installmentPeriod(this.installmentPeriod)
             .build();
     }

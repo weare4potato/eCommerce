@@ -1,6 +1,6 @@
 package com.potato.ecommerce.domain.payment.vo;
 
 
-public enum PaymentMethod {
+public enum PaymentType {
     SAMPLE1, SAMPLE2
 }

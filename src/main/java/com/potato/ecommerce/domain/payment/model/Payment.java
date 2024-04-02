@@ -1,6 +1,6 @@
 package com.potato.ecommerce.domain.payment.model;
 
-import com.potato.ecommerce.domain.payment.vo.PaymentMethod;
+import com.potato.ecommerce.domain.payment.vo.PaymentType;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,7 +17,7 @@ public class Payment {
 
     private Long discountPrice;
 
-    private PaymentMethod method;
+    private PaymentType type;
 
     private LocalDateTime installmentPeriod;
 
