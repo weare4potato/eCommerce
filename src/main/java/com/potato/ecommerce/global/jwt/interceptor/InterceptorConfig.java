@@ -1,5 +1,6 @@
 package com.potato.ecommerce.global.jwt.interceptor;
 
+import com.potato.ecommerce.global.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -21,7 +22,8 @@ public class InterceptorConfig implements WebMvcConfigurer {
                 "/api/v1/shops/signup",
                 "/api/v1/shops/signin",
                 "/api/v1/revenue",
-                "/api/v1/orders/**"
+                "/api/v1/orders/**",
+                "/api/v1/mail/**"
             );
 
     }

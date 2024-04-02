@@ -25,6 +25,9 @@ dependencies {
     // Swagger
     implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.2.0'
 
+    // java email
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+
     // JWT
     compileOnly group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
