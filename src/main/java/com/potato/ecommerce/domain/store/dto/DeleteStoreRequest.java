@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 
 @Getter
-public class StoreRequest {
+public class DeleteStoreRequest {
 
     @NotBlank
     @Email
@@ -17,20 +17,6 @@ public class StoreRequest {
     @Size(min = 8, max = 15)
     @Pattern(regexp = "^[a-zA-Z0-9.!@#$]*$")
     private String password;
-
-    @NotBlank
-    @Size(min = 8, max = 15)
-    private String validatePassword;
-
-    @NotBlank
-    private String name;
-
-    @Size(max = 50)
-    private String description;
-
-    @NotBlank
-    @Pattern(regexp = "^01(0)([0-9]{4})([0-9]{4})$")
-    private String phone;
 
     @NotBlank
     @Pattern(regexp = "^[0-9]{10}+$")

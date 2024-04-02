@@ -1,14 +1,16 @@
 package com.potato.ecommerce.domain.store.repository;
 
-import com.potato.ecommerce.domain.store.entity.StoreEntity;
-import java.util.Optional;
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.potato.ecommerce.domain.store.model.Store;
 
-public interface StoreRepository extends JpaRepository<StoreEntity, Long> {
-
-    Optional<StoreEntity> findByEmail(String email);
+public interface StoreRepository {
 
     boolean existsByEmail(String email);
 
-    Optional<StoreEntity> findByBusinessNumber(String subject);
+    void save(Store store);
+
+    void delete(Store store);
+
+    Store findByEmail(String email);
+
+    Store findBySubject(String businessNumber);
 }

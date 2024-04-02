@@ -2,17 +2,16 @@ package com.potato.ecommerce.domain.store.service;
 
 import com.potato.ecommerce.domain.revenue.model.Revenue;
 import com.potato.ecommerce.domain.revenue.repository.RevenueRepository;
+import com.potato.ecommerce.domain.store.dto.DeleteStoreRequest;
 import com.potato.ecommerce.domain.store.dto.LoginRequest;
 import com.potato.ecommerce.domain.store.dto.StoreRequest;
 import com.potato.ecommerce.domain.store.dto.StoreResponse;
 import com.potato.ecommerce.domain.store.dto.UpdateStoreRequest;
 import com.potato.ecommerce.domain.store.dto.ValidatePasswordRequest;
-import com.potato.ecommerce.domain.store.entity.StoreEntity;
 import com.potato.ecommerce.domain.store.model.Store;
 import com.potato.ecommerce.domain.store.repository.StoreRepository;
 import com.potato.ecommerce.global.jwt.JwtUtil;
 import jakarta.validation.ValidationException;
-import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -53,14 +52,14 @@ public class StoreService {
             .businessNumber(storeRequest.getBusinessNumber())
             .build();
 
-        storeRepository.save(StoreEntity.fromModel(store));
+        storeRepository.save(store);
     }
 
     @Transactional
     public String signin(LoginRequest loginRequest) {
         Store store = findByEmail(loginRequest.getEmail());
 
-        if (!passwordEncoder.matches(loginRequest.getPassword(), store.getPassword())) {
+        if (!store.passwordMatches(loginRequest.getPassword(), passwordEncoder)) {
             throw new ValidationException("비밀번호가 일치하지 않습니다.");
         }
 
@@ -89,7 +88,7 @@ public class StoreService {
             updateRequest.getPhone()
         );
 
-        storeRepository.save(StoreEntity.fromModel(store));
+        storeRepository.save(store);
 
         return StoreResponse.builder()
             .email(store.getEmail())
@@ -104,8 +103,7 @@ public class StoreService {
     public void validatePassword(String subject, ValidatePasswordRequest validatePasswordRequest) {
         Store store = findBySubject(subject);
 
-        if (!passwordEncoder.matches(validatePasswordRequest.getFirstPassword(),
-            store.getPassword())) {
+        if (!store.passwordMatches(validatePasswordRequest.getFirstPassword(), passwordEncoder)) {
             throw new ValidationException("비밀번호가 회원 정보와 일치하지 않습니다.");
         }
 
@@ -115,13 +113,29 @@ public class StoreService {
         }
     }
 
-    private void validationBusinessNumber(String businessNumber) {
-        Revenue revenue = revenueRepository.findByNumber(businessNumber)
-            .orElseThrow(
-                () -> new NoSuchElementException("등록된 사업자 번호가 아닙니다.")
-            ).toModel();
+    @Transactional
+    public void deleteStore(String subject, DeleteStoreRequest deleteStoreRequest) {
+        Store store = findBySubject(subject);
 
-        if (revenue.isUsed()) {
+        if (!store.emailMatches(deleteStoreRequest.getEmail())) {
+            throw new ValidationException("이메일이 일치하지 않습니다.");
+        }
+
+        if (!store.passwordMatches(deleteStoreRequest.getPassword(), passwordEncoder)) {
+            throw new ValidationException("비밀번호가 일치하지 않습니다.");
+        }
+
+        if (!store.businessNumberMatches(deleteStoreRequest.getBusinessNumber())) {
+            throw new ValidationException("사업자 등록 번호가 일치하지 않습니다.");
+        }
+
+        storeRepository.delete(store);
+    }
+
+    private void validationBusinessNumber(String businessNumber) {
+        Revenue revenue = revenueRepository.findByNumber(businessNumber);
+
+        if (revenue.isUsedChecking()) {
             throw new DataIntegrityViolationException("이미 사용된 사업자 번호입니다.");
         }
 
@@ -130,20 +144,15 @@ public class StoreService {
 
     private void use(Revenue revenue) {
         revenue.use();
-        revenueRepository.save(revenue.toEntity());
+        revenueRepository.save(revenue);
     }
 
     private Store findByEmail(String email) {
-        return storeRepository.findByEmail(email).orElseThrow(
-            () -> new DataIntegrityViolationException("등록되지 않은 이메일입니다.")
-        ).toModel();
+        return storeRepository.findByEmail(email);
     }
 
     private Store findBySubject(String subject) {
-        return storeRepository.findByBusinessNumber(subject).orElseThrow(
-            () -> new NoSuchElementException("상점이 존재하지 않습니다.")
-        ).toModel();
+        return storeRepository.findBySubject(subject);
     }
-
 
 }
