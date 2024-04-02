@@ -4,6 +4,7 @@ import com.potato.ecommerce.domain.store.entity.StoreEntity;
 import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Getter
 public class Store {
@@ -48,5 +49,17 @@ public class Store {
         this.name = name;
         this.description = description;
         this.phone = phone;
+    }
+
+    public boolean passwordMatches(String password, PasswordEncoder passwordEncoder) {
+        return passwordEncoder.matches(password, this.password);
+    }
+
+    public boolean emailMatches(String email) {
+        return email.equals(this.email);
+    }
+
+    public boolean businessNumberMatches(String businessNumber) {
+        return businessNumber.equals(this.businessNumber);
     }
 }
