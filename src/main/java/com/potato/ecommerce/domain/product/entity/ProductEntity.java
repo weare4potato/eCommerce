@@ -2,6 +2,7 @@ package com.potato.ecommerce.domain.product.entity;
 
 
 import com.potato.ecommerce.domain.category.entity.CategoryEntity;
+import com.potato.ecommerce.domain.product.model.Product;
 import com.potato.ecommerce.domain.store.entity.StoreEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -25,12 +26,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.springframework.data.annotation.CreatedDate;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@SQLDelete(sql = "UPDATE products SET is_deleted = true WHERE product_id = ?")
+@Where(clause = "is_delete=false")
 @Table(name = "products")
 public class ProductEntity {
 
@@ -38,12 +42,12 @@ public class ProductEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "store_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private StoreEntity store;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "category_id")
     private CategoryEntity category;
 
@@ -68,9 +72,10 @@ public class ProductEntity {
     private LocalDateTime createdAt;
 
     @Builder
-    public ProductEntity(StoreEntity store, CategoryEntity category, String name,
+    private ProductEntity(Long id, StoreEntity store, CategoryEntity category, String name,
         String description,
         Integer price, Integer stock, Boolean isDelete, LocalDateTime createdAt) {
+        this.id = id;
         this.store = store;
         this.category = category;
         this.name = name;
@@ -80,4 +85,32 @@ public class ProductEntity {
         this.isDelete = isDelete;
         this.createdAt = createdAt;
     }
+
+    public static ProductEntity fromModel(Product product) {
+        return ProductEntity.builder()
+            .store(product.getStore())
+            .category(product.getCategory())
+            .name(product.getName())
+            .description(product.getDescription())
+            .price(product.getPrice())
+            .stock(product.getStock())
+            .isDelete(product.getIsDelete())
+            .createdAt(product.getCreatedAt())
+            .build();
+    }
+
+    public Product toModel() {
+        return Product.builder()
+            .id(this.id)
+            .store(this.store)
+            .category(this.category)
+            .name(this.name)
+            .description(this.description)
+            .price(this.price)
+            .stock(this.stock)
+            .isDelete(this.isDelete)
+            .build();
+    }
+
+
 }

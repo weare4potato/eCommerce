@@ -16,14 +16,5 @@ public class ProductResponse {
     private final Long storeId;
     private final Long categoryId;
 
-    public ProductResponse(ProductEntity entity) {
-        this.id = entity.getId();
-        this.name = entity.getName();
-        this.description = entity.getDescription();
-        this.price = entity.getPrice();
-        this.stock = entity.getStock();
-        this.storeId = entity.getStore().getId();
-        this.categoryId = entity.getCategory().getId();
-    }
 }
 
