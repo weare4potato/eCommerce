@@ -19,6 +19,7 @@ public class Member {
     private String password;
     private String phone;
     private UserRoleEnum role;
+    private boolean authStatus;
 
     public Member(
         Long id,
@@ -26,7 +27,8 @@ public class Member {
         String userName,
         String password,
         String phone,
-        UserRoleEnum role
+        UserRoleEnum role,
+        boolean authStatus
     ) {
         this.id = id;
         this.email = email;
@@ -34,12 +36,18 @@ public class Member {
         this.password = password;
         this.phone = phone;
         this.role = role;
+        this.authStatus = authStatus;
     }
 
     public void update(UpdateMemberDto dto) {
         this.userName = dto.getUsername();
         this.phone = dto.getPhone();
     }
+
+    public void confirm(){
+        this.authStatus = true;
+    }
+
 
     public void updatePassword(String newPassword){
         this.password = newPassword;
@@ -59,6 +67,10 @@ public class Member {
 
     public boolean isNotMatchMember(Long id){
         return !this.id.equals(id);
+    }
+
+    public boolean isNotAuthCheck(){
+        return !this.authStatus;
     }
 
 }

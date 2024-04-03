@@ -1,5 +1,6 @@
 package com.potato.ecommerce.domain.member.controller;
 
+import com.potato.ecommerce.domain.mail.service.MailService;
 import com.potato.ecommerce.domain.member.dto.ResponseMember;
 import com.potato.ecommerce.domain.member.dto.SignUpDto;
 import com.potato.ecommerce.domain.member.dto.SignInDto;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -34,17 +36,18 @@ public class MemberController {
     TODO : 로그아웃, 비밀번호 수정, 회원 탈퇴
      */
 
-
     private final MemberService memberService;
+    private final MailService mailService;
 
     @PostMapping("/signup")
     @Tag(name = "Member API")
     @Operation(summary = "회원가입")
-    public ResponseEntity<Void> signUp(
+    public ResponseEntity<String> signUp(
         @RequestBody @Validated SignUpDto dto
     ) {
         memberService.signUp(dto);
-        return ResponseEntity.status(201).build();
+        mailService.sendMail(dto.getEmail());
+        return ResponseEntity.status(201).body("이메일 인증을 해주세요");
     }
 
     @PostMapping("/signin")
@@ -117,5 +120,13 @@ public class MemberController {
 
     private String getSubject(HttpServletRequest request) {
         return (String) request.getAttribute("subject");
+    }
+
+    @GetMapping("/signup/confirm")
+    public ResponseEntity<String> updateAuth(
+        @RequestParam("email") String email
+    ){
+        memberService.confirmMember(email);
+        return ResponseEntity.status(201).body("인증이 완료 되었습니다.");
     }
 }

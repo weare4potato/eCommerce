@@ -9,7 +9,9 @@ import com.potato.ecommerce.domain.member.entity.UserRoleEnum;
 import com.potato.ecommerce.domain.member.model.Member;
 import com.potato.ecommerce.domain.member.repository.MemberRepository;
 import com.potato.ecommerce.global.exception.ExceptionMessage;
+import com.potato.ecommerce.global.exception.custom.AuthenticationFailedException;
 import com.potato.ecommerce.global.jwt.JwtUtil;
+import jakarta.security.auth.message.AuthException;
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -42,6 +44,10 @@ public class MemberService {
     public String signIn(SignInDto dto) {
         Member member = findBy(dto.getEmail());
 
+        if(member.isNotAuthCheck()){
+            throw new AuthenticationFailedException();
+        }
+
         validateMemberPassword(member, dto.getPassword());
 
         return jwtUtil.createToken(member.getEmail(), member.getRole());
@@ -67,6 +73,15 @@ public class MemberService {
         memberRepository.update(member);
         return member.createResponseDTO();
     }
+
+    @Transactional
+    public void confirmMember(String email){
+        Member member = findBy(email);
+        member.confirm();
+
+        memberRepository.update(member);
+    }
+
 
     public void passwordCheck(String subject, String password) {
         Member member = findBy(subject);
