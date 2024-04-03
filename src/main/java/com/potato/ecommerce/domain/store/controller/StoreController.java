@@ -1,5 +1,6 @@
 package com.potato.ecommerce.domain.store.controller;
 
+import com.potato.ecommerce.domain.product.dto.ProductListResponse;
 import com.potato.ecommerce.domain.store.dto.DeleteStoreRequest;
 import com.potato.ecommerce.domain.store.dto.LoginRequest;
 import com.potato.ecommerce.domain.store.dto.StoreRequest;
@@ -7,6 +8,7 @@ import com.potato.ecommerce.domain.store.dto.StoreResponse;
 import com.potato.ecommerce.domain.store.dto.UpdateStoreRequest;
 import com.potato.ecommerce.domain.store.dto.ValidatePasswordRequest;
 import com.potato.ecommerce.domain.store.service.StoreService;
+import com.potato.ecommerce.global.util.RestPage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -118,16 +121,16 @@ public class StoreController {
         return new ResponseEntity<>("상점 탈퇴 완료", HttpStatus.NO_CONTENT);
     }
 
-    /*todo
-    @PostMapping("/order/{orderId}/accept")
-    public ResponseEntity<OrderAcceptResponse> acceptOrder(
-        HttpServletRequest request,
-        @PathVariable Long orderId,
-        @RequestBody AcceptOrderRequest acceptOrderRequest
-    ){
+    @GetMapping("/{shopsId}/products")
+    public ResponseEntity<RestPage<ProductListResponse>> getProducts(
+        HttpServletRequest httpServletRequest,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size
+    ) {
+        String subject = getSubject(httpServletRequest);
 
+        return ResponseEntity.ok().body(storeService.getProducts(subject, page, size));
     }
-     */
 
     private String getSubject(HttpServletRequest request) {
         return (String) request.getAttribute("subject");

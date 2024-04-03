@@ -7,6 +7,7 @@ import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -15,7 +16,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.DialectOverride.Wheres;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.springframework.data.annotation.CreatedDate;
@@ -27,8 +27,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @EntityListeners(AuditingEntityListener.class)
 @SQLDelete(sql = "UPDATE stores SET is_deleted = true WHERE store_id = ?")
 @Where(clause = "is_deleted=false")
-@Table(name = "stores")
-/*todo 삭제된 entity 또한 추가하려면 @filter, @filterDef 사용*/
+@Table(name = "stores", indexes = @Index(name = "idx_business_number", columnList = "business_number"))
 public class StoreEntity {
 
     @Id
@@ -59,7 +58,7 @@ public class StoreEntity {
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createdAt;
 
-    private boolean isDeleted = Boolean.FALSE;
+    private final boolean isDeleted = Boolean.FALSE;
 
     @Builder
     private StoreEntity(Long id, String email, String password, String name, String description,

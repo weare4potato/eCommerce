@@ -1,5 +1,7 @@
 package com.potato.ecommerce.domain.store.service;
 
+import com.potato.ecommerce.domain.product.dto.ProductListResponse;
+import com.potato.ecommerce.domain.product.repository.ProductQueryRepository;
 import com.potato.ecommerce.domain.revenue.model.Revenue;
 import com.potato.ecommerce.domain.revenue.repository.RevenueRepository;
 import com.potato.ecommerce.domain.store.dto.DeleteStoreRequest;
@@ -11,6 +13,7 @@ import com.potato.ecommerce.domain.store.dto.ValidatePasswordRequest;
 import com.potato.ecommerce.domain.store.model.Store;
 import com.potato.ecommerce.domain.store.repository.StoreRepository;
 import com.potato.ecommerce.global.jwt.JwtUtil;
+import com.potato.ecommerce.global.util.RestPage;
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +30,7 @@ public class StoreService {
 
     private final StoreRepository storeRepository;
     private final RevenueRepository revenueRepository;
+    private final ProductQueryRepository productQueryRepository;
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
 
@@ -130,6 +134,10 @@ public class StoreService {
         }
 
         storeRepository.delete(store);
+    }
+
+    public RestPage<ProductListResponse> getProducts(String subject, int page, int size) {
+        return productQueryRepository.getProducts(subject, page, size);
     }
 
     private void validationBusinessNumber(String businessNumber) {
