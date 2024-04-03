@@ -2,23 +2,28 @@ package com.potato.ecommerce.domain.product.service;
 
 import com.potato.ecommerce.domain.category.entity.CategoryEntity;
 import com.potato.ecommerce.domain.category.repository.CategoryRepository;
+import com.potato.ecommerce.domain.product.dto.ProductDetailResponse;
 import com.potato.ecommerce.domain.product.dto.ProductRequest;
 import com.potato.ecommerce.domain.product.dto.ProductResponse;
 import com.potato.ecommerce.domain.product.dto.ProductSimpleResponse;
+import com.potato.ecommerce.domain.product.dto.ProductUpdateRequest;
+import com.potato.ecommerce.domain.product.dto.ShopProductResponse;
 import com.potato.ecommerce.domain.product.entity.ProductEntity;
 import com.potato.ecommerce.domain.product.model.Product;
 import com.potato.ecommerce.domain.product.repository.ProductRepository;
 import com.potato.ecommerce.domain.store.entity.StoreEntity;
 import com.potato.ecommerce.domain.store.model.Store;
 import com.potato.ecommerce.domain.store.repository.StoreRepository;
+import com.potato.ecommerce.global.util.RestPage;
+import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
 
 @Service
 @Transactional
@@ -60,17 +65,82 @@ public class ProductService {
             product.getCategory().getId());
     }
 
-    public List<ProductSimpleResponse> findAllProductSimples() {
-        List<ProductEntity> productEntities = productRepository.findAll();
-        return productEntities.stream()
+    public RestPage<ProductSimpleResponse> findAllProducts(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<ProductEntity> productPage = productRepository.findAll(pageRequest);
+
+        List<ProductSimpleResponse> productSimpleResponses = productPage.getContent().stream()
             .map(entity -> new ProductSimpleResponse(entity.getName(), entity.getPrice()))
             .collect(Collectors.toList());
+
+        return new RestPage<>(productSimpleResponses, page, size, productPage.getTotalElements());
     }
 
-//    @GetMapping
-//    public ResponseEntity<List<ProductResponse>> getAllProducts() {
-//        List<ProductResponse> productResponses = productService.findAllProducts();
-//        return ResponseEntity.ok(productResponses);
-//    }
+    public ProductDetailResponse findProductDetail(Long productId) {
+        ProductEntity productEntity = productRepository.findById(productId)
+            .orElseThrow(() -> new IllegalArgumentException("상품을 찾을 수 없습니다."));
 
+        CategoryEntity category = productEntity.getCategory();
+        String oneDepthName = category.getOneDepth().toString();
+        String twoDepthName = category.getTwoDepth().toString();
+        String threeDepthName = category.getThreeDepth().toString();
+
+        return new ProductDetailResponse(
+            oneDepthName,
+            twoDepthName,
+            threeDepthName,
+            productEntity.getName(),
+            productEntity.getDescription(),
+            productEntity.getPrice().toString()
+        );
+    }
+
+    public RestPage<ShopProductResponse> findProductsByShopId(Long shopId, int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<ProductEntity> productsPage = productRepository.findByStoreId(shopId, pageRequest);
+
+        Page<ShopProductResponse> shopProductResponsesPage = productsPage.map(product -> new ShopProductResponse(
+            product.getName(),
+            product.getPrice()));
+
+        return new RestPage<>(shopProductResponsesPage);
+    }
+
+    public RestPage<ProductSimpleResponse> findProductsByCategoryId(Long categoryId, int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<ProductEntity> productPage = productRepository.findByCategoryId(categoryId, pageRequest);
+
+        Page<ProductSimpleResponse> productSimpleResponsesPage = productPage.map(entity -> new ProductSimpleResponse(
+            entity.getName(),
+            entity.getPrice()));
+
+        return new RestPage<>(productSimpleResponsesPage);
+    }
+
+    @Transactional
+    public ProductResponse updateProduct(Long productId, ProductUpdateRequest updateRequest) {
+        ProductEntity productEntity = productRepository.findById(productId)
+            .orElseThrow(() -> new EntityNotFoundException("상품을 찾을 수 없습니다."));
+
+        CategoryEntity categoryEntity = categoryRepository.findById(updateRequest.getCategoryId())
+            .orElseThrow(() -> new EntityNotFoundException("카테고리를 찾을 수 없습니다."));
+
+        Product product = Product.fromEntity(productEntity);
+
+        product.updateFromRequest(updateRequest);
+        product.updateCategory(categoryEntity);
+
+        ProductEntity updatedProductEntity = product.toEntity();
+        productRepository.save(updatedProductEntity);
+
+        return new ProductResponse(product);
+    }
+
+    public void softDeleteProduct(Long productId) {
+        ProductEntity productEntity = productRepository.findById(productId)
+            .orElseThrow(() -> new EntityNotFoundException("상품을 찾을 수 없습니다."));
+
+        Product product = Product.fromEntity(productEntity);
+        productRepository.delete(product.toEntity());
+    }
 }
