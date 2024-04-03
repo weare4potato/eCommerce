@@ -47,6 +47,7 @@ public class HistoryService {
         }
     }
 
+    @Transactional(readOnly = true)
     public List<HistoryInfo> getHistory(
         Long orderId
     ) {

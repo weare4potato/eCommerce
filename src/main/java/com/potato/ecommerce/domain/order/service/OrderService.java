@@ -63,6 +63,7 @@ public class OrderService {
         return OrderInfo.fromEntity(saved);
     }
 
+    @Transactional(readOnly = true)
     public OrderInfoWithHistory getOrder(Long orderId) {
         OrderEntity orderEntity = orderRepository.findById(orderId)
             .orElseThrow(() -> new EntityNotFoundException(
@@ -73,6 +74,7 @@ public class OrderService {
         return OrderInfoWithHistory.fromEntity(orderEntity, history);
     }
 
+    @Transactional(readOnly = true)
     public List<OrderInfo> getOrders(){
         return orderRepository.findAll().stream().map(OrderInfo::fromEntity).toList();
     }
