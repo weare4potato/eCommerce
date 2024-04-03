@@ -33,13 +33,14 @@ import org.springframework.data.annotation.CreatedDate;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SQLDelete(sql = "UPDATE products SET is_deleted = true WHERE product_id = ?")
+@SQLDelete(sql = "UPDATE products SET is_delete = true WHERE product_id = ?")
 @Where(clause = "is_delete=false")
 @Table(name = "products")
 public class ProductEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "product_id")
     private Long id;
 
     @ManyToOne
