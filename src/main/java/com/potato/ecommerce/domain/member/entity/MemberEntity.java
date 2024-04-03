@@ -53,6 +53,8 @@ public class MemberEntity {
     @Enumerated(EnumType.STRING)
     private UserRoleEnum role;
 
+    private boolean authStatus = false;
+
 
     public static MemberEntity fromModel(Member member) {
         return MemberEntity.builder()
@@ -62,6 +64,7 @@ public class MemberEntity {
             .password(member.getPassword())
             .phone(member.getPhone())
             .role(member.getRole())
+            .authStatus(member.isAuthStatus())
             .build();
     }
 
@@ -73,6 +76,7 @@ public class MemberEntity {
             .password(this.password)
             .phone(this.phone)
             .role(this.role)
+            .authStatus(this.authStatus)
             .build();
     }
 
