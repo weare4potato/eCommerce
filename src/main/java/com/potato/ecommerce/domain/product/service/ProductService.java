@@ -26,7 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ProductService {
 
@@ -136,6 +136,7 @@ public class ProductService {
         return new ProductResponse(product);
     }
 
+    @Transactional
     public void softDeleteProduct(Long productId) {
         ProductEntity productEntity = productRepository.findById(productId)
             .orElseThrow(() -> new EntityNotFoundException("상품을 찾을 수 없습니다."));
