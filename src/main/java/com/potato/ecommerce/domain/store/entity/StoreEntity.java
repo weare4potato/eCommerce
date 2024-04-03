@@ -15,6 +15,9 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DialectOverride.Wheres;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -22,7 +25,10 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
+@SQLDelete(sql = "UPDATE stores SET is_deleted = true WHERE store_id = ?")
+@Where(clause = "is_deleted=false")
 @Table(name = "stores")
+/*todo 삭제된 entity 또한 추가하려면 @filter, @filterDef 사용*/
 public class StoreEntity {
 
     @Id
@@ -52,6 +58,8 @@ public class StoreEntity {
     @Column(updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createdAt;
+
+    private boolean isDeleted = Boolean.FALSE;
 
     @Builder
     private StoreEntity(Long id, String email, String password, String name, String description,
