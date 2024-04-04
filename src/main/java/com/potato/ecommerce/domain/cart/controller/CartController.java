@@ -3,6 +3,7 @@ package com.potato.ecommerce.domain.cart.controller;
 import com.potato.ecommerce.domain.cart.controller.dto.response.CartInfoResponseDto;
 import com.potato.ecommerce.domain.cart.dto.CartRequest;
 import com.potato.ecommerce.domain.cart.service.CartService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/carts")
 @RequiredArgsConstructor
+@Tag(name = "Cart API", description = "Cart API 입니다.")
 public class CartController {
 
     private final CartService cartService;
