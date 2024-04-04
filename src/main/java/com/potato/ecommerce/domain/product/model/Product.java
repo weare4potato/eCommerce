@@ -22,7 +22,7 @@ public class Product {
     private String description;
     private Integer price;
     private Integer stock;
-    private Boolean isDeleted;
+    private Boolean isDelete;
     private LocalDateTime createdAt;
 
     public ProductEntity toEntity() {
@@ -34,7 +34,7 @@ public class Product {
             .description(description)
             .price(price)
             .stock(stock)
-            .isDeleted(isDeleted)
+            .isDelete(isDelete)
             .build();
     }
 
@@ -47,14 +47,14 @@ public class Product {
             .description(entity.getDescription())
             .price(entity.getPrice())
             .stock(entity.getStock())
-            .isDeleted(entity.getIsDeleted())
+            .isDelete(entity.getIsDelete())
             .build();
     }
 
     @Builder
     public Product(Long id, StoreEntity store, CategoryEntity category, String name,
         String description,
-        Integer price, Integer stock, Boolean isDeleted, LocalDateTime createdAt) {
+        Integer price, Integer stock, Boolean isDelete, LocalDateTime createdAt) {
         this.id = id;
         this.store = store;
         this.category = category;
@@ -62,7 +62,7 @@ public class Product {
         this.description = description;
         this.price = price;
         this.stock = stock;
-        this.isDeleted = isDeleted;
+        this.isDelete = isDelete;
         this.createdAt = createdAt;
     }
 
