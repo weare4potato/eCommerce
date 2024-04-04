@@ -1,7 +1,7 @@
 package com.potato.ecommerce.domain.cart.entity;
 
-import com.potato.ecommerce.domain.cartProduct.entity.CartProductEntity;
 import com.potato.ecommerce.domain.member.entity.MemberEntity;
+import com.potato.ecommerce.domain.product.entity.ProductEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -12,13 +12,19 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Min;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+
 @Table(name = "cart")
+@Entity
 public class CartEntity {
 
     @Id
@@ -26,17 +32,33 @@ public class CartEntity {
     @Column(name = "cart_id")
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private MemberEntity member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cart_product_id")
-    private CartProductEntity cartProduct;
+    @JoinColumn(name = "product_id")
+    private ProductEntity product;
+
+    @Min(value = 0)
+    @Column(name = "quantity")
+    private Integer quantity;
 
     @Builder
-    private CartEntity(MemberEntity member, CartProductEntity cartProduct) {
+    private CartEntity(MemberEntity member,
+        ProductEntity product,
+        Integer quantity
+    ) {
         this.member = member;
-        this.cartProduct = cartProduct;
+        this.product = product;
+        this.quantity = quantity;
+    }
+
+    public void addQuantity(Integer quantity) {
+        this.quantity += quantity;
+    }
+
+    public void updateQuantity(Integer quantity) {
+        this.quantity = quantity;
     }
 }
