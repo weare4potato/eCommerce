@@ -34,18 +34,16 @@ public class ProductController {
     private final JwtUtil jwtUtil;
 
     @PostMapping("/products")
-    public ResponseEntity<Void> createProduct(@Valid @RequestBody ProductRequest requestDto, HttpServletRequest request) {
-        String token = jwtUtil.getTokenFromRequest(request);
-        if (!jwtUtil.validateToken(token)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+    public ResponseEntity<Void> createProduct(
+        @Valid @RequestBody ProductRequest requestDto, HttpServletRequest request
+    ) {
+        String subject = (String) request.getAttribute("subject");
 
-        String sellerBusinessNumber = jwtUtil.getUserInfoFromToken(token).getSubject();
-        productService.createProduct(sellerBusinessNumber, requestDto);
+        productService.createProduct(subject, requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @GetMapping("/products")
+    @GetMapping("/products/all")
     public ResponseEntity<RestPage<ProductSimpleResponse>> getAllProducts(
         @RequestParam(value = "page", defaultValue = "0") int page,
         @RequestParam(value = "size", defaultValue = "10") int size) {
@@ -54,7 +52,7 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
-    @GetMapping("/products/{productId}")
+    @GetMapping("/products/details/{productId}")
     public ResponseEntity<ProductDetailResponse> getProductDetail(@PathVariable Long productId) {
         ProductDetailResponse productDetail = productService.findProductDetail(productId);
         return ResponseEntity.ok(productDetail);
@@ -86,10 +84,7 @@ public class ProductController {
         @Valid @RequestBody ProductUpdateRequest updateRequest,
         HttpServletRequest request) {
 
-        String token = jwtUtil.getTokenFromRequest(request);
-        if (!jwtUtil.validateToken(token)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+        String subject = (String) request.getAttribute("subject");
 
         ProductResponse updatedProduct = productService.updateProduct(productId, updateRequest);
         return ResponseEntity.ok().body(updatedProduct);
@@ -100,10 +95,7 @@ public class ProductController {
         @PathVariable Long productId,
         HttpServletRequest request) {
 
-        String token = jwtUtil.getTokenFromRequest(request);
-        if (!jwtUtil.validateToken(token)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+        String subject = (String) request.getAttribute("subject");
 
         productService.softDeleteProduct(productId);
         return ResponseEntity.ok().body(Map.of("message", "상품 삭제 완료"));
