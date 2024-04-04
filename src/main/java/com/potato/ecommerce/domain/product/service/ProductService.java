@@ -49,7 +49,7 @@ public class ProductService {
             .description(requestDto.getDescription())
             .price(requestDto.getPrice())
             .stock(requestDto.getStock())
-            .isDelete(false)
+            .isDeleted(false)
             .createdAt(LocalDateTime.now())
             .build();
 

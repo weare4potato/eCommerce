@@ -29,8 +29,8 @@ import org.springframework.data.annotation.CreatedDate;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SQLDelete(sql = "UPDATE products SET is_delete = true WHERE product_id = ?")
-@Where(clause = "is_delete=false")
+@SQLDelete(sql = "UPDATE products SET is_deleted = true WHERE product_id = ?")
+@Where(clause = "is_deleted=false")
 @Table(name = "products")
 public class ProductEntity {
 
@@ -61,7 +61,7 @@ public class ProductEntity {
     private Integer stock;
 
     @NotNull
-    private Boolean isDelete;
+    private Boolean isDeleted = false;
 
     @CreatedDate
     @Column(updatable = false)
@@ -71,7 +71,7 @@ public class ProductEntity {
     @Builder
     private ProductEntity(Long id, StoreEntity store, CategoryEntity category, String name,
         String description,
-        Integer price, Integer stock, Boolean isDelete, LocalDateTime createdAt) {
+        Integer price, Integer stock, Boolean isDeleted, LocalDateTime createdAt) {
         this.id = id;
         this.store = store;
         this.category = category;
@@ -79,7 +79,7 @@ public class ProductEntity {
         this.description = description;
         this.price = price;
         this.stock = stock;
-        this.isDelete = isDelete;
+        this.isDeleted = isDeleted;
         this.createdAt = createdAt;
     }
 
@@ -91,7 +91,7 @@ public class ProductEntity {
             .description(product.getDescription())
             .price(product.getPrice())
             .stock(product.getStock())
-            .isDelete(product.getIsDelete())
+            .isDeleted(product.getIsDeleted())
             .createdAt(product.getCreatedAt())
             .build();
     }
@@ -105,7 +105,7 @@ public class ProductEntity {
             .description(this.description)
             .price(this.price)
             .stock(this.stock)
-            .isDelete(this.isDelete)
+            .isDeleted(this.isDeleted)
             .build();
     }
 
