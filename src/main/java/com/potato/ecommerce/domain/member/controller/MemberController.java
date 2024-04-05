@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MemberController {
 
     /*
-    TODO : 로그아웃, 비밀번호 수정, 회원 탈퇴
+    TODO : 로그아웃, 회원 탈퇴
      */
 
     private final MemberService memberService;
