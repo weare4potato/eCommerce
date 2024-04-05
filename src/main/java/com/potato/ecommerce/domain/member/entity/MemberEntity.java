@@ -55,7 +55,7 @@ public class MemberEntity {
     @Enumerated(EnumType.STRING)
     private UserRoleEnum role;
 
-    private boolean authStatus = false;
+    private boolean authStatus;
 
 
     public static MemberEntity fromModel(Member member) {

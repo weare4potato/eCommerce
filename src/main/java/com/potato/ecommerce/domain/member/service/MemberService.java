@@ -35,6 +35,7 @@ public class MemberService {
             .userName(dto.getUsername())
             .phone(dto.getPhone())
             .role(UserRoleEnum.USER)
+            .authStatus(false)
             .build();
 
         memberRepository.save(member);
