@@ -37,6 +37,8 @@ public class HistoryService {
                 .orElseThrow(() -> new EntityNotFoundException(
                     "[ERROR] 유효하지 않은 상품 입니다. 조회 상품 id: %s".formatted(dto.getProductId())));
 
+            productEntity.removeStock(dto.getQuantity());
+
             HistoryEntity historyEntity = HistoryEntity.builder()
                 .order(orderEntity)
                 .product(productEntity)
@@ -54,5 +56,18 @@ public class HistoryService {
         return historyRepository.findAllByOrderId(orderId).stream()
             .map(HistoryInfo::fromEntity)
             .toList();
+    }
+
+    public void deleteHistory(
+        Long orderId
+    ) {
+        List<HistoryEntity> historyEntityList = historyRepository.findAllByOrderId(orderId);
+
+        for (HistoryEntity historyEntity : historyEntityList) {
+
+            historyEntity.cancel();
+        }
+
+        historyRepository.deleteAll(historyEntityList);
     }
 }
