@@ -42,14 +42,12 @@ public class OrderService {
         List<OrderProduct> orderProducts
     ) {
 
-        // member find
         MemberEntity memberEntity = memberJpaRepository.findById(memberId)
             .orElseThrow(() ->
                 new EntityNotFoundException(
                     "[ERROR] 유효하지 않은 사용자 입니다. 조회 사용자 id: %s".formatted(memberId))
             );
 
-        // receiver find
         ReceiverEntity receiverEntity = receiverJpaRepository.findById(receiverId)
             .orElseThrow(() ->
                 new EntityNotFoundException(
@@ -66,7 +64,6 @@ public class OrderService {
 
         OrderEntity saved = orderRepository.save(orderEntity);
 
-        // 주문 완료시, 상품 재고 -
         historyService.createHistory(saved.getId(), orderProducts);
 
         return OrderInfo.fromEntity(saved);
@@ -83,13 +80,6 @@ public class OrderService {
         return OrderInfoWithHistory.fromEntity(orderEntity, history);
     }
 
-//    @Transactional(readOnly = true)
-//    public List<OrderInfo> getOrders() {
-//        return orderRepository.findAll().stream().map(OrderInfo::fromEntity).toList();
-//    }
-
-    // TODO : 주문 내역 페이징 처리하기
-    @Transactional(readOnly = true)
     public RestPage<OrderList> getOrders(
         String subject,
         int page,
@@ -117,7 +107,6 @@ public class OrderService {
 
         OrderEntity completedOrder = orderEntity.cancel();
 
-        // 주문 취소시, 상품재고 +
         historyService.deleteHistory(orderId);
 
         return OrderInfo.fromEntity(orderRepository.saveAndFlush(completedOrder));
