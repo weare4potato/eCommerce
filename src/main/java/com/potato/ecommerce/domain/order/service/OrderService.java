@@ -5,16 +5,21 @@ import com.potato.ecommerce.domain.member.repository.MemberJpaRepository;
 import com.potato.ecommerce.domain.order.dto.HistoryInfo;
 import com.potato.ecommerce.domain.order.dto.OrderInfo;
 import com.potato.ecommerce.domain.order.dto.OrderInfoWithHistory;
+import com.potato.ecommerce.domain.order.dto.OrderList;
 import com.potato.ecommerce.domain.order.dto.OrderProduct;
 import com.potato.ecommerce.domain.order.entity.OrderEntity;
+import com.potato.ecommerce.domain.order.repository.OrderQueryRepository;
 import com.potato.ecommerce.domain.order.repository.OrderRepository;
 import com.potato.ecommerce.domain.payment.vo.PaymentType;
 import com.potato.ecommerce.domain.receiver.entity.ReceiverEntity;
 import com.potato.ecommerce.domain.receiver.repository.ReceiverJpaRepository;
+import com.potato.ecommerce.global.util.RestPage;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +31,7 @@ public class OrderService {
     private final MemberJpaRepository memberJpaRepository;
     private final ReceiverJpaRepository receiverJpaRepository;
     private final OrderRepository orderRepository;
+    private final OrderQueryRepository orderQueryRepository;
     private final HistoryService historyService;
 
     public OrderInfo createOrder(
@@ -77,11 +83,21 @@ public class OrderService {
         return OrderInfoWithHistory.fromEntity(orderEntity, history);
     }
 
+//    @Transactional(readOnly = true)
+//    public List<OrderInfo> getOrders() {
+//        return orderRepository.findAll().stream().map(OrderInfo::fromEntity).toList();
+//    }
+
+    // TODO : 주문 내역 페이징 처리하기
     @Transactional(readOnly = true)
-    public List<OrderInfo> getOrders() {
-        return orderRepository.findAll().stream().map(OrderInfo::fromEntity).toList();
-        // TODO : 주문 내역 페이징 처리하기
+    public RestPage<OrderList> getOrders(
+        String subject,
+        int page,
+        int size
+    ) {
+        return orderQueryRepository.getOrders(subject, page, size);
     }
+
 
     public OrderInfo completeOrder(Long orderId) {
         OrderEntity orderEntity = orderRepository.findById(orderId)
