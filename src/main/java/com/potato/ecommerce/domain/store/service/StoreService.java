@@ -17,6 +17,7 @@ import com.potato.ecommerce.global.util.RestPage;
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -136,6 +137,7 @@ public class StoreService {
         storeRepository.delete(store);
     }
 
+    @Cacheable(cacheNames = "getProducts", key = "#subject", cacheManager = "rcm")
     public RestPage<ProductListResponse> getProducts(String subject, int page, int size) {
         return productQueryRepository.getProducts(subject, page, size);
     }
