@@ -1,4 +1,4 @@
-package com.potato.ecommerce.global.config.redis;
+package com.potato.ecommerce.global.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
