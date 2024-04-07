@@ -2,6 +2,7 @@ package com.potato.ecommerce.domain.store.repository;
 
 import com.potato.ecommerce.domain.store.entity.StoreEntity;
 import com.potato.ecommerce.domain.store.model.Store;
+import jakarta.persistence.EntityNotFoundException;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -32,14 +33,14 @@ public class StoreRepositoryImpl implements StoreRepository {
     @Override
     public Store findByEmail(String email) {
         return jpaStoreRepository.findByEmail(email).orElseThrow(
-            () -> new DataIntegrityViolationException("등록되지 않은 이메일입니다.")
+            () -> new EntityNotFoundException("등록되지 않은 이메일입니다.")
         ).toModel();
     }
 
     @Override
     public Store findBySubject(String subject) {
         return jpaStoreRepository.findByBusinessNumber(subject).orElseThrow(
-            () -> new NoSuchElementException("상점이 존재하지 않습니다.")
+            () -> new EntityNotFoundException("상점이 존재하지 않습니다.")
         ).toModel();
     }
 }
