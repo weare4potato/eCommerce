@@ -1,6 +1,7 @@
 package com.potato.ecommerce.global.exception;
 
 import com.potato.ecommerce.global.exception.custom.AuthenticationFailedException;
+import com.potato.ecommerce.global.exception.custom.OutOfStockException;
 import com.potato.ecommerce.global.exception.dto.ExceptionDto;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ValidationException;
@@ -23,7 +24,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({
         EntityNotFoundException.class,
         AuthenticationFailedException.class,
-        ValidationException.class
+        ValidationException.class,
+        OutOfStockException.class
     })
     public ResponseEntity<ExceptionDto> badRequestExceptionHandler(RuntimeException e) {
         return createResponse(HttpStatus.BAD_REQUEST, e.getMessage());

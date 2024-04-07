@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @RequiredArgsConstructor
 public class OrderService {
+
     private final MemberJpaRepository memberJpaRepository;
     private final ReceiverJpaRepository receiverJpaRepository;
     private final OrderRepository orderRepository;
@@ -59,7 +60,9 @@ public class OrderService {
 
         OrderEntity saved = orderRepository.save(orderEntity);
 
+        // 주문 완료시, 상품 재고 -
         historyService.createHistory(saved.getId(), orderProducts);
+
         return OrderInfo.fromEntity(saved);
     }
 
@@ -75,11 +78,12 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
-    public List<OrderInfo> getOrders(){
+    public List<OrderInfo> getOrders() {
         return orderRepository.findAll().stream().map(OrderInfo::fromEntity).toList();
+        // TODO : 주문 내역 페이징 처리하기
     }
 
-    public OrderInfo completeOrder(Long orderId){
+    public OrderInfo completeOrder(Long orderId) {
         OrderEntity orderEntity = orderRepository.findById(orderId)
             .orElseThrow(() -> new EntityNotFoundException(
                 "[ERROR] 유효하지 않은 주문 입니다. 조회 주문 id: %s".formatted(orderId))
@@ -96,6 +100,10 @@ public class OrderService {
             );
 
         OrderEntity completedOrder = orderEntity.cancel();
+
+        // 주문 취소시, 상품재고 +
+        historyService.deleteHistory(orderId);
+
         return OrderInfo.fromEntity(orderRepository.saveAndFlush(completedOrder));
     }
 }
