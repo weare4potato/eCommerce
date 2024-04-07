@@ -32,13 +32,13 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/shops")
+@Tag(name = "Store API")
 @RequiredArgsConstructor
 public class StoreController {
 
     private final StoreService storeService;
 
     @PostMapping("/signup")
-    @Tag(name = "Store API")
     @Operation(summary = "상점 등록", description = "상점 등록입니다.")
     public ResponseEntity<Void> signup(@Valid @RequestBody StoreRequest storeRequest) {
         storeService.signup(storeRequest);
@@ -47,7 +47,6 @@ public class StoreController {
     }
 
     @PostMapping("/signin")
-    @Tag(name = "Store API")
     @Operation(summary = "상점 로그인", description = "상점 로그인입니다.")
     public ResponseEntity<Void> signin(@Valid @RequestBody LoginRequest loginRequest) {
         String token = storeService.signin(loginRequest);
@@ -65,21 +64,19 @@ public class StoreController {
     }
 
     @GetMapping
-    @Tag(name = "Store API")
     @Operation(summary = "판매자 상점 조회", description = "판매자 상점 조회입니다.")
-    public ResponseEntity<StoreResponse> getStores(
+    public ResponseEntity<StoreResponse> getStore(
         HttpServletRequest request
     ) {
         String subject = getSubject(request);
         log.info(subject);
 
-        StoreResponse storeResponse = storeService.getStores(subject);
+        StoreResponse storeResponse = storeService.getStore(subject);
 
         return ResponseEntity.ok().body(storeResponse);
     }
 
     @PutMapping
-    @Tag(name = "Store API")
     @Operation(summary = "상점 수정")
     public ResponseEntity<StoreResponse> updateStore(
         HttpServletRequest request,
@@ -93,7 +90,6 @@ public class StoreController {
     }
 
     @PostMapping("/password")
-    @Tag(name = "Store API")
     @Operation(summary = "비밀번호 확인")
     public ResponseEntity<String> validatePassword(
         HttpServletRequest request,
@@ -108,7 +104,6 @@ public class StoreController {
     }
 
     @DeleteMapping
-    @Tag(name = "Store API")
     @Operation(summary = "상점 탈퇴")
     public ResponseEntity<String> deleteStore(
         HttpServletRequest request,
@@ -122,6 +117,7 @@ public class StoreController {
     }
 
     @GetMapping("/{shopsId}/products")
+    @Operation(summary = "상점 상품 조회")
     public ResponseEntity<RestPage<ProductListResponse>> getProducts(
         HttpServletRequest httpServletRequest,
         @RequestParam(defaultValue = "0") int page,

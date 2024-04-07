@@ -71,7 +71,7 @@ public class StoreService {
         return jwtUtil.createSellerToken(store.getBusinessNumber());
     }
 
-    public StoreResponse getStores(String subject) {
+    public StoreResponse getStore(String subject) {
         Store store = findBySubject(subject);
 
         return StoreResponse.builder()
