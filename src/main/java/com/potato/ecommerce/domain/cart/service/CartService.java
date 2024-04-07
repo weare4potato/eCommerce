@@ -27,12 +27,10 @@ public class CartService {
         Long productId,
         Integer quantity
     ) {
-        // member find
         MemberEntity memberEntity = memberJpaRepository.findById(memberId)
             .orElseThrow(() -> new EntityNotFoundException(
                 "[ERROR] 유효하지 않은 사용자 입니다."));
 
-        // product find
         ProductEntity productEntity = productRepository.findById(productId)
             .orElseThrow(() -> new EntityNotFoundException(
                 "[ERROR] 유효하지 않은 상품 입니다."));
@@ -58,7 +56,6 @@ public class CartService {
         cartEntity.addQuantity(quantity);
     }
 
-    // 장바구니 상품 수량 변경
     public void updateCart(
         Long memberId,
         Long cartId,
@@ -69,28 +66,25 @@ public class CartService {
             .orElseThrow(() -> new EntityNotFoundException(
                 "[ERROR] 유효하지 않은 장바구니 입니다."));
 
-        // 수량 update
         cartEntity.updateQuantity(quantity);
     }
 
-    // 장바구니 상품 삭제
     public void deleteCart(
-        Long memberId,
+        String email,
         Long cartId
     ) {
         // member 가 가진 cart find
-        CartEntity cartEntity = cartRepository.findByMemberIdAndId(memberId, cartId)
+        CartEntity cartEntity = cartRepository.findByMemberEmailAndId(email, cartId)
             .orElseThrow(() -> new EntityNotFoundException(
                 "[ERROR] 유효하지 않은 장바구니 입니다."));
 
         cartRepository.delete(cartEntity);
     }
 
-    // 장바구니 목록 조회
     @Transactional(readOnly = true)
-    public List<CartInfo> getCarts(Long memberId) {
+    public List<CartInfo> getCarts(String email) {
 
-        return cartRepository.findAllByMember_Id(memberId).stream().map(CartInfo::fromEntity)
+        return cartRepository.findAllByMember_Email(email).stream().map(CartInfo::fromEntity)
             .toList();
     }
 }
