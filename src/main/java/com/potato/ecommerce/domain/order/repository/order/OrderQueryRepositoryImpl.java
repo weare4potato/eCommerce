@@ -1,4 +1,4 @@
-package com.potato.ecommerce.domain.order.repository;
+package com.potato.ecommerce.domain.order.repository.order;
 
 import static com.potato.ecommerce.domain.order.entity.QOrderEntity.orderEntity;
 import static com.querydsl.core.types.Projections.fields;
