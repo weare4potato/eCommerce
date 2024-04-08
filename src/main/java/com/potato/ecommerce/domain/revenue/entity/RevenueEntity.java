@@ -29,12 +29,4 @@ public class RevenueEntity {
     private RevenueEntity(String number) {
         this.number = number;
     }
-
-    public static RevenueEntity fromModel(Revenue revenue) {
-        return new RevenueEntity(revenue.getNumber());
-    }
-
-    public Revenue toModel() {
-        return new Revenue(id, number, isUsed);
-    }
 }

@@ -32,6 +32,19 @@ public class Store {
         this.createdAt = createdAt;
     }
 
+    public static Store fromEntity(StoreEntity storeEntity){
+        return Store.builder()
+            .id(storeEntity.getId())
+            .email(storeEntity.getEmail())
+            .password(storeEntity.getPassword())
+            .name(storeEntity.getName())
+            .description(storeEntity.getDescription())
+            .phone(storeEntity.getPhone())
+            .businessNumber(storeEntity.getBusinessNumber())
+            .createdAt(storeEntity.getCreatedAt())
+            .build();
+    }
+
     public StoreEntity toEntity() {
         return StoreEntity.builder()
             .id(id)
@@ -41,7 +54,6 @@ public class Store {
             .description(description)
             .phone(phone)
             .businessNumber(businessNumber)
-            .createdAt(createdAt)
             .build();
     }
 

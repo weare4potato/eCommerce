@@ -1,5 +1,15 @@
 package com.potato.ecommerce.domain.store.controller;
 
+import static com.potato.ecommerce.domain.store.message.StoreMessage.STORE_API;
+import static com.potato.ecommerce.domain.store.message.StoreMessage.STORE_DELETE;
+import static com.potato.ecommerce.domain.store.message.StoreMessage.STORE_DELETE_SUCCESS;
+import static com.potato.ecommerce.domain.store.message.StoreMessage.STORE_INFO;
+import static com.potato.ecommerce.domain.store.message.StoreMessage.STORE_PASSWORD_VALIDATION;
+import static com.potato.ecommerce.domain.store.message.StoreMessage.STORE_PASSWORD_VALIDATION_SUCCESS;
+import static com.potato.ecommerce.domain.store.message.StoreMessage.STORE_SIGN_IN;
+import static com.potato.ecommerce.domain.store.message.StoreMessage.STORE_SIGN_UP;
+import static com.potato.ecommerce.domain.store.message.StoreMessage.STORE_UPDATE;
+
 import com.potato.ecommerce.domain.product.dto.ProductListResponse;
 import com.potato.ecommerce.domain.store.dto.DeleteStoreRequest;
 import com.potato.ecommerce.domain.store.dto.LoginRequest;
@@ -32,22 +42,22 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/shops")
-@Tag(name = "Store API")
+@Tag(name = STORE_API)
 @RequiredArgsConstructor
 public class StoreController {
 
     private final StoreService storeService;
 
     @PostMapping("/signup")
-    @Operation(summary = "상점 등록", description = "상점 등록입니다.")
+    @Operation(summary = STORE_SIGN_UP)
     public ResponseEntity<Void> signup(@Valid @RequestBody StoreRequest storeRequest) {
         storeService.signup(storeRequest);
 
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PostMapping("/signin")
-    @Operation(summary = "상점 로그인", description = "상점 로그인입니다.")
+    @Operation(summary = STORE_SIGN_IN)
     public ResponseEntity<Void> signin(@Valid @RequestBody LoginRequest loginRequest) {
         String token = storeService.signin(loginRequest);
         ResponseCookie cookie = ResponseCookie
@@ -58,14 +68,14 @@ public class StoreController {
             .maxAge(Duration.ofMinutes(30L))
             .build();
 
-        return ResponseEntity.ok()
+        return ResponseEntity.status(HttpStatus.OK)
             .header(HttpHeaders.SET_COOKIE, cookie.toString())
             .build();
     }
 
     @GetMapping
-    @Operation(summary = "판매자 상점 조회", description = "판매자 상점 조회입니다.")
-    public ResponseEntity<StoreResponse> getStore(
+    @Operation(summary = STORE_INFO)
+    public ResponseEntity<StoreResponse> getStores(
         HttpServletRequest request
     ) {
         String subject = getSubject(request);
@@ -73,11 +83,11 @@ public class StoreController {
 
         StoreResponse storeResponse = storeService.getStore(subject);
 
-        return ResponseEntity.ok().body(storeResponse);
+        return ResponseEntity.status(HttpStatus.OK).body(storeResponse);
     }
 
     @PutMapping
-    @Operation(summary = "상점 수정")
+    @Operation(summary = STORE_UPDATE)
     public ResponseEntity<StoreResponse> updateStore(
         HttpServletRequest request,
         @Valid @RequestBody UpdateStoreRequest updateRequest
@@ -86,11 +96,11 @@ public class StoreController {
 
         StoreResponse storeResponse = storeService.updateStore(subject, updateRequest);
 
-        return ResponseEntity.ok().body(storeResponse);
+        return ResponseEntity.status(HttpStatus.OK).body(storeResponse);
     }
 
     @PostMapping("/password")
-    @Operation(summary = "비밀번호 확인")
+    @Operation(summary = STORE_PASSWORD_VALIDATION)
     public ResponseEntity<String> validatePassword(
         HttpServletRequest request,
         @Valid @RequestBody ValidatePasswordRequest validatePasswordRequest
@@ -100,11 +110,11 @@ public class StoreController {
 
         storeService.validatePassword(subject, validatePasswordRequest);
 
-        return new ResponseEntity<>("비밀번호 확인 성공", HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.OK).body(STORE_PASSWORD_VALIDATION_SUCCESS);
     }
 
     @DeleteMapping
-    @Operation(summary = "상점 탈퇴")
+    @Operation(summary = STORE_DELETE)
     public ResponseEntity<String> deleteStore(
         HttpServletRequest request,
         @Valid @RequestBody DeleteStoreRequest deleteStoreRequest
@@ -113,11 +123,10 @@ public class StoreController {
 
         storeService.deleteStore(subject, deleteStoreRequest);
 
-        return new ResponseEntity<>("상점 탈퇴 완료", HttpStatus.NO_CONTENT);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(STORE_DELETE_SUCCESS);
     }
 
     @GetMapping("/{shopsId}/products")
-    @Operation(summary = "상점 상품 조회")
     public ResponseEntity<RestPage<ProductListResponse>> getProducts(
         HttpServletRequest httpServletRequest,
         @RequestParam(defaultValue = "0") int page,
@@ -125,7 +134,7 @@ public class StoreController {
     ) {
         String subject = getSubject(httpServletRequest);
 
-        return ResponseEntity.ok().body(storeService.getProducts(subject, page, size));
+        return ResponseEntity.status(HttpStatus.OK).body(storeService.getProducts(subject, page, size));
     }
 
     private String getSubject(HttpServletRequest request) {
