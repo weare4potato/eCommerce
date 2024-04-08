@@ -6,6 +6,7 @@ import com.potato.ecommerce.domain.member.dto.SignUpDto;
 import com.potato.ecommerce.domain.member.dto.SignInDto;
 import com.potato.ecommerce.domain.member.dto.UpdateMemberDto;
 import com.potato.ecommerce.domain.member.dto.UpdatePasswordDto;
+import com.potato.ecommerce.domain.member.message.MemberMessage;
 import com.potato.ecommerce.domain.member.service.MemberService;
 import com.potato.ecommerce.global.jwt.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -110,7 +111,7 @@ public class MemberController {
         memberService.updatePassword(dto, getSubject(request));
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body("비밀번호 변경이 완료되었습니다.");
+            .body(MemberMessage.UPDATE_PASSWORD);
     }
 
     @GetMapping("/signup/confirm")
@@ -120,7 +121,7 @@ public class MemberController {
         memberService.confirmMember(email);
         return ResponseEntity
             .status(HttpStatus.CREATED)
-            .body("인증이 완료 되었습니다.");
+            .body(MemberMessage.CONFIRM_AUTH);
     }
 
     private String getSubject(HttpServletRequest request) {
