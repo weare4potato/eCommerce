@@ -1,7 +1,6 @@
 package com.potato.ecommerce.domain.receiver.entity;
 
 import com.potato.ecommerce.domain.member.entity.MemberEntity;
-import com.potato.ecommerce.domain.receiver.model.Receiver;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -14,9 +13,11 @@ import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
@@ -53,32 +54,5 @@ public class ReceiverEntity {
     @Column(nullable = false)
     private String zipcode;
 
-    public static ReceiverEntity fromModel(Receiver receiver) {
-        return ReceiverEntity.builder()
-            .id(receiver.getId())
-            .member(MemberEntity.fromModel(receiver.getMember()))
-            .name(receiver.getName())
-            .phone(receiver.getPhone())
-            .addressName(receiver.getAddressName())
-            .city(receiver.getCity())
-            .street(receiver.getStreet())
-            .detail(receiver.getDetail())
-            .zipcode(receiver.getZipcode())
-            .build();
-    }
-
-    public Receiver toModel() {
-        return Receiver.builder()
-            .id(this.id)
-            .member(this.member.toModel())
-            .name(this.name)
-            .phone(this.phone)
-            .addressName(this.addressName)
-            .city(this.city)
-            .street(this.street)
-            .detail(this.detail)
-            .zipcode(this.zipcode)
-            .build();
-    }
 
 }

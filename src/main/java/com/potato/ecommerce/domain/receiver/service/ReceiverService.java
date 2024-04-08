@@ -53,6 +53,16 @@ public class ReceiverService {
         return receiver.createReceiverForm();
     }
 
+    @Transactional
+    public void deleteMember(String subject, Long receiverId) {
+        Member member = findMemberBy(subject);
+        Receiver receiver = findReceiverBy(receiverId);
+
+        validateMember(receiver, member);
+
+        receiverRepository.delete(receiver);
+    }
+
     public List<ReceiverForm> findAllReceiver(String subject) {
         Member member = findMemberBy(subject);
 
@@ -73,5 +83,4 @@ public class ReceiverService {
             throw new EntityExistsException("해당 주소지를 갖고 있지 않습니다.");
         }
     }
-
 }
