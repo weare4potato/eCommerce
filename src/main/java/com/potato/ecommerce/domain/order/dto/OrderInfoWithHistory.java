@@ -1,8 +1,8 @@
 package com.potato.ecommerce.domain.order.dto;
 
 import com.potato.ecommerce.domain.member.model.Member;
-import com.potato.ecommerce.domain.order.entity.OrderEntity;
 import com.potato.ecommerce.domain.order.entity.OrderStatus;
+import com.potato.ecommerce.domain.order.model.Order;
 import com.potato.ecommerce.domain.payment.vo.PaymentType;
 import com.potato.ecommerce.domain.receiver.model.Receiver;
 import java.time.LocalDateTime;
@@ -17,6 +17,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderInfoWithHistory {
+
     private Long id;
     private Member member;
     private Receiver receiver;
@@ -27,18 +28,18 @@ public class OrderInfoWithHistory {
     private LocalDateTime orderedAt;
 
     public static OrderInfoWithHistory fromEntity(
-        OrderEntity entity,
+        Order order,
         List<HistoryInfo> historyInfos
-        ){
+    ) {
         return OrderInfoWithHistory.builder()
-            .id(entity.getId())
-            .member(entity.getMember().toModel())
-            .receiver(entity.getReceiver().toModel())
-            .paymentType(entity.getPaymentType())
-            .status(entity.getStatus())
-            .orderNum(entity.getOrderNum())
+            .id(order.getId())
+            .member(order.getMember())
+            .receiver(order.getReceiver())
+            .paymentType(order.getPayment())
+            .status(order.getStatus())
+            .orderNum(order.getOrderNum())
             .historyInfos(historyInfos)
-            .orderedAt(entity.getOrderedAt())
+            .orderedAt(order.getOrderedAt())
             .build();
     }
 }

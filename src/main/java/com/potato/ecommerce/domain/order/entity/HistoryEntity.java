@@ -1,6 +1,5 @@
 package com.potato.ecommerce.domain.order.entity;
 
-import com.potato.ecommerce.domain.member.entity.MemberEntity;
 import com.potato.ecommerce.domain.product.entity.ProductEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,22 +12,22 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Min;
-import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
-
-@Table(name = "order_product")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "orders_products")
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 public class HistoryEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "order_product_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -40,21 +39,20 @@ public class HistoryEntity {
     private ProductEntity product;
 
     @Min(value = 0)
-    @Column(name = "quantity")
     private Integer quantity;
 
     @Builder
     public HistoryEntity(
+        Long id,
         OrderEntity order,
         ProductEntity product,
         Integer quantity
     ) {
+        this.id = id;
         this.order = order;
         this.product = product;
         this.quantity = quantity;
     }
 
-    public void cancel() {
-        product.addStock(this.quantity);
-    }
+
 }
