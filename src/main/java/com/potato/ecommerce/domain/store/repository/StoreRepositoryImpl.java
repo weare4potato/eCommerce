@@ -1,5 +1,7 @@
 package com.potato.ecommerce.domain.store.repository;
 
+import static com.potato.ecommerce.domain.store.model.Store.fromEntity;
+
 import com.potato.ecommerce.domain.store.entity.StoreEntity;
 import com.potato.ecommerce.domain.store.model.Store;
 import java.util.NoSuchElementException;
@@ -21,25 +23,25 @@ public class StoreRepositoryImpl implements StoreRepository {
 
     @Override
     public void save(Store store) {
-        jpaStoreRepository.save(StoreEntity.fromModel(store));
+        jpaStoreRepository.save(store.toEntity());
     }
 
     @Override
     public void delete(Store store) {
-        jpaStoreRepository.delete(StoreEntity.fromModel(store));
+        jpaStoreRepository.delete(store.toEntity());
     }
 
     @Override
     public Store findByEmail(String email) {
-        return jpaStoreRepository.findByEmail(email).orElseThrow(
+        return fromEntity(jpaStoreRepository.findByEmail(email).orElseThrow(
             () -> new DataIntegrityViolationException("등록되지 않은 이메일입니다.")
-        ).toModel();
+        ));
     }
 
     @Override
     public Store findBySubject(String subject) {
-        return jpaStoreRepository.findByBusinessNumber(subject).orElseThrow(
+        return fromEntity(jpaStoreRepository.findByBusinessNumber(subject).orElseThrow(
             () -> new NoSuchElementException("상점이 존재하지 않습니다.")
-        ).toModel();
+        ));
     }
 }
