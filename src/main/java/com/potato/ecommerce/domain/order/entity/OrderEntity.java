@@ -1,8 +1,6 @@
 package com.potato.ecommerce.domain.order.entity;
 
 import com.potato.ecommerce.domain.member.entity.MemberEntity;
-import com.potato.ecommerce.domain.order.model.Order;
-import com.potato.ecommerce.domain.payment.entity.PaymentEntity;
 import com.potato.ecommerce.domain.payment.vo.PaymentType;
 import com.potato.ecommerce.domain.receiver.entity.ReceiverEntity;
 import jakarta.persistence.Column;
@@ -17,8 +15,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.Min;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
@@ -53,10 +49,10 @@ public class OrderEntity {
     private ReceiverEntity receiver;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "payment_type", nullable = false)
+    @Column(nullable = false)
     private PaymentType paymentType;
 
-    @Column(name = "order_num", nullable = false)
+    @Column(nullable = false)
     private String orderNum;
 
     /*
@@ -69,15 +65,13 @@ public class OrderEntity {
     private OrderStatus status;
 
     @Min(value = 0)
-    @Column(name = "total_price", nullable = false)
+    @Column(nullable = false)
     private Long totalPrice;
 
     @CreatedDate
     @Column(updatable = false)
-    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime orderedAt;
 
-    @Builder
     public OrderEntity(
         MemberEntity member,
         ReceiverEntity receiver,
@@ -93,29 +87,5 @@ public class OrderEntity {
         this.status = OrderStatus.READY;
     }
 
-    public OrderEntity complete() {
-        return OrderEntity.builder()
-            .id(this.id)
-            .member(this.member)
-            .receiver(this.receiver)
-            .paymentType(this.paymentType)
-            .orderNum(this.orderNum)
-            .status(OrderStatus.COMPLETE)
-            .orderedAt(this.orderedAt)
-            .totalPrice(this.totalPrice)
-            .build();
-    }
 
-    public OrderEntity cancel() {
-        return OrderEntity.builder()
-            .id(this.id)
-            .member(this.member)
-            .receiver(this.receiver)
-            .paymentType(this.paymentType)
-            .orderNum(this.orderNum)
-            .status(OrderStatus.CANCEL)
-            .orderedAt(this.orderedAt)
-            .totalPrice(this.totalPrice)
-            .build();
-    }
 }

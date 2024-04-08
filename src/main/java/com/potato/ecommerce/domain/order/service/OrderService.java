@@ -1,25 +1,22 @@
 package com.potato.ecommerce.domain.order.service;
 
-import com.potato.ecommerce.domain.member.entity.MemberEntity;
-import com.potato.ecommerce.domain.member.repository.MemberJpaRepository;
+import com.potato.ecommerce.domain.member.model.Member;
+import com.potato.ecommerce.domain.member.repository.MemberRepository;
 import com.potato.ecommerce.domain.order.dto.HistoryInfo;
 import com.potato.ecommerce.domain.order.dto.OrderInfo;
 import com.potato.ecommerce.domain.order.dto.OrderInfoWithHistory;
 import com.potato.ecommerce.domain.order.dto.OrderList;
 import com.potato.ecommerce.domain.order.dto.OrderProduct;
-import com.potato.ecommerce.domain.order.entity.OrderEntity;
-import com.potato.ecommerce.domain.order.repository.OrderQueryRepository;
-import com.potato.ecommerce.domain.order.repository.OrderRepository;
+import com.potato.ecommerce.domain.order.model.Order;
+import com.potato.ecommerce.domain.order.repository.order.OrderQueryRepository;
+import com.potato.ecommerce.domain.order.repository.order.OrderRepository;
 import com.potato.ecommerce.domain.payment.vo.PaymentType;
-import com.potato.ecommerce.domain.receiver.entity.ReceiverEntity;
-import com.potato.ecommerce.domain.receiver.repository.ReceiverJpaRepository;
+import com.potato.ecommerce.domain.receiver.model.Receiver;
+import com.potato.ecommerce.domain.receiver.repository.ReceiverRepository;
 import com.potato.ecommerce.global.util.RestPage;
-import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,8 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class OrderService {
 
-    private final MemberJpaRepository memberJpaRepository;
-    private final ReceiverJpaRepository receiverJpaRepository;
+    private final MemberRepository memberRepository;
+    private final ReceiverRepository receiverRepository;
     private final OrderRepository orderRepository;
     private final OrderQueryRepository orderQueryRepository;
     private final HistoryService historyService;
@@ -38,31 +35,21 @@ public class OrderService {
         Long memberId,
         Long receiverId,
         PaymentType type,
-        Long totalPrice,
         List<OrderProduct> orderProducts
     ) {
 
-        MemberEntity memberEntity = memberJpaRepository.findById(memberId)
-            .orElseThrow(() ->
-                new EntityNotFoundException(
-                    "[ERROR] 유효하지 않은 사용자 입니다. 조회 사용자 id: %s".formatted(memberId))
-            );
+        Member member = memberRepository.findById(memberId);
 
-        ReceiverEntity receiverEntity = receiverJpaRepository.findById(receiverId)
-            .orElseThrow(() ->
-                new EntityNotFoundException(
-                    "[ERROR] 유효하지 않은 배송지 입니다. 조회 배송지 id: %s".formatted(receiverId))
-            );
+        Receiver receiver = receiverRepository.findById(receiverId);
 
-        OrderEntity orderEntity = new OrderEntity(
-            memberEntity,
-            receiverEntity,
-            type,
-            UUID.randomUUID().toString(),
-            totalPrice
-        );
+        Order order = Order.builder()
+            .member(member)
+            .receiver(receiver)
+            .payment(type)
+            .orderNum(UUID.randomUUID().toString())
+            .build();
 
-        OrderEntity saved = orderRepository.save(orderEntity);
+        Order saved = orderRepository.save(order);
 
         historyService.createHistory(saved.getId(), orderProducts);
 
@@ -71,13 +58,11 @@ public class OrderService {
 
     @Transactional(readOnly = true)
     public OrderInfoWithHistory getOrder(Long orderId) {
-        OrderEntity orderEntity = orderRepository.findById(orderId)
-            .orElseThrow(() -> new EntityNotFoundException(
-                "[ERROR] 유효하지 않은 주문 입니다. 조회 주문 id: %s".formatted(orderId))
-            );
+
+        Order order = orderRepository.findById(orderId);
 
         List<HistoryInfo> history = historyService.getHistory(orderId);
-        return OrderInfoWithHistory.fromEntity(orderEntity, history);
+        return OrderInfoWithHistory.fromEntity(order, history);
     }
 
     public RestPage<OrderList> getOrders(
@@ -90,25 +75,21 @@ public class OrderService {
 
 
     public OrderInfo completeOrder(Long orderId) {
-        OrderEntity orderEntity = orderRepository.findById(orderId)
-            .orElseThrow(() -> new EntityNotFoundException(
-                "[ERROR] 유효하지 않은 주문 입니다. 조회 주문 id: %s".formatted(orderId))
-            );
 
-        OrderEntity completedOrder = orderEntity.complete();
-        return OrderInfo.fromEntity(orderRepository.saveAndFlush(completedOrder));
+        Order order = orderRepository.findById(orderId);
+
+        Order completedOrder = order.complete();
+        return OrderInfo.fromEntity(orderRepository.update(completedOrder));
     }
 
     public OrderInfo cancelOrder(Long orderId) {
-        OrderEntity orderEntity = orderRepository.findById(orderId)
-            .orElseThrow(() -> new EntityNotFoundException(
-                "[ERROR] 유효하지 않은 주문 입니다. 조회 주문 id: %s".formatted(orderId))
-            );
 
-        OrderEntity completedOrder = orderEntity.cancel();
+        Order order = orderRepository.findById(orderId);
+
+        Order cancelOrder = order.cancel();
 
         historyService.deleteHistory(orderId);
 
-        return OrderInfo.fromEntity(orderRepository.saveAndFlush(completedOrder));
+        return OrderInfo.fromEntity(orderRepository.update(cancelOrder));
     }
 }
