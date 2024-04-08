@@ -1,5 +1,7 @@
 package com.potato.ecommerce.domain.member.controller;
 
+import static com.potato.ecommerce.domain.member.message.MemberMessage.*;
+
 import com.potato.ecommerce.domain.mail.service.MailService;
 import com.potato.ecommerce.domain.member.dto.ResponseMember;
 import com.potato.ecommerce.domain.member.dto.SignInDto;
@@ -30,7 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@Tag(name = "Member API", description = "Member API 입니다.")
+@Tag(name = MEMBER_API)
 @RequestMapping("/api/v1/users")
 @Slf4j
 public class MemberController {
@@ -39,7 +41,7 @@ public class MemberController {
     private final MailService mailService;
 
     @PostMapping("/signup")
-    @Operation(summary = "회원가입")
+    @Operation(summary = SING_UP)
     public ResponseEntity<String> signUp(
         @RequestBody @Validated SignUpDto dto
     ) {
@@ -50,7 +52,7 @@ public class MemberController {
     }
 
     @PostMapping("/signin")
-    @Operation(summary = "로그인")
+    @Operation(summary = SING_IN)
     public ResponseEntity<Void> signIn(
         @RequestBody @Validated SignInDto dto
     ) {
@@ -70,7 +72,7 @@ public class MemberController {
     }
 
     @GetMapping
-    @Operation(summary = "정보 조회")
+    @Operation(summary = GET_MEMBER)
     public ResponseEntity<ResponseMember> getMember(
         HttpServletRequest request
     ) {
@@ -80,7 +82,7 @@ public class MemberController {
     }
 
     @PostMapping
-    @Operation(summary = "비밀번호 확인")
+    @Operation(summary = PASSWORD_CHECK)
     public ResponseEntity<Void> passwordCheck(
         @RequestBody String password,
         HttpServletRequest request
@@ -92,7 +94,7 @@ public class MemberController {
     }
 
     @PutMapping
-    @Operation(summary = "정보 수정")
+    @Operation(summary = UPDATE_MEMBER)
     public ResponseEntity<ResponseMember> updateMember(
         @RequestBody @Validated UpdateMemberDto dto,
         HttpServletRequest request
@@ -103,7 +105,7 @@ public class MemberController {
     }
 
     @PutMapping("/password")
-    @Operation(summary = "비밀번호 수정")
+    @Operation(summary = UPDATE_PASSWORD)
     public ResponseEntity<String> updatePassword(
         @RequestBody @Validated UpdatePasswordDto dto,
         HttpServletRequest request
@@ -111,7 +113,7 @@ public class MemberController {
         memberService.updatePassword(dto, getSubject(request));
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(MemberMessage.UPDATE_PASSWORD);
+            .body(UPDATE_PASSWORD_MESSAGE);
     }
 
     @GetMapping("/signup/confirm")
@@ -121,7 +123,7 @@ public class MemberController {
         memberService.confirmMember(email);
         return ResponseEntity
             .status(HttpStatus.CREATED)
-            .body(MemberMessage.CONFIRM_AUTH);
+            .body(CONFIRM_AUTH);
     }
 
     private String getSubject(HttpServletRequest request) {
