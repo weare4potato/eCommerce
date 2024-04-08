@@ -55,7 +55,6 @@ public class StoreEntity {
 
     @CreatedDate
     @Column(updatable = false)
-    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createdAt;
 
     private final boolean isDeleted = Boolean.FALSE;
@@ -63,7 +62,7 @@ public class StoreEntity {
     @Builder
     private StoreEntity(Long id, String email, String password, String name, String description,
         String phone,
-        String businessNumber, LocalDateTime createdAt) {
+        String businessNumber) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -71,33 +70,5 @@ public class StoreEntity {
         this.description = description;
         this.phone = phone;
         this.businessNumber = businessNumber;
-        this.createdAt = createdAt;
-    }
-
-    public static StoreEntity fromModel(Store store) {
-        return StoreEntity.builder()
-            .id(store.getId())
-            .email(store.getEmail())
-            .password(store.getPassword())
-            .name(store.getName())
-            .description(store.getDescription())
-            .phone(store.getPhone())
-            .businessNumber(store.getBusinessNumber())
-            .createdAt(store.getCreatedAt())
-            .build();
-    }
-
-
-    public Store toModel() {
-        return Store.builder()
-            .id(id)
-            .email(email)
-            .password(password)
-            .name(name)
-            .description(description)
-            .phone(phone)
-            .businessNumber(businessNumber)
-            .createdAt(createdAt)
-            .build();
     }
 }
