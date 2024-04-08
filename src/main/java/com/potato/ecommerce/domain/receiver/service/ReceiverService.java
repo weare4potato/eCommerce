@@ -1,5 +1,7 @@
 package com.potato.ecommerce.domain.receiver.service;
 
+import static com.potato.ecommerce.global.exception.ExceptionMessage.RECEIVER_NOT_MATCH;
+
 import com.potato.ecommerce.domain.member.model.Member;
 import com.potato.ecommerce.domain.member.repository.MemberRepository;
 import com.potato.ecommerce.domain.receiver.dto.ReceiverForm;
@@ -80,7 +82,7 @@ public class ReceiverService {
 
     private void validateMember(Receiver receiver, Member member) {
         if (receiver.isMemberNotMatch(member.getId())) {
-            throw new EntityExistsException("해당 주소지를 갖고 있지 않습니다.");
+            throw new EntityExistsException(RECEIVER_NOT_MATCH.toString());
         }
     }
 }
