@@ -2,7 +2,6 @@ package com.potato.ecommerce.domain.store.repository;
 
 import static com.potato.ecommerce.domain.store.model.Store.fromEntity;
 
-import com.potato.ecommerce.domain.store.entity.StoreEntity;
 import com.potato.ecommerce.domain.store.model.Store;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.EntityNotFoundException;

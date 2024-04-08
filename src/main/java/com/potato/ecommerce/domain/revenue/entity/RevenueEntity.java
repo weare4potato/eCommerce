@@ -1,6 +1,5 @@
 package com.potato.ecommerce.domain.revenue.entity;
 
-import com.potato.ecommerce.domain.revenue.model.Revenue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

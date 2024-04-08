@@ -134,7 +134,8 @@ public class StoreController {
     ) {
         String subject = getSubject(httpServletRequest);
 
-        return ResponseEntity.status(HttpStatus.OK).body(storeService.getProducts(subject, page, size));
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(storeService.getProducts(subject, page, size));
     }
 
     private String getSubject(HttpServletRequest request) {

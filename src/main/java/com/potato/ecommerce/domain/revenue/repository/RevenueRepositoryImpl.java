@@ -1,11 +1,9 @@
 package com.potato.ecommerce.domain.revenue.repository;
 
 import static com.potato.ecommerce.domain.revenue.model.Revenue.fromEntity;
-import static com.potato.ecommerce.global.exception.ExceptionMessage.*;
+import static com.potato.ecommerce.global.exception.ExceptionMessage.BUSINESS_NUMBER_NOT_FOUNT;
 
-import com.potato.ecommerce.domain.revenue.entity.RevenueEntity;
 import com.potato.ecommerce.domain.revenue.model.Revenue;
-import com.potato.ecommerce.global.exception.ExceptionMessage;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
