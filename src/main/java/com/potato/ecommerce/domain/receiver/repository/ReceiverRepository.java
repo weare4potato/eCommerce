@@ -13,4 +13,6 @@ public interface ReceiverRepository {
 
     void update(Receiver receiver);
 
+    void delete(Receiver receiver);
+
 }

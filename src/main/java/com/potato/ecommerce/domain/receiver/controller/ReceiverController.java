@@ -1,7 +1,13 @@
 package com.potato.ecommerce.domain.receiver.controller;
 
+import static com.potato.ecommerce.domain.receiver.message.ReceiverMessage.CREATE_MESSAGE;
+import static com.potato.ecommerce.domain.receiver.message.ReceiverMessage.CREATE_RECEIVER;
+import static com.potato.ecommerce.domain.receiver.message.ReceiverMessage.DELETE_MESSAGE;
+import static com.potato.ecommerce.domain.receiver.message.ReceiverMessage.DELETE_RECEIVER;
+import static com.potato.ecommerce.domain.receiver.message.ReceiverMessage.GET_RECEIVER;
+import static com.potato.ecommerce.domain.receiver.message.ReceiverMessage.UPDATE_RECEIVER;
+
 import com.potato.ecommerce.domain.receiver.dto.ReceiverForm;
-import com.potato.ecommerce.domain.receiver.message.ReceiverMessage;
 import com.potato.ecommerce.domain.receiver.service.ReceiverService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,7 +37,7 @@ public class ReceiverController {
     private final ReceiverService receiverService;
 
     @PostMapping
-    @Operation(summary = "배송지 등록")
+    @Operation(summary = CREATE_RECEIVER)
     public ResponseEntity<String> createReceiver(
         @RequestBody @Validated ReceiverForm dto,
         HttpServletRequest request
@@ -40,11 +46,11 @@ public class ReceiverController {
 
         return ResponseEntity
             .status(HttpStatus.CREATED)
-            .body(ReceiverMessage.CREATE_MESSAGE);
+            .body(CREATE_MESSAGE);
     }
 
     @GetMapping
-    @Operation(summary = "배송지 조회")
+    @Operation(summary = GET_RECEIVER)
     public ResponseEntity<List<ReceiverForm>> findAllReceiver(
         HttpServletRequest request
     ) {
@@ -55,7 +61,7 @@ public class ReceiverController {
     }
 
     @PutMapping("/{receiverId}")
-    @Operation(summary = "배송지 수정")
+    @Operation(summary = UPDATE_RECEIVER)
     public ResponseEntity<ReceiverForm> updateReceiver(
         HttpServletRequest request,
         @PathVariable Long receiverId,
@@ -68,7 +74,7 @@ public class ReceiverController {
     }
 
     @DeleteMapping("/{receiverId}")
-    @Operation(summary = "배송지 삭제")
+    @Operation(summary = DELETE_RECEIVER)
     public ResponseEntity<String> deleteReceiver(
         HttpServletRequest request,
         @PathVariable Long receiverId
@@ -76,7 +82,7 @@ public class ReceiverController {
         receiverService.deleteMember(getSubject(request), receiverId);
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(ReceiverMessage.DELETE_MESSAGE);
+            .body(DELETE_MESSAGE);
     }
     private String getSubject(HttpServletRequest request) {
         return (String) request.getAttribute("subject");
