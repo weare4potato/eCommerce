@@ -1,6 +1,5 @@
 package com.potato.ecommerce.domain.store.entity;
 
-import com.potato.ecommerce.domain.store.model.Store;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -9,8 +8,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
