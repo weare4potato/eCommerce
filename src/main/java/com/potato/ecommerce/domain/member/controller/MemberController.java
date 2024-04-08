@@ -2,8 +2,8 @@ package com.potato.ecommerce.domain.member.controller;
 
 import com.potato.ecommerce.domain.mail.service.MailService;
 import com.potato.ecommerce.domain.member.dto.ResponseMember;
-import com.potato.ecommerce.domain.member.dto.SignUpDto;
 import com.potato.ecommerce.domain.member.dto.SignInDto;
+import com.potato.ecommerce.domain.member.dto.SignUpDto;
 import com.potato.ecommerce.domain.member.dto.UpdateMemberDto;
 import com.potato.ecommerce.domain.member.dto.UpdatePasswordDto;
 import com.potato.ecommerce.domain.member.message.MemberMessage;

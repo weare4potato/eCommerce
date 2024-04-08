@@ -1,19 +1,18 @@
 package com.potato.ecommerce.domain.member.service;
 
-import static com.potato.ecommerce.global.exception.ExceptionMessage.*;
+import static com.potato.ecommerce.global.exception.ExceptionMessage.CHANGE_PASSWORD_CHECK;
+import static com.potato.ecommerce.global.exception.ExceptionMessage.PASSWORD_NOT_MATCH;
 
 import com.potato.ecommerce.domain.member.dto.ResponseMember;
-import com.potato.ecommerce.domain.member.dto.SignUpDto;
 import com.potato.ecommerce.domain.member.dto.SignInDto;
+import com.potato.ecommerce.domain.member.dto.SignUpDto;
 import com.potato.ecommerce.domain.member.dto.UpdateMemberDto;
 import com.potato.ecommerce.domain.member.dto.UpdatePasswordDto;
 import com.potato.ecommerce.domain.member.entity.UserRoleEnum;
 import com.potato.ecommerce.domain.member.model.Member;
 import com.potato.ecommerce.domain.member.repository.MemberRepository;
-import com.potato.ecommerce.global.exception.ExceptionMessage;
 import com.potato.ecommerce.global.exception.custom.AuthenticationFailedException;
 import com.potato.ecommerce.global.jwt.JwtUtil;
-import jakarta.security.auth.message.AuthException;
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
