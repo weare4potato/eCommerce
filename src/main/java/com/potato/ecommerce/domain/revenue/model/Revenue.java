@@ -21,7 +21,8 @@ public class Revenue {
     }
 
     public static Revenue fromEntity(RevenueEntity revenueEntity) {
-        return new Revenue(revenueEntity.getId(), revenueEntity.getNumber(), revenueEntity.isUsed());
+        return new Revenue(revenueEntity.getId(), revenueEntity.getNumber(),
+            revenueEntity.isUsed());
     }
 
     public void use() {

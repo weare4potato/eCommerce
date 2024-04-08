@@ -32,7 +32,7 @@ public class Store {
         this.createdAt = createdAt;
     }
 
-    public static Store fromEntity(StoreEntity storeEntity){
+    public static Store fromEntity(StoreEntity storeEntity) {
         return Store.builder()
             .id(storeEntity.getId())
             .email(storeEntity.getEmail())

@@ -1,7 +1,10 @@
 package com.potato.ecommerce.domain.store.service;
 
-import static com.potato.ecommerce.global.exception.ExceptionMessage.*;
+import static com.potato.ecommerce.global.exception.ExceptionMessage.BUSINESS_NUMBER_NOT_MATCH;
+import static com.potato.ecommerce.global.exception.ExceptionMessage.DUPLICATE_BUSINESS_NUMBER;
+import static com.potato.ecommerce.global.exception.ExceptionMessage.DUPLICATE_EMAIL;
 import static com.potato.ecommerce.global.exception.ExceptionMessage.EMAIL_NOT_MATCH;
+import static com.potato.ecommerce.global.exception.ExceptionMessage.PASSWORD_NOT_MATCH;
 
 import com.potato.ecommerce.domain.product.dto.ProductListResponse;
 import com.potato.ecommerce.domain.product.repository.ProductQueryRepository;
@@ -15,7 +18,6 @@ import com.potato.ecommerce.domain.store.dto.UpdateStoreRequest;
 import com.potato.ecommerce.domain.store.dto.ValidatePasswordRequest;
 import com.potato.ecommerce.domain.store.model.Store;
 import com.potato.ecommerce.domain.store.repository.StoreRepository;
-import com.potato.ecommerce.global.exception.ExceptionMessage;
 import com.potato.ecommerce.global.jwt.JwtUtil;
 import com.potato.ecommerce.global.util.RestPage;
 import jakarta.validation.ValidationException;
