@@ -1,5 +1,7 @@
 package com.potato.ecommerce.domain.member.service;
 
+import static com.potato.ecommerce.global.exception.ExceptionMessage.*;
+
 import com.potato.ecommerce.domain.member.dto.ResponseMember;
 import com.potato.ecommerce.domain.member.dto.SignUpDto;
 import com.potato.ecommerce.domain.member.dto.SignInDto;
@@ -45,7 +47,7 @@ public class MemberService {
     public String signIn(SignInDto dto) {
         Member member = findBy(dto.getEmail());
 
-        if(member.isNotAuthCheck()){
+        if (member.isNotAuthCheck()) {
             throw new AuthenticationFailedException();
         }
 
@@ -76,7 +78,7 @@ public class MemberService {
     }
 
     @Transactional
-    public void confirmMember(String email){
+    public void confirmMember(String email) {
         Member member = findBy(email);
         member.confirm();
 
@@ -103,12 +105,13 @@ public class MemberService {
 
     private void validateMemberPassword(Member member, String password) {
         if (member.isNotMatchPassword(passwordEncoder, password)) {
-            throw new ValidationException(ExceptionMessage.PASSWORD_NOT_MATCH.toString());
+            throw new ValidationException(PASSWORD_NOT_MATCH.toString());
         }
     }
+
     private void validateNewPassword(UpdatePasswordDto dto) {
-        if(dto.getPassword().equals(dto.getNewPassword())){
-            throw new ValidationException(ExceptionMessage.CHANGE_PASSWORD_CHECK.toString());
+        if (dto.getPassword().equals(dto.getNewPassword())) {
+            throw new ValidationException(CHANGE_PASSWORD_CHECK.toString());
         }
     }
 
