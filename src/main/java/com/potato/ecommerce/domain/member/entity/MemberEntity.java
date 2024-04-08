@@ -10,8 +10,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -55,31 +53,6 @@ public class MemberEntity {
     private UserRoleEnum role;
 
     private boolean authStatus;
-
-
-    public static MemberEntity fromModel(Member member) {
-        return MemberEntity.builder()
-            .id(member.getId())
-            .email(member.getEmail())
-            .userName(member.getUserName())
-            .password(member.getPassword())
-            .phone(member.getPhone())
-            .role(member.getRole())
-            .authStatus(member.isAuthStatus())
-            .build();
-    }
-
-    public Member toModel() {
-        return Member.builder()
-            .id(this.id)
-            .email(this.email)
-            .userName(this.userName)
-            .password(this.password)
-            .phone(this.phone)
-            .role(this.role)
-            .authStatus(this.authStatus)
-            .build();
-    }
 
 
 }

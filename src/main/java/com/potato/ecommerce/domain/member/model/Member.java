@@ -2,7 +2,9 @@ package com.potato.ecommerce.domain.member.model;
 
 import com.potato.ecommerce.domain.member.dto.ResponseMember;
 import com.potato.ecommerce.domain.member.dto.UpdateMemberDto;
+import com.potato.ecommerce.domain.member.entity.MemberEntity;
 import com.potato.ecommerce.domain.member.entity.UserRoleEnum;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Getter
 @Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class Member {
 
     private Long id;
@@ -21,22 +24,28 @@ public class Member {
     private UserRoleEnum role;
     private boolean authStatus;
 
-    public Member(
-        Long id,
-        String email,
-        String userName,
-        String password,
-        String phone,
-        UserRoleEnum role,
-        boolean authStatus
-    ) {
-        this.id = id;
-        this.email = email;
-        this.userName = userName;
-        this.password = password;
-        this.phone = phone;
-        this.role = role;
-        this.authStatus = authStatus;
+    public static Member fromEntity(MemberEntity member) {
+        return Member.builder()
+            .id(member.getId())
+            .email(member.getEmail())
+            .userName(member.getUserName())
+            .password(member.getPassword())
+            .phone(member.getPhone())
+            .role(member.getRole())
+            .authStatus(member.isAuthStatus())
+            .build();
+    }
+
+    public MemberEntity toEntity() {
+        return MemberEntity.builder()
+            .id(this.id)
+            .email(this.email)
+            .userName(this.userName)
+            .password(this.password)
+            .phone(this.phone)
+            .role(this.role)
+            .authStatus(this.authStatus)
+            .build();
     }
 
     public void update(UpdateMemberDto dto) {
@@ -44,12 +53,12 @@ public class Member {
         this.phone = dto.getPhone();
     }
 
-    public void confirm(){
+    public void confirm() {
         this.authStatus = true;
     }
 
 
-    public void updatePassword(String newPassword){
+    public void updatePassword(String newPassword) {
         this.password = newPassword;
     }
 
@@ -65,11 +74,11 @@ public class Member {
         return !encoder.matches(password, this.password);
     }
 
-    public boolean isNotMatchMember(Long id){
+    public boolean isNotMatchMember(Long id) {
         return !this.id.equals(id);
     }
 
-    public boolean isNotAuthCheck(){
+    public boolean isNotAuthCheck() {
         return !this.authStatus;
     }
 
