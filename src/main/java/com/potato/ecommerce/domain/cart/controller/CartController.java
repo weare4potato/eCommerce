@@ -4,6 +4,7 @@ import com.potato.ecommerce.domain.cart.controller.dto.response.CartInfoResponse
 import com.potato.ecommerce.domain.cart.dto.CartRequest;
 import com.potato.ecommerce.domain.cart.service.CartService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -55,26 +56,29 @@ public class CartController {
 
     @DeleteMapping("/{cartId}")
     public ResponseEntity<Void> deleteCart(
-        @PathVariable Long cartId,
-        @RequestBody @Valid CartRequest dto
+        HttpServletRequest httpServletRequest,
+        @PathVariable Long cartId
     ) {
-        cartService.deleteCart(
-            dto.getMemberId(),
-            cartId
-        );
+        String subject = getSubject(httpServletRequest);
+        cartService.deleteCart(subject, cartId);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping
     public ResponseEntity<List<CartInfoResponseDto>> getCarts(
-        @RequestBody @Valid CartRequest dto
+        HttpServletRequest httpServletRequest
     ) {
+        String subject = getSubject(httpServletRequest);
 
-        List<CartInfoResponseDto> carts = cartService.getCarts(dto.getMemberId()).stream()
+        List<CartInfoResponseDto> carts = cartService.getCarts(subject).stream()
             .map(CartInfoResponseDto::from)
             .toList();
 
         return new ResponseEntity<>(carts, HttpStatus.OK);
+    }
+
+    private String getSubject(HttpServletRequest request) {
+        return (String) request.getAttribute("subject");
     }
 }
