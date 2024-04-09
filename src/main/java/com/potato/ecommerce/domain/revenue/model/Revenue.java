@@ -20,17 +20,9 @@ public class Revenue {
         this.isUsed = isUsed;
     }
 
-    public static Revenue fromEntity(RevenueEntity revenueEntity) {
-        return new Revenue(revenueEntity.getId(), revenueEntity.getNumber(),
-            revenueEntity.isUsed());
-    }
 
     public void use() {
         isUsed = true;
-    }
-
-    public RevenueEntity toEntity() {
-        return new RevenueEntity(id, number, isUsed);
     }
 
     public boolean isUsedChecking() {

@@ -91,15 +91,7 @@ public class StoreService {
 
     @Transactional
     public StoreResponse updateStore(String subject, UpdateStoreRequest updateRequest) {
-        Store store = findBySubject(subject);
-
-        store.update(
-            updateRequest.getName(),
-            updateRequest.getDescription(),
-            updateRequest.getPhone()
-        );
-
-        storeRepository.save(store);
+        Store store = storeRepository.update(subject, updateRequest);
 
         return StoreResponse.builder()
             .email(store.getEmail())

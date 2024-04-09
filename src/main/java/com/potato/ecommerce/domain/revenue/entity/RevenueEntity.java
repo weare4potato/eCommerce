@@ -1,5 +1,6 @@
 package com.potato.ecommerce.domain.revenue.entity;
 
+import com.potato.ecommerce.domain.revenue.model.Revenue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,5 +28,13 @@ public class RevenueEntity {
 
     private RevenueEntity(String number) {
         this.number = number;
+    }
+
+    public Revenue toModel() {
+        return new Revenue(id, number, isUsed);
+    }
+
+    public static RevenueEntity fromModel(Revenue revenue) {
+        return new RevenueEntity(revenue.getNumber());
     }
 }

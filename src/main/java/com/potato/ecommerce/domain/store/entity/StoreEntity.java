@@ -1,5 +1,7 @@
 package com.potato.ecommerce.domain.store.entity;
 
+import com.potato.ecommerce.domain.store.dto.UpdateStoreRequest;
+import com.potato.ecommerce.domain.store.model.Store;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -67,5 +69,34 @@ public class StoreEntity {
         this.description = description;
         this.phone = phone;
         this.businessNumber = businessNumber;
+    }
+
+    public static StoreEntity fromModel(Store store) {
+        return StoreEntity.builder()
+            .email(store.getEmail())
+            .password(store.getPassword())
+            .name(store.getName())
+            .description(store.getDescription())
+            .phone(store.getPhone())
+            .businessNumber(store.getBusinessNumber())
+            .build();
+    }
+
+    public Store toModel() {
+        return Store.builder()
+            .id(id)
+            .email(email)
+            .password(password)
+            .name(name)
+            .description(description)
+            .phone(phone)
+            .businessNumber(businessNumber)
+            .build();
+    }
+
+    public void update(UpdateStoreRequest updateStoreRequest) {
+        this.name = updateStoreRequest.getName();
+        this.description = updateStoreRequest.getDescription();
+        this.phone = updateStoreRequest.getPhone();
     }
 }

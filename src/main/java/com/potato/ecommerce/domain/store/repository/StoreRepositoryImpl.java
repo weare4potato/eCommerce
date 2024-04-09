@@ -1,13 +1,10 @@
 package com.potato.ecommerce.domain.store.repository;
 
-import static com.potato.ecommerce.domain.store.model.Store.fromEntity;
-
+import com.potato.ecommerce.domain.store.dto.UpdateStoreRequest;
+import com.potato.ecommerce.domain.store.entity.StoreEntity;
 import com.potato.ecommerce.domain.store.model.Store;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.EntityNotFoundException;
-import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -24,25 +21,35 @@ public class StoreRepositoryImpl implements StoreRepository {
 
     @Override
     public void save(Store store) {
-        jpaStoreRepository.save(store.toEntity());
+        jpaStoreRepository.save(StoreEntity.fromModel(store));
     }
 
     @Override
     public void delete(Store store) {
-        jpaStoreRepository.delete(store.toEntity());
+        jpaStoreRepository.delete(StoreEntity.fromModel(store));
     }
 
     @Override
     public Store findByEmail(String email) {
-        return fromEntity(jpaStoreRepository.findByEmail(email).orElseThrow(
+        return jpaStoreRepository.findByEmail(email).orElseThrow(
             () -> new EntityNotFoundException("등록되지 않은 이메일입니다.")
-        ));
+        ).toModel();
     }
 
     @Override
     public Store findBySubject(String subject) {
-        return fromEntity(jpaStoreRepository.findByBusinessNumber(subject).orElseThrow(
+        return jpaStoreRepository.findByBusinessNumber(subject).orElseThrow(
             () -> new EntityNotFoundException("상점이 존재하지 않습니다.")
-        ));
+        ).toModel();
+    }
+
+    @Override
+    public Store update(String subject, UpdateStoreRequest updateStoreRequest) {
+        StoreEntity storeEntity = jpaStoreRepository.findByBusinessNumber(subject).orElseThrow(
+            () -> new EntityNotFoundException("상점이 존재하지 않습니다.")
+        );
+        storeEntity.update(updateStoreRequest);
+
+        return storeEntity.toModel();
     }
 }
