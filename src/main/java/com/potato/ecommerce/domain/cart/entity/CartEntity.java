@@ -10,7 +10,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Min;
 import lombok.AccessLevel;
@@ -23,7 +22,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 
-@Table(name = "cart")
+@Table(name = "carts")
 @Entity
 public class CartEntity {
 
@@ -41,7 +40,6 @@ public class CartEntity {
     private ProductEntity product;
 
     @Min(value = 0)
-    @Column(name = "quantity")
     private Integer quantity;
 
     @Builder
