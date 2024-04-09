@@ -2,12 +2,14 @@ package com.potato.ecommerce.domain.receiver.service;
 
 import static com.potato.ecommerce.global.exception.ExceptionMessage.RECEIVER_NOT_MATCH;
 
-import com.potato.ecommerce.domain.member.model.Member;
-import com.potato.ecommerce.domain.member.repository.MemberRepository;
+import com.potato.ecommerce.domain.member.entity.MemberEntity;
+import com.potato.ecommerce.domain.member.repository.MemberJpaRepository;
 import com.potato.ecommerce.domain.receiver.dto.ReceiverForm;
-import com.potato.ecommerce.domain.receiver.model.Receiver;
-import com.potato.ecommerce.domain.receiver.repository.ReceiverRepository;
+import com.potato.ecommerce.domain.receiver.entity.ReceiverEntity;
+import com.potato.ecommerce.domain.receiver.repository.ReceiverJpaRepository;
+import com.potato.ecommerce.global.exception.ExceptionMessage;
 import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,17 +21,17 @@ import org.springframework.util.StringUtils;
 @Transactional(readOnly = true)
 public class ReceiverService {
 
-    private final MemberRepository memberRepository;
-    private final ReceiverRepository receiverRepository;
+    private final MemberJpaRepository memberJpaRepository;
+    private final ReceiverJpaRepository receiverJpaRepository;
 
     @Transactional
     public void createReceiver(ReceiverForm dto, String subject) {
-        Member member = findMemberBy(subject);
+        MemberEntity member = findByEmail(subject);
 
         String addressName =
             StringUtils.hasText(dto.getAddressName()) ? dto.getAddressName() : dto.getName();
 
-        Receiver receiver = Receiver.builder()
+        ReceiverEntity receiver = ReceiverEntity.builder()
             .member(member)
             .name(dto.getName())
             .phone(dto.getPhone())
@@ -40,47 +42,51 @@ public class ReceiverService {
             .zipcode(dto.getZipcode())
             .build();
 
-        receiverRepository.save(receiver);
+        receiverJpaRepository.save(receiver);
     }
 
     @Transactional
     public ReceiverForm updateReceiver(String subject, Long receiverId, ReceiverForm dto) {
-        Member member = findMemberBy(subject);
-        Receiver receiver = findReceiverBy(receiverId);
+        MemberEntity member = findByEmail(subject);
+        ReceiverEntity receiver = findReceiverBy(receiverId);
 
         validateMember(receiver, member);
 
         receiver.update(dto);
-        receiverRepository.update(receiver);
         return receiver.createReceiverForm();
     }
 
     @Transactional
     public void deleteMember(String subject, Long receiverId) {
-        Member member = findMemberBy(subject);
-        Receiver receiver = findReceiverBy(receiverId);
+        MemberEntity member = findByEmail(subject);
+        ReceiverEntity receiver = findReceiverBy(receiverId);
 
         validateMember(receiver, member);
 
-        receiverRepository.delete(receiver);
+        receiverJpaRepository.delete(receiver);
     }
 
     public List<ReceiverForm> findAllReceiver(String subject) {
-        Member member = findMemberBy(subject);
+        MemberEntity member = findByEmail(subject);
 
-        return receiverRepository.findAll(member.getId()).stream().map(Receiver::createReceiverForm)
+        return receiverJpaRepository.findAllByMember_Id(member.getId()).stream()
+            .map(ReceiverEntity::createReceiverForm)
             .toList();
     }
 
-    private Member findMemberBy(String subject) {
-        return memberRepository.findMemberBy(subject);
+    private MemberEntity findByEmail(String subject) {
+        return memberJpaRepository.findByEmail(subject).orElseThrow(
+            () -> new EntityNotFoundException(ExceptionMessage.MEMBER_NOT_FOUND.toString())
+        );
     }
 
-    private Receiver findReceiverBy(Long receiverId) {
-        return receiverRepository.findBy(receiverId);
+    private ReceiverEntity findReceiverBy(Long receiverId) {
+        return receiverJpaRepository.findById(receiverId).orElseThrow(
+            () -> new EntityNotFoundException(ExceptionMessage.RECEIVER_NOT_FOUND.toString())
+        );
     }
 
-    private void validateMember(Receiver receiver, Member member) {
+    private void validateMember(ReceiverEntity receiver, MemberEntity member) {
         if (receiver.isMemberNotMatch(member.getId())) {
             throw new EntityExistsException(RECEIVER_NOT_MATCH.toString());
         }
