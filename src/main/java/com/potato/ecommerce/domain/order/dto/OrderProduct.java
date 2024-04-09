@@ -12,6 +12,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderProduct {
+
     private Long productId;
     private Integer quantity;
 }
