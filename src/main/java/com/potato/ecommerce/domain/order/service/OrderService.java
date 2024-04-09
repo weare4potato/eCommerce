@@ -72,7 +72,7 @@ public class OrderService {
     public OrderInfoWithHistory getOrder(Long orderId) {
         OrderEntity orderEntity = orderJpaRepository.findById(orderId)
             .orElseThrow(() -> new EntityNotFoundException(
-                "[ERROR] 유효하지 않은 주문 입니다. 조회 주문 id: %s".formatted(orderId))
+                ExceptionMessage.ORDER_NOT_FOUND.toString())
             );
 
         List<HistoryInfo> history = historyService.getHistory(orderId);
@@ -91,7 +91,7 @@ public class OrderService {
     public OrderInfo completeOrder(Long orderId) {
         OrderEntity orderEntity = orderJpaRepository.findById(orderId)
             .orElseThrow(() -> new EntityNotFoundException(
-                "[ERROR] 유효하지 않은 주문 입니다. 조회 주문 id: %s".formatted(orderId))
+                ExceptionMessage.ORDER_NOT_FOUND.toString())
             );
 
         OrderEntity completedOrder = orderEntity.complete();
@@ -101,7 +101,7 @@ public class OrderService {
     public OrderInfo cancelOrder(Long orderId) {
         OrderEntity orderEntity = orderJpaRepository.findById(orderId)
             .orElseThrow(() -> new EntityNotFoundException(
-                "[ERROR] 유효하지 않은 주문 입니다. 조회 주문 id: %s".formatted(orderId))
+                ExceptionMessage.ORDER_NOT_FOUND.toString())
             );
 
         OrderEntity completedOrder = orderEntity.cancel();
