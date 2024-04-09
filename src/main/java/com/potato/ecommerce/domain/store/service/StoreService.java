@@ -1,14 +1,17 @@
 package com.potato.ecommerce.domain.store.service;
 
+import static com.potato.ecommerce.global.exception.ExceptionMessage.BUSINESS_NUMBER_NOT_FOUNT;
 import static com.potato.ecommerce.global.exception.ExceptionMessage.BUSINESS_NUMBER_NOT_MATCH;
 import static com.potato.ecommerce.global.exception.ExceptionMessage.DUPLICATE_BUSINESS_NUMBER;
 import static com.potato.ecommerce.global.exception.ExceptionMessage.DUPLICATE_EMAIL;
 import static com.potato.ecommerce.global.exception.ExceptionMessage.EMAIL_NOT_MATCH;
 import static com.potato.ecommerce.global.exception.ExceptionMessage.PASSWORD_NOT_MATCH;
+import static com.potato.ecommerce.global.exception.ExceptionMessage.STORE_NOT_FOUNT;
 
 import com.potato.ecommerce.domain.product.dto.ProductListResponse;
 import com.potato.ecommerce.domain.product.repository.ProductQueryRepository;
 import com.potato.ecommerce.domain.revenue.entity.RevenueEntity;
+import com.potato.ecommerce.domain.revenue.repository.RevenueRepository;
 import com.potato.ecommerce.domain.store.dto.DeleteStoreRequest;
 import com.potato.ecommerce.domain.store.dto.LoginRequest;
 import com.potato.ecommerce.domain.store.dto.StoreRequest;
@@ -19,6 +22,7 @@ import com.potato.ecommerce.domain.store.entity.StoreEntity;
 import com.potato.ecommerce.domain.store.repository.StoreRepository;
 import com.potato.ecommerce.global.jwt.JwtUtil;
 import com.potato.ecommerce.global.util.RestPage;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -53,14 +57,11 @@ public class StoreService {
 
         validationBusinessNumber(storeRequest.getBusinessNumber());
 
-        StoreEntity storeEntity = StoreEntity.builder()
-            .email(storeRequest.getEmail())
+        StoreEntity storeEntity = StoreEntity.builder().email(storeRequest.getEmail())
             .password(passwordEncoder.encode(storeRequest.getPassword()))
-            .name(storeRequest.getName())
-            .phone(storeRequest.getPhone())
+            .name(storeRequest.getName()).phone(storeRequest.getPhone())
             .description(storeRequest.getDescription())
-            .businessNumber(storeRequest.getBusinessNumber())
-            .build();
+            .businessNumber(storeRequest.getBusinessNumber()).build();
 
         storeRepository.save(storeEntity);
     }
@@ -79,33 +80,29 @@ public class StoreService {
     public StoreResponse getStore(String subject) {
         StoreEntity storeEntity = findBySubject(subject);
 
-        return StoreResponse.builder()
-            .email(storeEntity.getEmail())
-            .name(storeEntity.getName())
-            .description(storeEntity.getDescription())
-            .phone(storeEntity.getPhone())
-            .businessNumber(storeEntity.getBusinessNumber())
-            .build();
+        return StoreResponse.builder().email(storeEntity.getEmail()).name(storeEntity.getName())
+            .description(storeEntity.getDescription()).phone(storeEntity.getPhone())
+            .businessNumber(storeEntity.getBusinessNumber()).build();
     }
 
     @Transactional
     public StoreResponse updateStore(String subject, UpdateStoreRequest updateRequest) {
-        StoreEntity storeEntity = storeRepository.update(subject, updateRequest);
+        StoreEntity storeEntity = findBySubject(subject);
 
-        return StoreResponse.builder()
-            .email(storeEntity.getEmail())
-            .name(storeEntity.getName())
-            .description(storeEntity.getDescription())
-            .phone(storeEntity.getPhone())
-            .businessNumber(storeEntity.getBusinessNumber())
-            .build();
+        storeEntity.update(updateRequest.getName(), updateRequest.getDescription(),
+            updateRequest.getPhone());
+
+        return StoreResponse.builder().email(storeEntity.getEmail()).name(storeEntity.getName())
+            .description(storeEntity.getDescription()).phone(storeEntity.getPhone())
+            .businessNumber(storeEntity.getBusinessNumber()).build();
     }
 
     @Transactional
     public void validatePassword(String subject, ValidatePasswordRequest validatePasswordRequest) {
         StoreEntity storeEntity = findBySubject(subject);
 
-        if (!storeEntity.passwordMatches(validatePasswordRequest.getFirstPassword(), passwordEncoder)) {
+        if (!storeEntity.passwordMatches(validatePasswordRequest.getFirstPassword(),
+            passwordEncoder)) {
             throw new ValidationException(PASSWORD_NOT_MATCH.toString());
         }
 
@@ -140,7 +137,8 @@ public class StoreService {
     }
 
     private void validationBusinessNumber(String businessNumber) {
-        RevenueEntity revenueEntity = revenueRepository.findByNumber(businessNumber);
+        RevenueEntity revenueEntity = revenueRepository.findByNumber(businessNumber)
+            .orElseThrow(() -> new EntityNotFoundException(BUSINESS_NUMBER_NOT_FOUNT.toString()));
 
         if (revenueEntity.isUsedChecking()) {
             throw new DataIntegrityViolationException(DUPLICATE_BUSINESS_NUMBER.toString());
@@ -155,11 +153,13 @@ public class StoreService {
     }
 
     private StoreEntity findByEmail(String email) {
-        return storeRepository.findByEmail(email);
+        return storeRepository.findByEmail(email)
+            .orElseThrow(() -> new EntityNotFoundException(STORE_NOT_FOUNT.toString()));
     }
 
     private StoreEntity findBySubject(String subject) {
-        return storeRepository.findBySubject(subject);
+        return storeRepository.findByBusinessNumber(subject)
+            .orElseThrow(() -> new EntityNotFoundException(STORE_NOT_FOUNT.toString()));
     }
 
 }

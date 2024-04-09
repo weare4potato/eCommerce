@@ -10,8 +10,8 @@ public enum ExceptionMessage {
     BUSINESS_NUMBER_NOT_MATCH("사업자 등록 번호가 일치하지 않습니다."),
     DUPLICATE_BUSINESS_NUMBER("이미 사용된 사업자 번호입니다."),
     BUSINESS_NUMBER_NOT_FOUNT("발급된 사업자 번호가 아닙니다."),
-    RECEIVER_NOT_MATCH("해당 주소지를 갖고 있지 않습니다.");
-
+    RECEIVER_NOT_MATCH("해당 주소지를 갖고 있지 않습니다."),
+    STORE_NOT_FOUNT("상점을 찾을 수 없습니다.");
     private final String message;
 
     ExceptionMessage(String message) {

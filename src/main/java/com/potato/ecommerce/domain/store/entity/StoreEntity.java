@@ -1,6 +1,5 @@
 package com.potato.ecommerce.domain.store.entity;
 
-import com.potato.ecommerce.domain.store.dto.UpdateStoreRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;

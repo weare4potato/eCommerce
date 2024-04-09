@@ -12,7 +12,6 @@ import com.potato.ecommerce.domain.product.entity.ProductEntity;
 import com.potato.ecommerce.domain.product.model.Product;
 import com.potato.ecommerce.domain.product.repository.ProductRepository;
 import com.potato.ecommerce.domain.store.entity.StoreEntity;
-import com.potato.ecommerce.domain.store.repository.StoreRepository;
 import com.potato.ecommerce.global.util.RestPage;
 import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;

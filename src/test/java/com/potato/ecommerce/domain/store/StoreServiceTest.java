@@ -133,7 +133,7 @@ public class StoreServiceTest implements StoreTestUtil {
             TEST_STORE_PASSWORD
         );
 
-        StoreEntity store = StoreEntity.builder()
+        StoreEntity storeEntity = StoreEntity.builder()
             .name(TEST_STORE_NAME)
             .email(TEST_STORE_EMAIL)
             .password(passwordEncoder.encode(TEST_STORE_PASSWORD))
@@ -142,10 +142,10 @@ public class StoreServiceTest implements StoreTestUtil {
             .businessNumber(TEST_BUSINESS_NUMBER)
             .build();
 
-        given(storeRepository.findByEmail(loginRequest.getEmail())).willReturn(store);
-        given(passwordEncoder.matches(loginRequest.getPassword(), store.getPassword())).willReturn(
+        given(storeRepository.findByEmail(loginRequest.getEmail())).willReturn(Optional.ofNullable(storeEntity));
+        given(passwordEncoder.matches(loginRequest.getPassword(), storeEntity.getPassword())).willReturn(
             true);
-        given(jwtUtil.createSellerToken(store.getBusinessNumber())).willReturn("token");
+        given(jwtUtil.createSellerToken(storeEntity.getBusinessNumber())).willReturn("token");
 
         // when + then
         assertThat(storeService.signin(loginRequest)).isEqualTo("token");
@@ -161,7 +161,7 @@ public class StoreServiceTest implements StoreTestUtil {
             TEST_STORE_PASSWORD
         );
 
-        StoreEntity store = StoreEntity.builder()
+        StoreEntity storeEntity = StoreEntity.builder()
             .name(TEST_STORE_NAME)
             .email(TEST_STORE_EMAIL)
             .password(passwordEncoder.encode(TEST_ANOTHER_STORE_PASSWORD))
@@ -170,8 +170,8 @@ public class StoreServiceTest implements StoreTestUtil {
             .businessNumber(TEST_BUSINESS_NUMBER)
             .build();
 
-        given(storeRepository.findByEmail(loginRequest.getEmail())).willReturn(store);
-        given(passwordEncoder.matches(loginRequest.getPassword(), store.getPassword())).willReturn(
+        given(storeRepository.findByEmail(loginRequest.getEmail())).willReturn(Optional.ofNullable(storeEntity));
+        given(passwordEncoder.matches(loginRequest.getPassword(), storeEntity.getPassword())).willReturn(
             false);
 
         // when + then
@@ -189,9 +189,9 @@ public class StoreServiceTest implements StoreTestUtil {
         );
         String subject = TEST_BUSINESS_NUMBER;
 
-        StoreEntity store = TEST_STORE;
+        StoreEntity storeEntity = TEST_STORE;
 
-        given(storeRepository.findBySubject(subject)).willReturn(store);
+        given(storeRepository.findByBusinessNumber(subject)).willReturn(Optional.ofNullable(storeEntity));
 
         // when
         StoreResponse storeResponse = storeService.updateStore(subject, updateStoreRequest);
@@ -214,7 +214,7 @@ public class StoreServiceTest implements StoreTestUtil {
 
         StoreEntity storeEntity = TEST_STORE;
 
-        given(storeRepository.findBySubject(subject)).willReturn(storeEntity);
+        given(storeRepository.findByBusinessNumber(subject)).willReturn(Optional.ofNullable(storeEntity));
         given(passwordEncoder.matches(deleteStoreRequest.getPassword(),
             storeEntity.getPassword())).willReturn(true);
 

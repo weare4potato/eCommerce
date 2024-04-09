@@ -1,19 +1,14 @@
 package com.potato.ecommerce.domain.store.repository;
 
-import com.potato.ecommerce.domain.store.dto.UpdateStoreRequest;
 import com.potato.ecommerce.domain.store.entity.StoreEntity;
+import java.util.Optional;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface StoreRepository {
+public interface StoreRepository extends JpaRepository<StoreEntity, Long> {
+
+    Optional<StoreEntity> findByEmail(String email);
 
     boolean existsByEmail(String email);
 
-    void save(StoreEntity storeEntity);
-
-    StoreEntity update(String subject, UpdateStoreRequest updateStoreRequest);
-
-    void delete(StoreEntity storeEntity);
-
-    StoreEntity findByEmail(String email);
-
-    StoreEntity findBySubject(String businessNumber);
+    Optional<StoreEntity> findByBusinessNumber(String subject);
 }
