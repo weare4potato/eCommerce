@@ -10,6 +10,7 @@ import com.potato.ecommerce.domain.product.repository.ProductRepository;
 import com.potato.ecommerce.global.exception.ExceptionMessage;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +24,7 @@ public class CartService {
     private final MemberJpaRepository memberJpaRepository;
     private final ProductRepository productRepository;
 
-    public void addCart(
+    public CartInfo addCart(
         Long memberId,
         Long productId,
         Integer quantity
@@ -36,29 +37,25 @@ public class CartService {
             .orElseThrow(() -> new EntityNotFoundException(
                 ExceptionMessage.PRODUCT_NOT_FOUND.toString()));
 
-        // 어떤 멤버가 어떤 상품을 담았는지 확인
         CartEntity cartEntity =
-            cartJpaRepository.findByMember_IdAndProduct_Id(memberEntity.getId(),
-                productEntity.getId());
+            cartJpaRepository.
+                findByMember_IdAndProduct_Id(memberEntity.getId(), productEntity.getId())
+                .orElseGet(() -> CartEntity.builder()
+                    .member(memberEntity)
+                    .product(productEntity)
+                    .quantity(quantity).build());
 
-        // TODO : null 쓰지 않는 방식으로 수정
-        // 상품을 처음으로 담을 경우 장바구니를 생성
-        if (cartEntity == null) {
-            cartEntity = CartEntity.builder()
-                .member(memberEntity)
-                .product(productEntity)
-                .quantity(quantity)
-                .build();
+        if (Objects.nonNull(cartEntity.getId())) {
+            cartEntity.addQuantity(quantity);
 
-            cartJpaRepository.save(cartEntity);
-
-            return;
         }
-        // 상품이 이미 담겨있다면 수량을 업데이트
-        cartEntity.addQuantity(quantity);
+
+        cartJpaRepository.save(cartEntity);
+
+        return CartInfo.fromEntity(cartEntity);
     }
 
-    public void updateCart(
+    public CartInfo updateCart(
         Long memberId,
         Long cartId,
         Integer quantity
@@ -68,6 +65,8 @@ public class CartService {
                 ExceptionMessage.CART_NOT_FOUND.toString()));
 
         cartEntity.updateQuantity(quantity);
+
+        return CartInfo.fromEntity(cartEntity);
     }
 
     public void deleteCart(
