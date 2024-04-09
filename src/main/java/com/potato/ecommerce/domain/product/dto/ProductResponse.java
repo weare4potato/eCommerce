@@ -1,12 +1,14 @@
 package com.potato.ecommerce.domain.product.dto;
 
 import com.potato.ecommerce.domain.product.entity.ProductEntity;
-import com.potato.ecommerce.domain.product.model.Product;
+
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
+@Builder
 public class ProductResponse {
 
     private final Long id;
@@ -17,14 +19,14 @@ public class ProductResponse {
     private final Long storeId;
     private final Long categoryId;
 
-    public ProductResponse(Product product) {
-        this.id = product.getId();
-        this.name = product.getName();
-        this.description = product.getDescription();
-        this.price = product.getPrice();
-        this.stock = product.getStock();
-        this.storeId = product.getStore().getId();
-        this.categoryId = product.getCategory().getId();
+    public ProductResponse(ProductEntity productEntity) {
+        this.id = productEntity.getId();
+        this.name = productEntity.getName();
+        this.description = productEntity.getDescription();
+        this.price = productEntity.getPrice();
+        this.stock = productEntity.getStock();
+        this.storeId = productEntity.getStore().getId();
+        this.categoryId = productEntity.getCategory().getId();
     }
 }
 

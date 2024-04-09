@@ -12,7 +12,6 @@ import com.potato.ecommerce.domain.product.dto.ProductSimpleResponse;
 import com.potato.ecommerce.domain.product.dto.ProductUpdateRequest;
 import com.potato.ecommerce.domain.product.dto.ShopProductResponse;
 import com.potato.ecommerce.domain.product.entity.ProductEntity;
-import com.potato.ecommerce.domain.product.model.Product;
 import com.potato.ecommerce.domain.product.repository.ProductRepository;
 import com.potato.ecommerce.domain.store.entity.StoreEntity;
 import com.potato.ecommerce.global.util.RestPage;
@@ -43,7 +42,7 @@ public class ProductService {
         CategoryEntity category = categoryRepository.findById(requestDto.getCategoryId())
             .orElseThrow(() -> new EntityNotFoundException(CATEGORY_NOT_FOUND.toString()));
 
-        Product product = Product.builder()
+        ProductEntity productEntity = ProductEntity.builder()
             .store(storeEntity)
             .category(category)
             .name(requestDto.getName())
@@ -54,16 +53,16 @@ public class ProductService {
             .createdAt(LocalDateTime.now())
             .build();
 
-        productRepository.save(ProductEntity.fromModel(product));
+        productRepository.save(productEntity);
 
         return new ProductResponse(
-            product.getId(),
-            product.getName(),
-            product.getDescription(),
-            product.getPrice(),
-            product.getStock(),
-            product.getStore().getId(),
-            product.getCategory().getId());
+            productEntity.getId(),
+            productEntity.getName(),
+            productEntity.getDescription(),
+            productEntity.getPrice(),
+            productEntity.getStock(),
+            productEntity.getStore().getId(),
+            productEntity.getCategory().getId());
     }
 
     public RestPage<ProductSimpleResponse> findAllProducts(int page, int size) {
@@ -126,15 +125,20 @@ public class ProductService {
         CategoryEntity categoryEntity = categoryRepository.findById(updateRequest.getCategoryId())
             .orElseThrow(() -> new EntityNotFoundException(CATEGORY_NOT_FOUND.toString()));
 
-        Product product = Product.fromEntity(productEntity);
+        productEntity.updateFromRequest(updateRequest);
+        productEntity.updateCategory(categoryEntity);
 
-        product.updateFromRequest(updateRequest);
-        product.updateCategory(categoryEntity);
+        productRepository.save(productEntity);
 
-        ProductEntity updatedProductEntity = product.toEntity();
-        productRepository.save(updatedProductEntity);
-
-        return new ProductResponse(product);
+        return ProductResponse.builder()
+            .id(productEntity.getId())
+            .name(productEntity.getName())
+            .description(productEntity.getDescription())
+            .price(productEntity.getPrice())
+            .stock(productEntity.getStock())
+            .storeId(productEntity.getStore().getId())
+            .categoryId(productEntity.getCategory().getId())
+            .build();
     }
 
     @Transactional
@@ -142,7 +146,7 @@ public class ProductService {
         ProductEntity productEntity = productRepository.findById(productId)
             .orElseThrow(() -> new EntityNotFoundException(PRODUCT_NOT_FOUND.toString()));
 
-        Product product = Product.fromEntity(productEntity);
-        productRepository.delete(product.toEntity());
+        productEntity.softDelete();
+        productRepository.delete(productEntity);
     }
 }
