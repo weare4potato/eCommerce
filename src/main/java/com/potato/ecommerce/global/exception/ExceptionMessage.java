@@ -14,7 +14,8 @@ public enum ExceptionMessage {
     ORDER_NOT_FOUND("해당 주문을 찾지 못했습니다."),
     PRODUCT_NOT_FOUND("해당 상품을 찾지 못했습니다."),
     STORE_NOT_FOUND("해당 상점을 찾지 못했습니다."),
-    CART_NOT_FOUND("해당 장바구니를 찾지 못했습니다.");
+    CART_NOT_FOUND("해당 장바구니를 찾지 못했습니다."),
+    CATEGORY_NOT_FOUND("해당 카테고리를 찾지 못했습니다.");
 
     private final String message;
 

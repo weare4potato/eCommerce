@@ -1,5 +1,8 @@
 package com.potato.ecommerce.domain.product.service;
 
+import static com.potato.ecommerce.global.exception.ExceptionMessage.CATEGORY_NOT_FOUND;
+import static com.potato.ecommerce.global.exception.ExceptionMessage.PRODUCT_NOT_FOUND;
+
 import com.potato.ecommerce.domain.category.entity.CategoryEntity;
 import com.potato.ecommerce.domain.category.repository.CategoryRepository;
 import com.potato.ecommerce.domain.product.dto.ProductDetailResponse;
@@ -38,7 +41,7 @@ public class ProductService {
         StoreEntity storeEntity = storeRepository.findBySubject(businessNumber);
 
         CategoryEntity category = categoryRepository.findById(requestDto.getCategoryId())
-            .orElseThrow(() -> new IllegalArgumentException("카테고리를 찾을 수 없습니다."));
+            .orElseThrow(() -> new EntityNotFoundException(CATEGORY_NOT_FOUND.toString()));
 
         Product product = Product.builder()
             .store(storeEntity)
@@ -76,7 +79,7 @@ public class ProductService {
 
     public ProductDetailResponse findProductDetail(Long productId) {
         ProductEntity productEntity = productRepository.findById(productId)
-            .orElseThrow(() -> new IllegalArgumentException("상품을 찾을 수 없습니다."));
+            .orElseThrow(() -> new EntityNotFoundException(PRODUCT_NOT_FOUND.toString()));
 
         CategoryEntity category = productEntity.getCategory();
         String oneDepthName = category.getOneDepth().toString();
@@ -118,10 +121,10 @@ public class ProductService {
     @Transactional
     public ProductResponse updateProduct(Long productId, ProductUpdateRequest updateRequest) {
         ProductEntity productEntity = productRepository.findById(productId)
-            .orElseThrow(() -> new EntityNotFoundException("상품을 찾을 수 없습니다."));
+            .orElseThrow(() -> new EntityNotFoundException(PRODUCT_NOT_FOUND.toString()));
 
         CategoryEntity categoryEntity = categoryRepository.findById(updateRequest.getCategoryId())
-            .orElseThrow(() -> new EntityNotFoundException("카테고리를 찾을 수 없습니다."));
+            .orElseThrow(() -> new EntityNotFoundException(CATEGORY_NOT_FOUND.toString()));
 
         Product product = Product.fromEntity(productEntity);
 
@@ -137,7 +140,7 @@ public class ProductService {
     @Transactional
     public void softDeleteProduct(Long productId) {
         ProductEntity productEntity = productRepository.findById(productId)
-            .orElseThrow(() -> new EntityNotFoundException("상품을 찾을 수 없습니다."));
+            .orElseThrow(() -> new EntityNotFoundException(PRODUCT_NOT_FOUND.toString()));
 
         Product product = Product.fromEntity(productEntity);
         productRepository.delete(product.toEntity());
