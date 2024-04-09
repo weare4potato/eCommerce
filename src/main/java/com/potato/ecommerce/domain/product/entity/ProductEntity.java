@@ -2,7 +2,7 @@ package com.potato.ecommerce.domain.product.entity;
 
 
 import com.potato.ecommerce.domain.category.entity.CategoryEntity;
-import com.potato.ecommerce.domain.product.model.Product;
+import com.potato.ecommerce.domain.product.dto.ProductUpdateRequest;
 import com.potato.ecommerce.domain.store.entity.StoreEntity;
 import com.potato.ecommerce.global.exception.custom.OutOfStockException;
 import jakarta.persistence.Column;
@@ -83,41 +83,32 @@ public class ProductEntity {
         this.createdAt = createdAt;
     }
 
-    public static ProductEntity fromModel(Product product) {
-        return ProductEntity.builder()
-            .store(product.getStore())
-            .category(product.getCategory())
-            .name(product.getName())
-            .description(product.getDescription())
-            .price(product.getPrice())
-            .stock(product.getStock())
-            .isDeleted(product.getIsDeleted())
-            .createdAt(product.getCreatedAt())
-            .build();
-    }
-
-    public Product toModel() {
-        return Product.builder()
-            .id(this.id)
-            .store(this.store)
-            .category(this.category)
-            .name(this.name)
-            .description(this.description)
-            .price(this.price)
-            .stock(this.stock)
-            .isDeleted(this.isDeleted)
-            .build();
-    }
-
     public void removeStock(Integer stock) {
         Integer restStock = this.stock - stock;
-        if(restStock < 0) {
+        if (restStock < 0) {
             throw new OutOfStockException("[ERROR] 상품의 재고가 부족합니다. 현재 재고 수량: " + this.stock);
         }
         this.stock = restStock;
     }
-    public void addStock(Integer stock){
+
+    public void addStock(Integer stock) {
         this.stock += stock;
+    }
+
+    public void updateFromRequest(ProductUpdateRequest updateRequest) {
+//        this.category = categoryEntity;
+        this.name = updateRequest.getProductName();
+        this.description = updateRequest.getDescription();
+        this.price = updateRequest.getPrice();
+        this.stock = updateRequest.getStock();
+    }
+
+    public void updateCategory(CategoryEntity newCategory) {
+        this.category = newCategory;
+    }
+
+    public void softDelete() {
+        this.isDeleted = true;
     }
 
 }
