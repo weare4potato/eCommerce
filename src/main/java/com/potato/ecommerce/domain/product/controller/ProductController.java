@@ -40,7 +40,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@Tag(name = PRODUCT_API)
+@Tag(name = "Product API")
 @RequestMapping("/api/v1")
 public class ProductController {
 
@@ -48,18 +48,18 @@ public class ProductController {
     private final JwtUtil jwtUtil;
 
     @PostMapping("/products")
-    @Operation(summary = PRODUCT_CREATE)
-    public ResponseEntity<Void> createProduct(
+    @Operation(summary = "상품 등록")
+    public ResponseEntity<ProductResponse> createProduct(
         @Valid @RequestBody ProductRequest requestDto, HttpServletRequest request
     ) {
         String subject = (String) request.getAttribute("subject");
 
-        productService.createProduct(subject, requestDto);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        ProductResponse productResponse = productService.createProduct(subject, requestDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(productResponse);
     }
 
     @GetMapping("/products/all")
-    @Operation(summary = ALL_PRODUCT_LIST)
+    @Operation(summary = "모든 상품 조회")
     public ResponseEntity<RestPage<ProductSimpleResponse>> getAllProducts(
         @RequestParam(value = "page", defaultValue = "0") int page,
         @RequestParam(value = "size", defaultValue = "10") int size) {
@@ -69,14 +69,14 @@ public class ProductController {
     }
 
     @GetMapping("/products/details/{productId}")
-    @Operation(summary = PRODUCT_DETAIL)
+    @Operation(summary = "상품 상세 조회")
     public ResponseEntity<ProductDetailResponse> getProductDetail(@PathVariable Long productId) {
         ProductDetailResponse productDetail = productService.findProductDetail(productId);
         return ResponseEntity.status(HttpStatus.OK).body(productDetail);
     }
 
     @GetMapping("/shops/{shopId}/shop-products")
-    @Operation(summary = PRODUCT_LIST_BY_STORE)
+    @Operation(summary = "상점별 상품 조회")
     public ResponseEntity<RestPage<ShopProductResponse>> getProductsByShop(
         @PathVariable Long shopId,
         @RequestParam(value = "page", defaultValue = "0") int page,
@@ -87,7 +87,7 @@ public class ProductController {
     }
 
     @GetMapping("/products/categories")
-    @Operation(summary = PRODUCT_LIST_BY_CATEGORY)
+    @Operation(summary = "카테고리별 상품 조회")
     public ResponseEntity<RestPage<ProductSimpleResponse>> getProductsByCategory(
         @RequestParam("categoryId") Long categoryId,
         @RequestParam(value = "page", defaultValue = "0") int page,
@@ -98,7 +98,7 @@ public class ProductController {
     }
 
     @PutMapping("/products/{productId}")
-    @Operation(summary = PRODUCT_UPDATE)
+    @Operation(summary = "상품 수정")
     public ResponseEntity<ProductResponse> updateProduct(
         @PathVariable Long productId,
         @Valid @RequestBody ProductUpdateRequest updateRequest,
@@ -111,15 +111,15 @@ public class ProductController {
     }
 
     @DeleteMapping("/products/{productId}")
-    @Operation(summary = PRODUCT_DELETE)
-    public ResponseEntity<?> deleteProduct(
+    @Operation(summary = "상품 삭제")
+    public ResponseEntity<Void> deleteProduct(
         @PathVariable Long productId,
         HttpServletRequest request) {
 
         String subject = (String) request.getAttribute("subject");
 
         productService.softDeleteProduct(productId);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(PRODUCT_DELETE_SUCCESS);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 }
