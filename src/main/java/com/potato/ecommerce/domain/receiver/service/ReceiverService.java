@@ -1,5 +1,7 @@
 package com.potato.ecommerce.domain.receiver.service;
 
+import static com.potato.ecommerce.global.exception.ExceptionMessage.MEMBER_NOT_FOUND;
+import static com.potato.ecommerce.global.exception.ExceptionMessage.RECEIVER_NOT_FOUND;
 import static com.potato.ecommerce.global.exception.ExceptionMessage.RECEIVER_NOT_MATCH;
 
 import com.potato.ecommerce.domain.member.entity.MemberEntity;
@@ -7,7 +9,6 @@ import com.potato.ecommerce.domain.member.repository.MemberJpaRepository;
 import com.potato.ecommerce.domain.receiver.dto.ReceiverForm;
 import com.potato.ecommerce.domain.receiver.entity.ReceiverEntity;
 import com.potato.ecommerce.domain.receiver.repository.ReceiverJpaRepository;
-import com.potato.ecommerce.global.exception.ExceptionMessage;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
@@ -25,7 +26,7 @@ public class ReceiverService {
     private final ReceiverJpaRepository receiverJpaRepository;
 
     @Transactional
-    public void createReceiver(ReceiverForm dto, String subject) {
+    public Long createReceiver(ReceiverForm dto, String subject) {
         MemberEntity member = findByEmail(subject);
 
         String addressName =
@@ -42,24 +43,25 @@ public class ReceiverService {
             .zipcode(dto.getZipcode())
             .build();
 
-        receiverJpaRepository.save(receiver);
+        return receiverJpaRepository.save(receiver).getId();
+
     }
 
     @Transactional
     public ReceiverForm updateReceiver(String subject, Long receiverId, ReceiverForm dto) {
         MemberEntity member = findByEmail(subject);
-        ReceiverEntity receiver = findReceiverBy(receiverId);
+        ReceiverEntity receiver = findById(receiverId);
 
         validateMember(receiver, member);
 
         receiver.update(dto);
-        return receiver.createReceiverForm();
+        return ReceiverForm.fromEntity(receiver);
     }
 
     @Transactional
     public void deleteMember(String subject, Long receiverId) {
         MemberEntity member = findByEmail(subject);
-        ReceiverEntity receiver = findReceiverBy(receiverId);
+        ReceiverEntity receiver = findById(receiverId);
 
         validateMember(receiver, member);
 
@@ -70,19 +72,20 @@ public class ReceiverService {
         MemberEntity member = findByEmail(subject);
 
         return receiverJpaRepository.findAllByMember_Id(member.getId()).stream()
-            .map(ReceiverEntity::createReceiverForm)
+            .map(ReceiverForm::fromEntity)
             .toList();
     }
 
+
     private MemberEntity findByEmail(String subject) {
         return memberJpaRepository.findByEmail(subject).orElseThrow(
-            () -> new EntityNotFoundException(ExceptionMessage.MEMBER_NOT_FOUND.toString())
+            () -> new EntityNotFoundException(MEMBER_NOT_FOUND.toString())
         );
     }
 
-    private ReceiverEntity findReceiverBy(Long receiverId) {
+    private ReceiverEntity findById(Long receiverId) {
         return receiverJpaRepository.findById(receiverId).orElseThrow(
-            () -> new EntityNotFoundException(ExceptionMessage.RECEIVER_NOT_FOUND.toString())
+            () -> new EntityNotFoundException(RECEIVER_NOT_FOUND.toString())
         );
     }
 

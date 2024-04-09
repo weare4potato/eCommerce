@@ -27,7 +27,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "members")
-@Builder
 public class MemberEntity {
 
     @Id
@@ -54,20 +53,26 @@ public class MemberEntity {
     @Enumerated(EnumType.STRING)
     private UserRoleEnum role;
 
+    @Builder
+    public MemberEntity(String email, String userName, String password, String phone,
+        LocalDateTime createdAt, UserRoleEnum role, boolean authStatus) {
+        this.email = email;
+        this.userName = userName;
+        this.password = password;
+        this.phone = phone;
+        this.createdAt = createdAt;
+        this.role = role;
+        this.authStatus = authStatus;
+    }
+
     private boolean authStatus;
 
     public void confirm() {
         this.authStatus = true;
     }
 
-
     public void updatePassword(String newPassword) {
         this.password = newPassword;
-    }
-
-    public ResponseMember createResponseDTO() {
-        return ResponseMember.builder().username(this.userName).email(this.email).phone(this.phone)
-            .build();
     }
 
     public boolean isNotMatchPassword(PasswordEncoder encoder, String password) {

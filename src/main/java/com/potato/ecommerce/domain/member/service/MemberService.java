@@ -32,14 +32,9 @@ public class MemberService {
 
     @Transactional
     public void signUp(SignUpDto dto) {
-        MemberEntity member = MemberEntity.builder()
-            .email(dto.getEmail())
-            .password(passwordEncoder.encode(dto.getPassword()))
-            .userName(dto.getUsername())
-            .phone(dto.getPhone())
-            .role(UserRoleEnum.USER)
-            .authStatus(false)
-            .build();
+        MemberEntity member = MemberEntity.builder().email(dto.getEmail())
+            .password(passwordEncoder.encode(dto.getPassword())).userName(dto.getUsername())
+            .phone(dto.getPhone()).role(UserRoleEnum.USER).authStatus(false).build();
 
         memberJpaRepository.save(member);
     }
@@ -58,13 +53,15 @@ public class MemberService {
     }
 
     @Transactional
-    public void updatePassword(UpdatePasswordDto dto, String subject) {
+    public Long updatePassword(UpdatePasswordDto dto, String subject) {
         MemberEntity member = findByEmail(subject);
 
         validateMemberPassword(member, dto.getPassword());
         validateNewPassword(dto);
 
         member.updatePassword(passwordEncoder.encode(dto.getNewPassword()));
+
+        return member.getId();
     }
 
     @Transactional
@@ -73,33 +70,36 @@ public class MemberService {
 
         member.update(dto);
 
-        return member.createResponseDTO();
+        return ResponseMember.fromEntity(member);
     }
 
     @Transactional
-    public void confirmMember(String email) {
+    public Long confirmMember(String email) {
         MemberEntity member = findByEmail(email);
 
         member.confirm();
+
+        return member.getId();
     }
 
 
-    public void passwordCheck(String subject, String password) {
+    public Long passwordCheck(String subject, String password) {
         MemberEntity member = findByEmail(subject);
 
         validateMemberPassword(member, password);
+
+        return member.getId();
     }
 
     public ResponseMember getMember(String subject) {
         MemberEntity member = findByEmail(subject);
 
-        return member.createResponseDTO();
+        return ResponseMember.fromEntity(member);
     }
 
     private MemberEntity findByEmail(String subject) {
         return memberJpaRepository.findByEmail(subject).orElseThrow(
-            () -> new EntityNotFoundException(ExceptionMessage.MEMBER_NOT_FOUND.toString())
-        );
+            () -> new EntityNotFoundException(ExceptionMessage.MEMBER_NOT_FOUND.toString()));
     }
 
 
