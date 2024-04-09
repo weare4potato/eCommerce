@@ -63,7 +63,6 @@ public class ProductService {
             product.getCategory().getId());
     }
 
-    @Transactional
     public RestPage<ProductSimpleResponse> findAllProducts(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
         Page<ProductEntity> productPage = productRepository.findAll(pageRequest);
@@ -75,7 +74,6 @@ public class ProductService {
         return new RestPage<>(productSimpleResponses, page, size, productPage.getTotalElements());
     }
 
-    @Transactional
     public ProductDetailResponse findProductDetail(Long productId) {
         ProductEntity productEntity = productRepository.findById(productId)
             .orElseThrow(() -> new IllegalArgumentException("상품을 찾을 수 없습니다."));
@@ -95,7 +93,6 @@ public class ProductService {
         );
     }
 
-    @Transactional
     public RestPage<ShopProductResponse> findProductsByShopId(Long shopId, int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
         Page<ProductEntity> productsPage = productRepository.findByStoreId(shopId, pageRequest);
@@ -107,7 +104,6 @@ public class ProductService {
         return new RestPage<>(shopProductResponsesPage);
     }
 
-    @Transactional
     public RestPage<ProductSimpleResponse> findProductsByCategoryId(Long categoryId, int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
         Page<ProductEntity> productPage = productRepository.findByCategoryId(categoryId, pageRequest);
