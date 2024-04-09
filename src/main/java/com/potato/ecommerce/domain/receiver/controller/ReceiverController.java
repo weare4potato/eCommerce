@@ -1,12 +1,5 @@
 package com.potato.ecommerce.domain.receiver.controller;
 
-import static com.potato.ecommerce.domain.receiver.message.ReceiverMessage.CREATE_MESSAGE;
-import static com.potato.ecommerce.domain.receiver.message.ReceiverMessage.CREATE_RECEIVER;
-import static com.potato.ecommerce.domain.receiver.message.ReceiverMessage.DELETE_MESSAGE;
-import static com.potato.ecommerce.domain.receiver.message.ReceiverMessage.DELETE_RECEIVER;
-import static com.potato.ecommerce.domain.receiver.message.ReceiverMessage.GET_RECEIVER;
-import static com.potato.ecommerce.domain.receiver.message.ReceiverMessage.UPDATE_RECEIVER;
-
 import com.potato.ecommerce.domain.receiver.dto.ReceiverForm;
 import com.potato.ecommerce.domain.receiver.service.ReceiverService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,7 +7,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -29,28 +21,27 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@Tag(name = "Receiver API", description = "Receiver API 입니다.")
+@Tag(name = "Receiver API")
 @RequestMapping("/api/v1/users/receivers")
-@Slf4j
 public class ReceiverController {
 
     private final ReceiverService receiverService;
 
     @PostMapping
-    @Operation(summary = CREATE_RECEIVER)
-    public ResponseEntity<String> createReceiver(
+    @Operation(summary = "배송지 생성")
+    public ResponseEntity<Long> createReceiver(
         @RequestBody @Validated ReceiverForm dto,
         HttpServletRequest request
     ) {
-        receiverService.createReceiver(dto, getSubject(request));
+        Long id = receiverService.createReceiver(dto, getSubject(request));
 
         return ResponseEntity
             .status(HttpStatus.CREATED)
-            .body(CREATE_MESSAGE);
+            .body(id);
     }
 
     @GetMapping
-    @Operation(summary = GET_RECEIVER)
+    @Operation(summary = "배송지 조회")
     public ResponseEntity<List<ReceiverForm>> findAllReceiver(
         HttpServletRequest request
     ) {
@@ -61,7 +52,7 @@ public class ReceiverController {
     }
 
     @PutMapping("/{receiverId}")
-    @Operation(summary = UPDATE_RECEIVER)
+    @Operation(summary = "배송지 수정")
     public ResponseEntity<ReceiverForm> updateReceiver(
         HttpServletRequest request,
         @PathVariable Long receiverId,
@@ -74,15 +65,15 @@ public class ReceiverController {
     }
 
     @DeleteMapping("/{receiverId}")
-    @Operation(summary = DELETE_RECEIVER)
+    @Operation(summary = "배송지 삭제")
     public ResponseEntity<String> deleteReceiver(
         HttpServletRequest request,
         @PathVariable Long receiverId
     ){
         receiverService.deleteMember(getSubject(request), receiverId);
         return ResponseEntity
-            .status(HttpStatus.OK)
-            .body(DELETE_MESSAGE);
+            .status(HttpStatus.NO_CONTENT)
+            .build();
     }
     private String getSubject(HttpServletRequest request) {
         return (String) request.getAttribute("subject");

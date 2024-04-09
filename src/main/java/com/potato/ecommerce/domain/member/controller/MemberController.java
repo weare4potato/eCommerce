@@ -1,14 +1,11 @@
 package com.potato.ecommerce.domain.member.controller;
 
-import static com.potato.ecommerce.domain.member.message.MemberMessage.*;
-
 import com.potato.ecommerce.domain.mail.service.MailService;
 import com.potato.ecommerce.domain.member.dto.ResponseMember;
 import com.potato.ecommerce.domain.member.dto.SignInDto;
 import com.potato.ecommerce.domain.member.dto.SignUpDto;
 import com.potato.ecommerce.domain.member.dto.UpdateMemberDto;
 import com.potato.ecommerce.domain.member.dto.UpdatePasswordDto;
-import com.potato.ecommerce.domain.member.message.MemberMessage;
 import com.potato.ecommerce.domain.member.service.MemberService;
 import com.potato.ecommerce.global.jwt.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,7 +13,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -32,31 +28,26 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@Tag(name = MEMBER_API)
+@Tag(name = "Member API")
 @RequestMapping("/api/v1/users")
-@Slf4j
 public class MemberController {
 
     private final MemberService memberService;
     private final MailService mailService;
 
     @PostMapping("/signup")
-    @Operation(summary = SING_UP)
-    public ResponseEntity<String> signUp(
-        @RequestBody @Validated SignUpDto dto
-    ) {
+    @Operation(summary = "회원가입")
+    public ResponseEntity<String> signUp(@RequestBody @Validated SignUpDto dto) {
         memberService.signUp(dto);
-        return ResponseEntity
-            .status(HttpStatus.CREATED)
-            .body(mailService.sendMail(dto.getEmail()));
+        String message = mailService.sendMail(dto.getEmail());
+        return ResponseEntity.status(HttpStatus.CREATED).body(message);
     }
 
     @PostMapping("/signin")
-    @Operation(summary = SING_IN)
-    public ResponseEntity<Void> signIn(
-        @RequestBody @Validated SignInDto dto
-    ) {
+    @Operation(summary = "로그인")
+    public ResponseEntity<Void> signIn(@RequestBody @Validated SignInDto dto) {
         String token = memberService.signIn(dto);
+
         ResponseCookie cookie = ResponseCookie
             .from(JwtUtil.AUTHORIZATION_HEADER, token)
             .domain("localhost")
@@ -65,65 +56,45 @@ public class MemberController {
             .maxAge(Duration.ofMinutes(30L))
             .build();
 
-        return ResponseEntity
-            .status(HttpStatus.OK)
-            .header(HttpHeaders.SET_COOKIE, cookie.toString())
-            .build();
+        return ResponseEntity.status(HttpStatus.OK)
+            .header(HttpHeaders.SET_COOKIE, cookie.toString()).build();
     }
 
     @GetMapping
-    @Operation(summary = GET_MEMBER)
-    public ResponseEntity<ResponseMember> getMember(
-        HttpServletRequest request
-    ) {
-        return ResponseEntity
-            .status(HttpStatus.OK)
-            .body(memberService.getMember(getSubject(request)));
+    @Operation(summary = "단일 조회")
+    public ResponseEntity<ResponseMember> getMember(HttpServletRequest request) {
+        ResponseMember response = memberService.getMember(getSubject(request));
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @PostMapping
-    @Operation(summary = PASSWORD_CHECK)
-    public ResponseEntity<Void> passwordCheck(
-        @RequestBody String password,
-        HttpServletRequest request
-    ) {
-        memberService.passwordCheck(getSubject(request), password);
-        return ResponseEntity
-            .status(HttpStatus.OK)
-            .build();
+    @Operation(summary = "비밀번호 확인")
+    public ResponseEntity<Long> passwordCheck(@RequestBody String password,
+        HttpServletRequest request) {
+        Long id = memberService.passwordCheck(getSubject(request), password);
+        return ResponseEntity.status(HttpStatus.OK).body(id);
     }
 
     @PutMapping
-    @Operation(summary = UPDATE_MEMBER)
-    public ResponseEntity<ResponseMember> updateMember(
-        @RequestBody @Validated UpdateMemberDto dto,
-        HttpServletRequest request
-    ) {
-        return ResponseEntity
-            .status(HttpStatus.OK)
-            .body(memberService.updateMember(dto, getSubject(request)));
+    @Operation(summary = "정보 수정")
+    public ResponseEntity<ResponseMember> updateMember(@RequestBody @Validated UpdateMemberDto dto,
+        HttpServletRequest request) {
+        ResponseMember response = memberService.updateMember(dto, getSubject(request));
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @PutMapping("/password")
-    @Operation(summary = UPDATE_PASSWORD)
-    public ResponseEntity<String> updatePassword(
-        @RequestBody @Validated UpdatePasswordDto dto,
-        HttpServletRequest request
-    ) {
-        memberService.updatePassword(dto, getSubject(request));
-        return ResponseEntity
-            .status(HttpStatus.OK)
-            .body(UPDATE_PASSWORD_MESSAGE);
+    @Operation(summary = "비밀번호 수정")
+    public ResponseEntity<Long> updatePassword(@RequestBody @Validated UpdatePasswordDto dto,
+        HttpServletRequest request) {
+        Long id = memberService.updatePassword(dto, getSubject(request));
+        return ResponseEntity.status(HttpStatus.OK).body(id);
     }
 
     @GetMapping("/signup/confirm")
-    public ResponseEntity<String> updateAuth(
-        @RequestParam("email") String email
-    ) {
-        memberService.confirmMember(email);
-        return ResponseEntity
-            .status(HttpStatus.CREATED)
-            .body(CONFIRM_AUTH);
+    public ResponseEntity<Long> updateAuth(@RequestParam("email") String email) {
+        Long id = memberService.confirmMember(email);
+        return ResponseEntity.status(HttpStatus.CREATED).body(id);
     }
 
     private String getSubject(HttpServletRequest request) {

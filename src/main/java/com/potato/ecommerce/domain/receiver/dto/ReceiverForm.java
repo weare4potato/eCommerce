@@ -1,5 +1,7 @@
 package com.potato.ecommerce.domain.receiver.dto;
 
+import com.potato.ecommerce.domain.receiver.entity.ReceiverEntity;
+import jakarta.persistence.criteria.From;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -35,4 +37,17 @@ public class ReceiverForm {
 
     @NotBlank
     private String detail;
+
+
+    public static ReceiverForm fromEntity(ReceiverEntity entity) {
+        return ReceiverForm.builder()
+            .name(entity.getName())
+            .phone(entity.getPhone())
+            .addressName(entity.getAddressName())
+            .city(entity.getCity())
+            .street(entity.getStreet())
+            .zipcode(entity.getZipcode())
+            .detail(entity.getDetail())
+            .build();
+    }
 }

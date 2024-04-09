@@ -21,7 +21,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder
 @Table(name = "receivers")
 public class ReceiverEntity {
 
@@ -55,10 +54,17 @@ public class ReceiverEntity {
     @Column(nullable = false)
     private String zipcode;
 
-    public ReceiverForm createReceiverForm() {
-        return ReceiverForm.builder().name(this.name).phone(this.phone)
-            .addressName(this.addressName).city(this.city).street(this.street).zipcode(this.zipcode)
-            .detail(this.detail).build();
+    @Builder
+    public ReceiverEntity(MemberEntity member, String name, String phone, String addressName,
+        String city, String street, String detail, String zipcode) {
+        this.member = member;
+        this.name = name;
+        this.phone = phone;
+        this.addressName = addressName;
+        this.city = city;
+        this.street = street;
+        this.detail = detail;
+        this.zipcode = zipcode;
     }
 
     public void update(ReceiverForm dto) {
