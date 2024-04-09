@@ -1,6 +1,5 @@
 package com.potato.ecommerce.domain.store.model;
 
-import com.potato.ecommerce.domain.store.entity.StoreEntity;
 import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,31 +29,6 @@ public class Store {
         this.phone = phone;
         this.businessNumber = businessNumber;
         this.createdAt = createdAt;
-    }
-
-    public static Store fromEntity(StoreEntity storeEntity) {
-        return Store.builder()
-            .id(storeEntity.getId())
-            .email(storeEntity.getEmail())
-            .password(storeEntity.getPassword())
-            .name(storeEntity.getName())
-            .description(storeEntity.getDescription())
-            .phone(storeEntity.getPhone())
-            .businessNumber(storeEntity.getBusinessNumber())
-            .createdAt(storeEntity.getCreatedAt())
-            .build();
-    }
-
-    public StoreEntity toEntity() {
-        return StoreEntity.builder()
-            .id(id)
-            .email(email)
-            .password(password)
-            .name(name)
-            .description(description)
-            .phone(phone)
-            .businessNumber(businessNumber)
-            .build();
     }
 
     public void update(String name, String description, String phone) {

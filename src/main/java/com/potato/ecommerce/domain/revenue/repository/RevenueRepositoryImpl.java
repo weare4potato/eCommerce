@@ -1,8 +1,8 @@
 package com.potato.ecommerce.domain.revenue.repository;
 
-import static com.potato.ecommerce.domain.revenue.model.Revenue.fromEntity;
 import static com.potato.ecommerce.global.exception.ExceptionMessage.BUSINESS_NUMBER_NOT_FOUNT;
 
+import com.potato.ecommerce.domain.revenue.entity.RevenueEntity;
 import com.potato.ecommerce.domain.revenue.model.Revenue;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
@@ -16,13 +16,13 @@ public class RevenueRepositoryImpl implements RevenueRepository {
 
     @Override
     public Revenue save(Revenue revenue) {
-        return fromEntity(jpaRevenueRepository.save(revenue.toEntity()));
+        return jpaRevenueRepository.save(RevenueEntity.fromModel(revenue)).toModel();
     }
 
     @Override
     public Revenue findByNumber(String businessNumber) {
-        return fromEntity(jpaRevenueRepository.findByNumber(businessNumber).orElseThrow(
+        return jpaRevenueRepository.findByNumber(businessNumber).orElseThrow(
             () -> new NoSuchElementException(BUSINESS_NUMBER_NOT_FOUNT.toString())
-        ));
+        ).toModel();
     }
 }
