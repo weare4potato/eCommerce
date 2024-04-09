@@ -1,10 +1,10 @@
 package com.potato.ecommerce.domain.order.controller.dto.response;
 
-import com.potato.ecommerce.domain.member.model.Member;
+import com.potato.ecommerce.domain.member.entity.MemberEntity;
 import com.potato.ecommerce.domain.order.dto.OrderInfo;
 import com.potato.ecommerce.domain.order.entity.OrderStatus;
 import com.potato.ecommerce.domain.payment.vo.PaymentType;
-import com.potato.ecommerce.domain.receiver.model.Receiver;
+import com.potato.ecommerce.domain.receiver.entity.ReceiverEntity;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,15 +16,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderInfoResponseDTO {
+
     private Long id;
-    private Member member;
-    private Receiver receiver;
+    private MemberEntity member;
+    private ReceiverEntity receiver;
     private PaymentType paymentType;
     private OrderStatus status;
     private String orderNum;
     private LocalDateTime orderedAt;
 
-    public static OrderInfoResponseDTO from(OrderInfo info){
+    public static OrderInfoResponseDTO from(OrderInfo info) {
         return OrderInfoResponseDTO.builder()
             .id(info.getId())
             .member(info.getMember())

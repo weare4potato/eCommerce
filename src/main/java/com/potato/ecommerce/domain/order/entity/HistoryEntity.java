@@ -54,5 +54,7 @@ public class HistoryEntity {
         this.quantity = quantity;
     }
 
-
+    public void cancel() {
+        product.addStock(this.quantity);
+    }
 }

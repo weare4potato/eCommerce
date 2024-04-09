@@ -87,5 +87,30 @@ public class OrderEntity {
         this.status = OrderStatus.READY;
     }
 
+    public OrderEntity complete() {
+        return OrderEntity.builder()
+            .id(this.id)
+            .member(this.member)
+            .receiver(this.receiver)
+            .paymentType(this.paymentType)
+            .orderNum(this.orderNum)
+            .status(OrderStatus.COMPLETE)
+            .orderedAt(this.orderedAt)
+            .totalPrice(this.totalPrice)
+            .build();
+    }
+
+    public OrderEntity cancel() {
+        return OrderEntity.builder()
+            .id(this.id)
+            .member(this.member)
+            .receiver(this.receiver)
+            .paymentType(this.paymentType)
+            .orderNum(this.orderNum)
+            .status(OrderStatus.CANCEL)
+            .orderedAt(this.orderedAt)
+            .totalPrice(this.totalPrice)
+            .build();
+    }
 
 }

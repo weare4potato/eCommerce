@@ -17,5 +17,6 @@ public class CreateOrderRequestDTO {
     private Long memberId;
     private Long receiverId;
     private PaymentType type;
+    private Long totalPrice;
     private List<OrderProduct> orderProducts;
 }

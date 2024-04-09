@@ -2,12 +2,13 @@ package com.potato.ecommerce.domain.order.service;
 
 import com.potato.ecommerce.domain.order.dto.HistoryInfo;
 import com.potato.ecommerce.domain.order.dto.OrderProduct;
-import com.potato.ecommerce.domain.order.model.History;
-import com.potato.ecommerce.domain.order.model.Order;
-import com.potato.ecommerce.domain.order.repository.history.HistoryRepository;
-import com.potato.ecommerce.domain.order.repository.order.OrderRepository;
+import com.potato.ecommerce.domain.order.entity.HistoryEntity;
+import com.potato.ecommerce.domain.order.entity.OrderEntity;
+import com.potato.ecommerce.domain.order.repository.history.HistoryJpaRepository;
+import com.potato.ecommerce.domain.order.repository.order.OrderJpaRepository;
 import com.potato.ecommerce.domain.product.entity.ProductEntity;
 import com.potato.ecommerce.domain.product.repository.ProductRepository;
+import com.potato.ecommerce.global.exception.ExceptionMessage;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -19,32 +20,33 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class HistoryService {
 
-    private final HistoryRepository historyRepository;
+    private final HistoryJpaRepository historyJpaRepository;
     // TODO: ProductJpaRepository 로 변경 가능성이 있음. 예외시 확인 필요
     private final ProductRepository productRepository;
-    private final OrderRepository orderRepository;
+    private final OrderJpaRepository orderJpaRepository;
 
     public void createHistory(
         Long orderId,
         List<OrderProduct> orderProducts
     ) {
-        Order order = orderRepository.findById(orderId);
+        OrderEntity orderEntity = orderJpaRepository.findById(orderId)
+            .orElseThrow(() -> new EntityNotFoundException(
+                ExceptionMessage.ORDER_NOT_FOUND.toString()));
 
-        // TODO: product 수정되면 수정
         for (OrderProduct dto : orderProducts) {
             ProductEntity productEntity = productRepository.findById(dto.getProductId())
                 .orElseThrow(() -> new EntityNotFoundException(
-                    "[ERROR] 유효하지 않은 상품 입니다. 조회 상품 id: %s".formatted(dto.getProductId())));
+                    ExceptionMessage.PRODUCT_NOT_FOUND.toString()));
 
             productEntity.removeStock(dto.getQuantity());
 
-            History history = History.builder()
-                .order(order)
+            HistoryEntity historyEntity = HistoryEntity.builder()
+                .order(orderEntity)
                 .product(productEntity)
                 .quantity(dto.getQuantity())
                 .build();
 
-            historyRepository.save(history);
+            historyJpaRepository.save(historyEntity);
         }
     }
 
@@ -52,7 +54,7 @@ public class HistoryService {
     public List<HistoryInfo> getHistory(
         Long orderId
     ) {
-        return historyRepository.findAllByOrderId(orderId).stream()
+        return historyJpaRepository.findAllByOrderId(orderId).stream()
             .map(HistoryInfo::fromEntity)
             .toList();
     }
@@ -60,14 +62,13 @@ public class HistoryService {
     public void deleteHistory(
         Long orderId
     ) {
-        List<History> historyList = historyRepository.findAllByOrderId(orderId);
+        List<HistoryEntity> historyEntityList = historyJpaRepository.findAllByOrderId(orderId);
 
-        for (History history : historyList) {
+        for (HistoryEntity historyEntity : historyEntityList) {
 
-            // TODO: product 수정되면 수정
-            history.cancel();
-
-            historyRepository.delete(history);
+            historyEntity.cancel();
         }
+
+        historyJpaRepository.deleteAll(historyEntityList);
     }
 }
