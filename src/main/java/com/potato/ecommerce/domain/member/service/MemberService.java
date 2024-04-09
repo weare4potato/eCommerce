@@ -8,11 +8,13 @@ import com.potato.ecommerce.domain.member.dto.SignInDto;
 import com.potato.ecommerce.domain.member.dto.SignUpDto;
 import com.potato.ecommerce.domain.member.dto.UpdateMemberDto;
 import com.potato.ecommerce.domain.member.dto.UpdatePasswordDto;
+import com.potato.ecommerce.domain.member.entity.MemberEntity;
 import com.potato.ecommerce.domain.member.entity.UserRoleEnum;
-import com.potato.ecommerce.domain.member.model.Member;
-import com.potato.ecommerce.domain.member.repository.MemberRepository;
+import com.potato.ecommerce.domain.member.repository.MemberJpaRepository;
+import com.potato.ecommerce.global.exception.ExceptionMessage;
 import com.potato.ecommerce.global.exception.custom.AuthenticationFailedException;
 import com.potato.ecommerce.global.jwt.JwtUtil;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,13 +26,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class MemberService {
 
-    private final MemberRepository memberRepository;
+    private final MemberJpaRepository memberJpaRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
     @Transactional
     public void signUp(SignUpDto dto) {
-        Member member = Member.builder()
+        MemberEntity member = MemberEntity.builder()
             .email(dto.getEmail())
             .password(passwordEncoder.encode(dto.getPassword()))
             .userName(dto.getUsername())
@@ -39,12 +41,12 @@ public class MemberService {
             .authStatus(false)
             .build();
 
-        memberRepository.save(member);
+        memberJpaRepository.save(member);
     }
 
     @Transactional
     public String signIn(SignInDto dto) {
-        Member member = findBy(dto.getEmail());
+        MemberEntity member = findByEmail(dto.getEmail());
 
         if (member.isNotAuthCheck()) {
             throw new AuthenticationFailedException();
@@ -57,52 +59,51 @@ public class MemberService {
 
     @Transactional
     public void updatePassword(UpdatePasswordDto dto, String subject) {
-        Member member = findBy(subject);
+        MemberEntity member = findByEmail(subject);
 
         validateMemberPassword(member, dto.getPassword());
         validateNewPassword(dto);
 
         member.updatePassword(passwordEncoder.encode(dto.getNewPassword()));
-        memberRepository.update(member);
     }
 
     @Transactional
     public ResponseMember updateMember(UpdateMemberDto dto, String subject) {
-        Member member = findBy(subject);
+        MemberEntity member = findByEmail(subject);
 
         member.update(dto);
 
-        memberRepository.update(member);
         return member.createResponseDTO();
     }
 
     @Transactional
     public void confirmMember(String email) {
-        Member member = findBy(email);
-        member.confirm();
+        MemberEntity member = findByEmail(email);
 
-        memberRepository.update(member);
+        member.confirm();
     }
 
 
     public void passwordCheck(String subject, String password) {
-        Member member = findBy(subject);
+        MemberEntity member = findByEmail(subject);
 
         validateMemberPassword(member, password);
     }
 
     public ResponseMember getMember(String subject) {
-        Member member = findBy(subject);
+        MemberEntity member = findByEmail(subject);
 
         return member.createResponseDTO();
     }
 
-
-    private Member findBy(String email) {
-        return memberRepository.findMemberBy(email);
+    private MemberEntity findByEmail(String subject) {
+        return memberJpaRepository.findByEmail(subject).orElseThrow(
+            () -> new EntityNotFoundException(ExceptionMessage.MEMBER_NOT_FOUND.toString())
+        );
     }
 
-    private void validateMemberPassword(Member member, String password) {
+
+    private void validateMemberPassword(MemberEntity member, String password) {
         if (member.isNotMatchPassword(passwordEncoder, password)) {
             throw new ValidationException(PASSWORD_NOT_MATCH.toString());
         }
