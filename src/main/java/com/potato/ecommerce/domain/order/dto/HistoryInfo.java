@@ -1,6 +1,7 @@
 package com.potato.ecommerce.domain.order.dto;
 
 import com.potato.ecommerce.domain.order.entity.HistoryEntity;
+import com.potato.ecommerce.domain.product.entity.ProductEntity;
 import com.potato.ecommerce.domain.product.model.Product;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,13 +15,13 @@ import lombok.NoArgsConstructor;
 public class HistoryInfo {
 
     private Long id;
-    private Product product;
+    private ProductEntity product;
     private Integer quantity;
 
     public static HistoryInfo fromEntity(HistoryEntity historyEntity) {
         return HistoryInfo.builder()
             .id(historyEntity.getId())
-            .product(historyEntity.getProduct().toModel())
+            .product(historyEntity.getProduct())
             .quantity(historyEntity.getQuantity())
             .build();
     }
