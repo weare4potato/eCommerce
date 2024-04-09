@@ -1,8 +1,15 @@
 package com.potato.ecommerce.domain.cart.controller;
 
+import static com.potato.ecommerce.domain.cart.message.CartMessage.ADD_CART;
+import static com.potato.ecommerce.domain.cart.message.CartMessage.CART_API;
+import static com.potato.ecommerce.domain.cart.message.CartMessage.DELETE_CART;
+import static com.potato.ecommerce.domain.cart.message.CartMessage.GET_CARTS;
+import static com.potato.ecommerce.domain.cart.message.CartMessage.UPDATE_CART;
+
 import com.potato.ecommerce.domain.cart.controller.dto.response.CartInfoResponseDto;
 import com.potato.ecommerce.domain.cart.dto.CartRequest;
 import com.potato.ecommerce.domain.cart.service.CartService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -22,12 +29,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/carts")
 @RequiredArgsConstructor
-@Tag(name = "Cart API", description = "Cart API 입니다.")
+@Tag(name = CART_API)
 public class CartController {
 
     private final CartService cartService;
 
     @PostMapping
+    @Operation(summary = ADD_CART)
     public ResponseEntity<Void> addCart(
         @RequestBody @Valid CartRequest dto
     ) {
@@ -37,10 +45,11 @@ public class CartController {
             dto.getQuantity()
         );
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @PutMapping("/{cartId}")
+    @Operation(summary = UPDATE_CART)
     public ResponseEntity<Void> updateCart(
         @PathVariable Long cartId,
         @RequestBody @Valid CartRequest dto
@@ -51,10 +60,11 @@ public class CartController {
             dto.getQuantity()
         );
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @DeleteMapping("/{cartId}")
+    @Operation(summary = DELETE_CART)
     public ResponseEntity<Void> deleteCart(
         HttpServletRequest httpServletRequest,
         @PathVariable Long cartId
@@ -62,10 +72,11 @@ public class CartController {
         String subject = getSubject(httpServletRequest);
         cartService.deleteCart(subject, cartId);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @GetMapping
+    @Operation(summary = GET_CARTS)
     public ResponseEntity<List<CartInfoResponseDto>> getCarts(
         HttpServletRequest httpServletRequest
     ) {
@@ -75,7 +86,7 @@ public class CartController {
             .map(CartInfoResponseDto::from)
             .toList();
 
-        return new ResponseEntity<>(carts, HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.OK).body(carts);
     }
 
     private String getSubject(HttpServletRequest request) {
