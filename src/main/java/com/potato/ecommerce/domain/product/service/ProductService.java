@@ -52,7 +52,6 @@ public class ProductService {
             .description(requestDto.getDescription())
             .price(requestDto.getPrice())
             .stock(requestDto.getStock())
-            .isDeleted(false)
             .createdAt(LocalDateTime.now())
             .build();
 
@@ -73,8 +72,8 @@ public class ProductService {
         Page<ProductEntity> productPage = productRepository.findAll(pageRequest);
 
         List<ProductSimpleResponse> productSimpleResponses = productPage.getContent().stream()
-            .map(entity -> new ProductSimpleResponse(entity.getName(), entity.getPrice()))
-            .collect(Collectors.toList());
+            .map(ProductSimpleResponse::new)
+            .toList();
 
         return new RestPage<>(productSimpleResponses, page, size, productPage.getTotalElements());
     }
@@ -102,9 +101,8 @@ public class ProductService {
         PageRequest pageRequest = PageRequest.of(page, size);
         Page<ProductEntity> productsPage = productRepository.findByStoreId(shopId, pageRequest);
 
-        Page<ShopProductResponse> shopProductResponsesPage = productsPage.map(product -> new ShopProductResponse(
-            product.getName(),
-            product.getPrice()));
+        Page<ShopProductResponse> shopProductResponsesPage = productsPage.map(ShopProductResponse::new);
+
 
         return new RestPage<>(shopProductResponsesPage);
     }
@@ -113,9 +111,7 @@ public class ProductService {
         PageRequest pageRequest = PageRequest.of(page, size);
         Page<ProductEntity> productPage = productRepository.findByCategoryId(categoryId, pageRequest);
 
-        Page<ProductSimpleResponse> productSimpleResponsesPage = productPage.map(entity -> new ProductSimpleResponse(
-            entity.getName(),
-            entity.getPrice()));
+        Page<ProductSimpleResponse> productSimpleResponsesPage = productPage.map(ProductSimpleResponse::new);
 
         return new RestPage<>(productSimpleResponsesPage);
     }
