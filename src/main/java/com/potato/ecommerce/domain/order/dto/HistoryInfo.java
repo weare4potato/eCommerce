@@ -2,7 +2,6 @@ package com.potato.ecommerce.domain.order.dto;
 
 import com.potato.ecommerce.domain.order.entity.HistoryEntity;
 import com.potato.ecommerce.domain.product.entity.ProductEntity;
-import com.potato.ecommerce.domain.product.model.Product;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
