@@ -1,7 +1,6 @@
 package com.potato.ecommerce.domain.store.entity;
 
 import com.potato.ecommerce.domain.store.dto.UpdateStoreRequest;
-import com.potato.ecommerce.domain.store.model.Store;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -19,6 +18,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Entity
 @Getter
@@ -71,32 +71,21 @@ public class StoreEntity {
         this.businessNumber = businessNumber;
     }
 
-    public static StoreEntity fromModel(Store store) {
-        return StoreEntity.builder()
-            .email(store.getEmail())
-            .password(store.getPassword())
-            .name(store.getName())
-            .description(store.getDescription())
-            .phone(store.getPhone())
-            .businessNumber(store.getBusinessNumber())
-            .build();
+    public void update(String name, String description, String phone) {
+        this.name = name;
+        this.description = description;
+        this.phone = phone;
     }
 
-    public Store toModel() {
-        return Store.builder()
-            .id(id)
-            .email(email)
-            .password(password)
-            .name(name)
-            .description(description)
-            .phone(phone)
-            .businessNumber(businessNumber)
-            .build();
+    public boolean passwordMatches(String password, PasswordEncoder passwordEncoder) {
+        return passwordEncoder.matches(password, this.password);
     }
 
-    public void update(UpdateStoreRequest updateStoreRequest) {
-        this.name = updateStoreRequest.getName();
-        this.description = updateStoreRequest.getDescription();
-        this.phone = updateStoreRequest.getPhone();
+    public boolean emailMatches(String email) {
+        return email.equals(this.email);
+    }
+
+    public boolean businessNumberMatches(String businessNumber) {
+        return businessNumber.equals(this.businessNumber);
     }
 }

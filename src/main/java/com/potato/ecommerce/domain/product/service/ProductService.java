@@ -12,7 +12,6 @@ import com.potato.ecommerce.domain.product.entity.ProductEntity;
 import com.potato.ecommerce.domain.product.model.Product;
 import com.potato.ecommerce.domain.product.repository.ProductRepository;
 import com.potato.ecommerce.domain.store.entity.StoreEntity;
-import com.potato.ecommerce.domain.store.model.Store;
 import com.potato.ecommerce.domain.store.repository.StoreRepository;
 import com.potato.ecommerce.global.util.RestPage;
 import jakarta.persistence.EntityNotFoundException;
@@ -37,13 +36,13 @@ public class ProductService {
     @Transactional
     public ProductResponse createProduct(String businessNumber, ProductRequest requestDto) {
 
-        Store store = storeRepository.findBySubject(businessNumber);
+        StoreEntity storeEntity = storeRepository.findBySubject(businessNumber);
 
         CategoryEntity category = categoryRepository.findById(requestDto.getCategoryId())
             .orElseThrow(() -> new IllegalArgumentException("카테고리를 찾을 수 없습니다."));
 
         Product product = Product.builder()
-            .store(StoreEntity.fromModel(store))
+            .store(storeEntity)
             .category(category)
             .name(requestDto.getName())
             .description(requestDto.getDescription())

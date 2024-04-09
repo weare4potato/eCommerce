@@ -1,8 +1,7 @@
 package com.potato.ecommerce.domain.store;
 
-import com.potato.ecommerce.domain.member.model.Member;
 import com.potato.ecommerce.domain.store.dto.StoreRequest;
-import com.potato.ecommerce.domain.store.model.Store;
+import com.potato.ecommerce.domain.store.entity.StoreEntity;
 
 public interface StoreTestUtil {
     String ANOTHER_PREFIX = "another";
@@ -19,7 +18,7 @@ public interface StoreTestUtil {
     String TEST_ANOTHER_BUSINESS_NUMBER = "0000000002";
     String TEST_TOKEN = "token";
     String TEST_FAIL_TOKEN = "failToken";
-    Store TEST_STORE = Store.builder()
+    StoreEntity TEST_STORE = StoreEntity.builder()
         .name(TEST_STORE_NAME)
         .email(TEST_STORE_EMAIL)
         .password(TEST_STORE_PASSWORD)
@@ -28,7 +27,7 @@ public interface StoreTestUtil {
         .businessNumber(TEST_BUSINESS_NUMBER)
         .build();
 
-    Store TEST_ANOTHER_STORE = Store.builder()
+    StoreEntity TEST_ANOTHER_STORE = StoreEntity.builder()
         .name(ANOTHER_PREFIX + TEST_STORE_NAME)
         .email(ANOTHER_PREFIX + TEST_STORE_EMAIL)
         .phone(ANOTHER_PREFIX + TEST_STORE_PHONE)

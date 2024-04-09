@@ -1,19 +1,19 @@
 package com.potato.ecommerce.domain.store.repository;
 
 import com.potato.ecommerce.domain.store.dto.UpdateStoreRequest;
-import com.potato.ecommerce.domain.store.model.Store;
+import com.potato.ecommerce.domain.store.entity.StoreEntity;
 
 public interface StoreRepository {
 
     boolean existsByEmail(String email);
 
-    void save(Store store);
+    void save(StoreEntity storeEntity);
 
-    Store update(String subject, UpdateStoreRequest updateStoreRequest);
+    StoreEntity update(String subject, UpdateStoreRequest updateStoreRequest);
 
-    void delete(Store store);
+    void delete(StoreEntity storeEntity);
 
-    Store findByEmail(String email);
+    StoreEntity findByEmail(String email);
 
-    Store findBySubject(String businessNumber);
+    StoreEntity findBySubject(String businessNumber);
 }

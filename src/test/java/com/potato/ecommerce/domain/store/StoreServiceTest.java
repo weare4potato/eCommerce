@@ -1,17 +1,12 @@
 package com.potato.ecommerce.domain.store;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import com.potato.ecommerce.domain.member.repository.MemberRepository;
-import com.potato.ecommerce.domain.member.service.MemberService;
-import com.potato.ecommerce.domain.product.model.Product;
 import com.potato.ecommerce.domain.revenue.model.Revenue;
 import com.potato.ecommerce.domain.revenue.repository.RevenueRepository;
 import com.potato.ecommerce.domain.store.dto.DeleteStoreRequest;
@@ -19,15 +14,11 @@ import com.potato.ecommerce.domain.store.dto.LoginRequest;
 import com.potato.ecommerce.domain.store.dto.StoreRequest;
 import com.potato.ecommerce.domain.store.dto.StoreResponse;
 import com.potato.ecommerce.domain.store.dto.UpdateStoreRequest;
-import com.potato.ecommerce.domain.store.model.Store;
-import com.potato.ecommerce.domain.store.repository.JpaStoreRepository;
+import com.potato.ecommerce.domain.store.entity.StoreEntity;
 import com.potato.ecommerce.domain.store.repository.StoreRepository;
 import com.potato.ecommerce.domain.store.service.StoreService;
 import com.potato.ecommerce.global.jwt.JwtUtil;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ValidationException;
-import java.util.Optional;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -56,35 +47,35 @@ public class StoreServiceTest implements StoreTestUtil {
 
     @Test
     @Transactional
-    void 상점을_등록할_수_있다(){
+    void 상점을_등록할_수_있다() {
         // given
         StoreRequest storeRequest = TEST_STORE_REQUEST;
 
-        Store store = TEST_STORE;
+        StoreEntity storeEntity = TEST_STORE;
 
         Revenue revenue = new Revenue(1L);
 
-        given(storeRepository.existsByEmail(store.getEmail())).willReturn(false);
+        given(storeRepository.existsByEmail(storeEntity.getEmail())).willReturn(false);
         given(revenueRepository.findByNumber(TEST_BUSINESS_NUMBER)).willReturn(revenue);
 
         // when
         storeService.signup(storeRequest);
 
         // then
-        verify(storeRepository, times(1)).save(any(Store.class));
+        verify(storeRepository, times(1)).save(any(StoreEntity.class));
 
     }
 
 
     @Test
     @Transactional
-    void 상점등록은_이메일_중복을_허용하지_않는다(){
+    void 상점등록은_이메일_중복을_허용하지_않는다() {
         // given
         StoreRequest storeRequest = TEST_STORE_REQUEST;
 
-        Store store = TEST_STORE;
+        StoreEntity storeEntity = TEST_STORE;
 
-        given(storeRepository.existsByEmail(store.getEmail())).willReturn(true);
+        given(storeRepository.existsByEmail(storeEntity.getEmail())).willReturn(true);
 
         // when + then
         assertThrows(ValidationException.class, () -> storeService.signup(storeRequest));
@@ -92,7 +83,7 @@ public class StoreServiceTest implements StoreTestUtil {
 
     @Test
     @Transactional
-    void 상점등록은_두_패스워드가_일치_해야만_한다(){
+    void 상점등록은_두_패스워드가_일치_해야만_한다() {
         StoreRequest storeRequest = new StoreRequest(
             TEST_STORE_EMAIL,
             TEST_STORE_PASSWORD,
@@ -103,11 +94,11 @@ public class StoreServiceTest implements StoreTestUtil {
             TEST_BUSINESS_NUMBER
         );
 
-        Store store = TEST_STORE;
+        StoreEntity storeEntity = TEST_STORE;
 
         Revenue revenue = new Revenue(1L);
 
-        given(storeRepository.existsByEmail(store.getEmail())).willReturn(false);
+        given(storeRepository.existsByEmail(storeEntity.getEmail())).willReturn(false);
 
         // when + then
         assertThrows(ValidationException.class, () -> storeService.signup(storeRequest));
@@ -115,14 +106,14 @@ public class StoreServiceTest implements StoreTestUtil {
 
     @Test
     @Transactional
-    void 상점_등록에_성공하면_revenue를_isUsed로_변경한다(){
+    void 상점_등록에_성공하면_revenue를_isUsed로_변경한다() {
         StoreRequest storeRequest = TEST_STORE_REQUEST;
 
-        Store store = TEST_STORE;
+        StoreEntity storeEntity = TEST_STORE;
 
         Revenue revenue = new Revenue(1L);
 
-        given(storeRepository.existsByEmail(store.getEmail())).willReturn(false);
+        given(storeRepository.existsByEmail(storeEntity.getEmail())).willReturn(false);
         given(revenueRepository.findByNumber(TEST_BUSINESS_NUMBER)).willReturn(revenue);
 
         // when
@@ -134,14 +125,14 @@ public class StoreServiceTest implements StoreTestUtil {
 
     @Test
     @Transactional
-    void 상점_로그인에_성공하면_토큰을_반환한다(){
+    void 상점_로그인에_성공하면_토큰을_반환한다() {
         // given
         LoginRequest loginRequest = new LoginRequest(
             TEST_STORE_EMAIL,
             TEST_STORE_PASSWORD
         );
 
-        Store store = Store.builder()
+        StoreEntity store = StoreEntity.builder()
             .name(TEST_STORE_NAME)
             .email(TEST_STORE_EMAIL)
             .password(passwordEncoder.encode(TEST_STORE_PASSWORD))
@@ -151,7 +142,8 @@ public class StoreServiceTest implements StoreTestUtil {
             .build();
 
         given(storeRepository.findByEmail(loginRequest.getEmail())).willReturn(store);
-        given(passwordEncoder.matches(loginRequest.getPassword(), store.getPassword())).willReturn(true);
+        given(passwordEncoder.matches(loginRequest.getPassword(), store.getPassword())).willReturn(
+            true);
         given(jwtUtil.createSellerToken(store.getBusinessNumber())).willReturn("token");
 
         // when + then
@@ -160,7 +152,7 @@ public class StoreServiceTest implements StoreTestUtil {
 
     @Test
     @Transactional
-    void 상점_로그인은_비밀번호가_일치해야_한다(){
+    void 상점_로그인은_비밀번호가_일치해야_한다() {
         // given
 
         LoginRequest loginRequest = new LoginRequest(
@@ -168,7 +160,7 @@ public class StoreServiceTest implements StoreTestUtil {
             TEST_STORE_PASSWORD
         );
 
-        Store store = Store.builder()
+        StoreEntity store = StoreEntity.builder()
             .name(TEST_STORE_NAME)
             .email(TEST_STORE_EMAIL)
             .password(passwordEncoder.encode(TEST_ANOTHER_STORE_PASSWORD))
@@ -178,7 +170,8 @@ public class StoreServiceTest implements StoreTestUtil {
             .build();
 
         given(storeRepository.findByEmail(loginRequest.getEmail())).willReturn(store);
-        given(passwordEncoder.matches(loginRequest.getPassword(), store.getPassword())).willReturn(false);
+        given(passwordEncoder.matches(loginRequest.getPassword(), store.getPassword())).willReturn(
+            false);
 
         // when + then
         assertThrows(ValidationException.class, () -> storeService.signin(loginRequest));
@@ -186,7 +179,7 @@ public class StoreServiceTest implements StoreTestUtil {
 
     @Test
     @Transactional
-    void UpdateStoreReqeust로_update가_가능하다(){
+    void UpdateStoreReqeust로_update가_가능하다() {
         // given
         UpdateStoreRequest updateStoreRequest = new UpdateStoreRequest(
             TEST_STORE_NAME,
@@ -195,7 +188,7 @@ public class StoreServiceTest implements StoreTestUtil {
         );
         String subject = TEST_BUSINESS_NUMBER;
 
-        Store store = TEST_STORE;
+        StoreEntity store = TEST_STORE;
 
         given(storeRepository.findBySubject(subject)).willReturn(store);
 
@@ -208,7 +201,7 @@ public class StoreServiceTest implements StoreTestUtil {
 
     @Test
     @Transactional
-    void DeleteStoreRequest로_delete가_가능하다(){
+    void DeleteStoreRequest로_delete가_가능하다() {
         // given
         DeleteStoreRequest deleteStoreRequest = new DeleteStoreRequest(
             TEST_STORE_EMAIL,
@@ -218,16 +211,17 @@ public class StoreServiceTest implements StoreTestUtil {
 
         String subject = TEST_BUSINESS_NUMBER;
 
-        Store store = TEST_STORE;
+        StoreEntity storeEntity = TEST_STORE;
 
-        given(storeRepository.findBySubject(subject)).willReturn(store);
-        given(passwordEncoder.matches(deleteStoreRequest.getPassword(), store.getPassword())).willReturn(true);
+        given(storeRepository.findBySubject(subject)).willReturn(storeEntity);
+        given(passwordEncoder.matches(deleteStoreRequest.getPassword(),
+            storeEntity.getPassword())).willReturn(true);
 
         // when
         storeService.deleteStore(subject, deleteStoreRequest);
 
         // then
-        verify(storeRepository, times(1)).delete(store);
+        verify(storeRepository, times(1)).delete(storeEntity);
     }
 
 //    @Test

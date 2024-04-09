@@ -16,7 +16,7 @@ import com.potato.ecommerce.domain.store.dto.StoreRequest;
 import com.potato.ecommerce.domain.store.dto.StoreResponse;
 import com.potato.ecommerce.domain.store.dto.UpdateStoreRequest;
 import com.potato.ecommerce.domain.store.dto.ValidatePasswordRequest;
-import com.potato.ecommerce.domain.store.model.Store;
+import com.potato.ecommerce.domain.store.entity.StoreEntity;
 import com.potato.ecommerce.domain.store.repository.StoreRepository;
 import com.potato.ecommerce.global.jwt.JwtUtil;
 import com.potato.ecommerce.global.util.RestPage;
@@ -54,7 +54,7 @@ public class StoreService {
 
         validationBusinessNumber(storeRequest.getBusinessNumber());
 
-        Store store = Store.builder()
+        StoreEntity storeEntity = StoreEntity.builder()
             .email(storeRequest.getEmail())
             .password(passwordEncoder.encode(storeRequest.getPassword()))
             .name(storeRequest.getName())
@@ -63,50 +63,50 @@ public class StoreService {
             .businessNumber(storeRequest.getBusinessNumber())
             .build();
 
-        storeRepository.save(store);
+        storeRepository.save(storeEntity);
     }
 
     @Transactional
     public String signin(LoginRequest loginRequest) {
-        Store store = findByEmail(loginRequest.getEmail());
+        StoreEntity storeEntity = findByEmail(loginRequest.getEmail());
 
-        if (!store.passwordMatches(loginRequest.getPassword(), passwordEncoder)) {
+        if (!storeEntity.passwordMatches(loginRequest.getPassword(), passwordEncoder)) {
             throw new ValidationException(PASSWORD_NOT_MATCH.toString());
         }
 
-        return jwtUtil.createSellerToken(store.getBusinessNumber());
+        return jwtUtil.createSellerToken(storeEntity.getBusinessNumber());
     }
 
     public StoreResponse getStore(String subject) {
-        Store store = findBySubject(subject);
+        StoreEntity storeEntity = findBySubject(subject);
 
         return StoreResponse.builder()
-            .email(store.getEmail())
-            .name(store.getName())
-            .description(store.getDescription())
-            .phone(store.getPhone())
-            .businessNumber(store.getBusinessNumber())
+            .email(storeEntity.getEmail())
+            .name(storeEntity.getName())
+            .description(storeEntity.getDescription())
+            .phone(storeEntity.getPhone())
+            .businessNumber(storeEntity.getBusinessNumber())
             .build();
     }
 
     @Transactional
     public StoreResponse updateStore(String subject, UpdateStoreRequest updateRequest) {
-        Store store = storeRepository.update(subject, updateRequest);
+        StoreEntity storeEntity = storeRepository.update(subject, updateRequest);
 
         return StoreResponse.builder()
-            .email(store.getEmail())
-            .name(store.getName())
-            .description(store.getDescription())
-            .phone(store.getPhone())
-            .businessNumber(store.getBusinessNumber())
+            .email(storeEntity.getEmail())
+            .name(storeEntity.getName())
+            .description(storeEntity.getDescription())
+            .phone(storeEntity.getPhone())
+            .businessNumber(storeEntity.getBusinessNumber())
             .build();
     }
 
     @Transactional
     public void validatePassword(String subject, ValidatePasswordRequest validatePasswordRequest) {
-        Store store = findBySubject(subject);
+        StoreEntity storeEntity = findBySubject(subject);
 
-        if (!store.passwordMatches(validatePasswordRequest.getFirstPassword(), passwordEncoder)) {
+        if (!storeEntity.passwordMatches(validatePasswordRequest.getFirstPassword(), passwordEncoder)) {
             throw new ValidationException(PASSWORD_NOT_MATCH.toString());
         }
 
@@ -118,21 +118,21 @@ public class StoreService {
 
     @Transactional
     public void deleteStore(String subject, DeleteStoreRequest deleteStoreRequest) {
-        Store store = findBySubject(subject);
+        StoreEntity storeEntity = findBySubject(subject);
 
-        if (!store.emailMatches(deleteStoreRequest.getEmail())) {
+        if (!storeEntity.emailMatches(deleteStoreRequest.getEmail())) {
             throw new ValidationException(EMAIL_NOT_MATCH.toString());
         }
 
-        if (!store.passwordMatches(deleteStoreRequest.getPassword(), passwordEncoder)) {
+        if (!storeEntity.passwordMatches(deleteStoreRequest.getPassword(), passwordEncoder)) {
             throw new ValidationException(PASSWORD_NOT_MATCH.toString());
         }
 
-        if (!store.businessNumberMatches(deleteStoreRequest.getBusinessNumber())) {
+        if (!storeEntity.businessNumberMatches(deleteStoreRequest.getBusinessNumber())) {
             throw new ValidationException(BUSINESS_NUMBER_NOT_MATCH.toString());
         }
 
-        storeRepository.delete(store);
+        storeRepository.delete(storeEntity);
     }
 
     @Cacheable(cacheNames = "getProducts", key = "#subject", cacheManager = "rcm")
@@ -155,11 +155,11 @@ public class StoreService {
         revenueRepository.save(revenue);
     }
 
-    private Store findByEmail(String email) {
+    private StoreEntity findByEmail(String email) {
         return storeRepository.findByEmail(email);
     }
 
-    private Store findBySubject(String subject) {
+    private StoreEntity findBySubject(String subject) {
         return storeRepository.findBySubject(subject);
     }
 
