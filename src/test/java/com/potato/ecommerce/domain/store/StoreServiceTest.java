@@ -7,7 +7,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import com.potato.ecommerce.domain.revenue.model.Revenue;
+import com.potato.ecommerce.domain.revenue.entity.RevenueEntity;
 import com.potato.ecommerce.domain.revenue.repository.RevenueRepository;
 import com.potato.ecommerce.domain.store.dto.DeleteStoreRequest;
 import com.potato.ecommerce.domain.store.dto.LoginRequest;
@@ -19,6 +19,7 @@ import com.potato.ecommerce.domain.store.repository.StoreRepository;
 import com.potato.ecommerce.domain.store.service.StoreService;
 import com.potato.ecommerce.global.jwt.JwtUtil;
 import jakarta.validation.ValidationException;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -53,10 +54,10 @@ public class StoreServiceTest implements StoreTestUtil {
 
         StoreEntity storeEntity = TEST_STORE;
 
-        Revenue revenue = new Revenue(1L);
+        RevenueEntity revenueEntity = new RevenueEntity(1L);
 
         given(storeRepository.existsByEmail(storeEntity.getEmail())).willReturn(false);
-        given(revenueRepository.findByNumber(TEST_BUSINESS_NUMBER)).willReturn(revenue);
+        given(revenueRepository.findByNumber(TEST_BUSINESS_NUMBER)).willReturn(Optional.of(revenueEntity));
 
         // when
         storeService.signup(storeRequest);
@@ -96,7 +97,7 @@ public class StoreServiceTest implements StoreTestUtil {
 
         StoreEntity storeEntity = TEST_STORE;
 
-        Revenue revenue = new Revenue(1L);
+        RevenueEntity revenueEntity = new RevenueEntity(1L);
 
         given(storeRepository.existsByEmail(storeEntity.getEmail())).willReturn(false);
 
@@ -111,16 +112,16 @@ public class StoreServiceTest implements StoreTestUtil {
 
         StoreEntity storeEntity = TEST_STORE;
 
-        Revenue revenue = new Revenue(1L);
+        RevenueEntity revenueEntity = new RevenueEntity(1L);
 
         given(storeRepository.existsByEmail(storeEntity.getEmail())).willReturn(false);
-        given(revenueRepository.findByNumber(TEST_BUSINESS_NUMBER)).willReturn(revenue);
+        given(revenueRepository.findByNumber(TEST_BUSINESS_NUMBER)).willReturn(Optional.of(revenueEntity));
 
         // when
         storeService.signup(storeRequest);
 
         // then
-        assertThat(revenue.isUsedChecking()).isTrue();
+        assertThat(revenueEntity.isUsedChecking()).isTrue();
     }
 
     @Test

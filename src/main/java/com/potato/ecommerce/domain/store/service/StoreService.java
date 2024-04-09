@@ -8,8 +8,7 @@ import static com.potato.ecommerce.global.exception.ExceptionMessage.PASSWORD_NO
 
 import com.potato.ecommerce.domain.product.dto.ProductListResponse;
 import com.potato.ecommerce.domain.product.repository.ProductQueryRepository;
-import com.potato.ecommerce.domain.revenue.model.Revenue;
-import com.potato.ecommerce.domain.revenue.repository.RevenueRepository;
+import com.potato.ecommerce.domain.revenue.entity.RevenueEntity;
 import com.potato.ecommerce.domain.store.dto.DeleteStoreRequest;
 import com.potato.ecommerce.domain.store.dto.LoginRequest;
 import com.potato.ecommerce.domain.store.dto.StoreRequest;
@@ -141,18 +140,18 @@ public class StoreService {
     }
 
     private void validationBusinessNumber(String businessNumber) {
-        Revenue revenue = revenueRepository.findByNumber(businessNumber);
+        RevenueEntity revenueEntity = revenueRepository.findByNumber(businessNumber);
 
-        if (revenue.isUsedChecking()) {
+        if (revenueEntity.isUsedChecking()) {
             throw new DataIntegrityViolationException(DUPLICATE_BUSINESS_NUMBER.toString());
         }
 
-        use(revenue);
+        use(revenueEntity);
     }
 
-    private void use(Revenue revenue) {
-        revenue.use();
-        revenueRepository.save(revenue);
+    private void use(RevenueEntity revenueEntity) {
+        revenueEntity.use();
+        revenueRepository.save(revenueEntity);
     }
 
     private StoreEntity findByEmail(String email) {

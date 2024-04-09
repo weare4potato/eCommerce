@@ -1,20 +1,17 @@
 package com.potato.ecommerce.domain.revenue.entity;
 
-import com.potato.ecommerce.domain.revenue.model.Revenue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 @Table(name = "revenues")
 public class RevenueEntity {
 
@@ -26,15 +23,15 @@ public class RevenueEntity {
 
     private boolean isUsed;
 
-    private RevenueEntity(String number) {
-        this.number = number;
+    public RevenueEntity(Long number) {
+        this.number = String.format("%010d", number);
     }
 
-    public Revenue toModel() {
-        return new Revenue(id, number, isUsed);
+    public void use() {
+        isUsed = true;
     }
 
-    public static RevenueEntity fromModel(Revenue revenue) {
-        return new RevenueEntity(revenue.getNumber());
+    public boolean isUsedChecking() {
+        return isUsed;
     }
 }

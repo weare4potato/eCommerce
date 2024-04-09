@@ -1,7 +1,7 @@
 package com.potato.ecommerce.domain.revenue.service;
 
 import com.potato.ecommerce.domain.revenue.dto.RevenueResponse;
-import com.potato.ecommerce.domain.revenue.model.Revenue;
+import com.potato.ecommerce.domain.revenue.entity.RevenueEntity;
 import com.potato.ecommerce.domain.revenue.repository.RevenueRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,10 +14,10 @@ public class RevenueService {
     private Long number = 1L;
 
     public RevenueResponse getBusinessNumber() {
-        Revenue revenue = new Revenue(number++);
+        RevenueEntity revenueEntity = new RevenueEntity(number++);
 
-        Revenue model = revenueRepository.save(revenue);
+        RevenueEntity revenue = revenueRepository.save(revenueEntity);
 
-        return new RevenueResponse(model.getNumber());
+        return new RevenueResponse(revenue.getNumber());
     }
 }
