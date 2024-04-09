@@ -43,12 +43,10 @@ public class HistoryEntity {
 
     @Builder
     public HistoryEntity(
-        Long id,
         OrderEntity order,
         ProductEntity product,
         Integer quantity
     ) {
-        this.id = id;
         this.order = order;
         this.product = product;
         this.quantity = quantity;
