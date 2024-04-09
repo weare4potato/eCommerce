@@ -2,7 +2,7 @@ package com.potato.ecommerce.domain.cart.service;
 
 import com.potato.ecommerce.domain.cart.dto.CartInfo;
 import com.potato.ecommerce.domain.cart.entity.CartEntity;
-import com.potato.ecommerce.domain.cart.repository.CartRepository;
+import com.potato.ecommerce.domain.cart.repository.CartJpaRepository;
 import com.potato.ecommerce.domain.member.entity.MemberEntity;
 import com.potato.ecommerce.domain.member.repository.MemberJpaRepository;
 import com.potato.ecommerce.domain.product.entity.ProductEntity;
@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class CartService {
 
-    private final CartRepository cartRepository;
+    private final CartJpaRepository cartJpaRepository;
     private final MemberJpaRepository memberJpaRepository;
     private final ProductRepository productRepository;
 
@@ -38,7 +38,7 @@ public class CartService {
 
         // 어떤 멤버가 어떤 상품을 담았는지 확인
         CartEntity cartEntity =
-            cartRepository.findByMember_IdAndProduct_Id(memberEntity.getId(),
+            cartJpaRepository.findByMember_IdAndProduct_Id(memberEntity.getId(),
                 productEntity.getId());
 
         // TODO : null 쓰지 않는 방식으로 수정
@@ -50,7 +50,7 @@ public class CartService {
                 .quantity(quantity)
                 .build();
 
-            cartRepository.save(cartEntity);
+            cartJpaRepository.save(cartEntity);
 
             return;
         }
@@ -63,7 +63,7 @@ public class CartService {
         Long cartId,
         Integer quantity
     ) {
-        CartEntity cartEntity = cartRepository.findByMemberIdAndId(memberId, cartId)
+        CartEntity cartEntity = cartJpaRepository.findByMemberIdAndId(memberId, cartId)
             .orElseThrow(() -> new EntityNotFoundException(
                 ExceptionMessage.CART_NOT_FOUND.toString()));
 
@@ -74,17 +74,17 @@ public class CartService {
         String email,
         Long cartId
     ) {
-        CartEntity cartEntity = cartRepository.findByMemberEmailAndId(email, cartId)
+        CartEntity cartEntity = cartJpaRepository.findByMemberEmailAndId(email, cartId)
             .orElseThrow(() -> new EntityNotFoundException(
                 ExceptionMessage.CART_NOT_FOUND.toString()));
 
-        cartRepository.delete(cartEntity);
+        cartJpaRepository.delete(cartEntity);
     }
 
     @Transactional(readOnly = true)
     public List<CartInfo> getCarts(String email) {
 
-        return cartRepository.findAllByMember_Email(email).stream().map(CartInfo::fromEntity)
+        return cartJpaRepository.findAllByMember_Email(email).stream().map(CartInfo::fromEntity)
             .toList();
     }
 }
