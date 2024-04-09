@@ -12,11 +12,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CartInfoResponseDto {
 
+    private Long cartId;
     private Long productId;
     private Integer quantity;
 
     public static CartInfoResponseDto from(CartInfo info) {
         return CartInfoResponseDto.builder()
+            .cartId(info.getCartId())
             .productId(info.getProductId())
             .quantity(info.getQuantity())
             .build();
