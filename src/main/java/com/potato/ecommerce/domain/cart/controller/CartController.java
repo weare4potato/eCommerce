@@ -1,12 +1,7 @@
 package com.potato.ecommerce.domain.cart.controller;
 
-import static com.potato.ecommerce.domain.cart.message.CartMessage.ADD_CART;
-import static com.potato.ecommerce.domain.cart.message.CartMessage.CART_API;
-import static com.potato.ecommerce.domain.cart.message.CartMessage.DELETE_CART;
-import static com.potato.ecommerce.domain.cart.message.CartMessage.GET_CARTS;
-import static com.potato.ecommerce.domain.cart.message.CartMessage.UPDATE_CART;
-
 import com.potato.ecommerce.domain.cart.controller.dto.response.CartInfoResponseDto;
+import com.potato.ecommerce.domain.cart.dto.CartInfo;
 import com.potato.ecommerce.domain.cart.dto.CartRequest;
 import com.potato.ecommerce.domain.cart.service.CartService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,42 +24,44 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/carts")
 @RequiredArgsConstructor
-@Tag(name = CART_API)
+@Tag(name = "Cart API")
 public class CartController {
 
     private final CartService cartService;
 
     @PostMapping
-    @Operation(summary = ADD_CART)
-    public ResponseEntity<Void> addCart(
+    @Operation(summary = "장바구니 생성")
+    public ResponseEntity<CartInfoResponseDto> addCart(
         @RequestBody @Valid CartRequest dto
     ) {
-        cartService.addCart(
+        CartInfo cartInfo = cartService.addCart(
             dto.getMemberId(),
             dto.getProductId(),
             dto.getQuantity()
         );
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(CartInfoResponseDto.from(cartInfo));
     }
 
     @PutMapping("/{cartId}")
-    @Operation(summary = UPDATE_CART)
-    public ResponseEntity<Void> updateCart(
+    @Operation(summary = "장바구니 수정")
+    public ResponseEntity<CartInfoResponseDto> updateCart(
         @PathVariable Long cartId,
         @RequestBody @Valid CartRequest dto
     ) {
-        cartService.updateCart(
+        CartInfo cartInfo = cartService.updateCart(
             dto.getMemberId(),
             cartId,
             dto.getQuantity()
         );
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(CartInfoResponseDto.from(cartInfo));
     }
 
     @DeleteMapping("/{cartId}")
-    @Operation(summary = DELETE_CART)
+    @Operation(summary = "장바구니 삭제")
     public ResponseEntity<Void> deleteCart(
         HttpServletRequest httpServletRequest,
         @PathVariable Long cartId
@@ -72,11 +69,11 @@ public class CartController {
         String subject = getSubject(httpServletRequest);
         cartService.deleteCart(subject, cartId);
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @GetMapping
-    @Operation(summary = GET_CARTS)
+    @Operation(summary = "장바구니 조회")
     public ResponseEntity<List<CartInfoResponseDto>> getCarts(
         HttpServletRequest httpServletRequest
     ) {
