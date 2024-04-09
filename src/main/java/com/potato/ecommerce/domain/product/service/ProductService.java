@@ -2,6 +2,7 @@ package com.potato.ecommerce.domain.product.service;
 
 import static com.potato.ecommerce.global.exception.ExceptionMessage.CATEGORY_NOT_FOUND;
 import static com.potato.ecommerce.global.exception.ExceptionMessage.PRODUCT_NOT_FOUND;
+import static com.potato.ecommerce.global.exception.ExceptionMessage.STORE_NOT_FOUND;
 
 import com.potato.ecommerce.domain.category.entity.CategoryEntity;
 import com.potato.ecommerce.domain.category.repository.CategoryRepository;
@@ -14,6 +15,7 @@ import com.potato.ecommerce.domain.product.dto.ShopProductResponse;
 import com.potato.ecommerce.domain.product.entity.ProductEntity;
 import com.potato.ecommerce.domain.product.repository.ProductRepository;
 import com.potato.ecommerce.domain.store.entity.StoreEntity;
+import com.potato.ecommerce.domain.store.repository.StoreRepository;
 import com.potato.ecommerce.global.util.RestPage;
 import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
@@ -37,7 +39,8 @@ public class ProductService {
     @Transactional
     public ProductResponse createProduct(String businessNumber, ProductRequest requestDto) {
 
-        StoreEntity storeEntity = storeRepository.findBySubject(businessNumber);
+        StoreEntity storeEntity = storeRepository.findByBusinessNumber(businessNumber)
+            .orElseThrow(() -> new EntityNotFoundException(STORE_NOT_FOUND.toString()));
 
         CategoryEntity category = categoryRepository.findById(requestDto.getCategoryId())
             .orElseThrow(() -> new EntityNotFoundException(CATEGORY_NOT_FOUND.toString()));
