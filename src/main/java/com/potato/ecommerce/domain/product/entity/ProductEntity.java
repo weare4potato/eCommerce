@@ -7,6 +7,7 @@ import com.potato.ecommerce.domain.store.entity.StoreEntity;
 import com.potato.ecommerce.global.exception.custom.OutOfStockException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -40,28 +41,28 @@ public class ProductEntity {
     @Column(name = "product_id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private StoreEntity store;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private CategoryEntity category;
 
-    @NotNull
+    @Column(nullable = false)
     private String name;
 
-    @NotNull
+    @Column(nullable = false)
     private String description;
 
-    @NotNull
+    @Column(nullable = false)
     private Integer price;
 
-    @NotNull
+    @Column(nullable = false)
     private Integer stock;
 
-    @NotNull
+    @Column(nullable = false)
     private Boolean isDeleted = false;
 
     @CreatedDate
@@ -69,10 +70,9 @@ public class ProductEntity {
     private LocalDateTime createdAt;
 
     @Builder
-    private ProductEntity(Long id, StoreEntity store, CategoryEntity category, String name,
+    private ProductEntity(StoreEntity store, CategoryEntity category, String name,
         String description,
         Integer price, Integer stock, Boolean isDeleted, LocalDateTime createdAt) {
-        this.id = id;
         this.store = store;
         this.category = category;
         this.name = name;
@@ -96,7 +96,6 @@ public class ProductEntity {
     }
 
     public void updateFromRequest(ProductUpdateRequest updateRequest) {
-//        this.category = categoryEntity;
         this.name = updateRequest.getProductName();
         this.description = updateRequest.getDescription();
         this.price = updateRequest.getPrice();
