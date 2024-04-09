@@ -1,13 +1,6 @@
 package com.potato.ecommerce.domain.order.controller;
 
 
-import static com.potato.ecommerce.domain.order.message.OrderMessage.CANCEL_ORDER;
-import static com.potato.ecommerce.domain.order.message.OrderMessage.COMPLETE_ORDER;
-import static com.potato.ecommerce.domain.order.message.OrderMessage.CREATE_ORDER;
-import static com.potato.ecommerce.domain.order.message.OrderMessage.GET_ORDER;
-import static com.potato.ecommerce.domain.order.message.OrderMessage.GET_ORDERS;
-import static com.potato.ecommerce.domain.order.message.OrderMessage.ORDER_API;
-
 import com.potato.ecommerce.domain.order.controller.dto.request.CreateOrderRequestDTO;
 import com.potato.ecommerce.domain.order.controller.dto.response.OrderInfoResponseDTO;
 import com.potato.ecommerce.domain.order.controller.dto.response.OrderInfoWithHistoryResponseDTO;
@@ -33,13 +26,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/orders")
 @RequiredArgsConstructor
-@Tag(name = ORDER_API)
+@Tag(name = "Order API")
 public class OrderController {
 
     private final OrderService orderService;
 
     @PostMapping
-    @Operation(summary = CREATE_ORDER)
+    @Operation(summary = "주문 생성")
     public ResponseEntity<OrderInfoResponseDTO> createOrder(
         @RequestBody CreateOrderRequestDTO dto
     ) {
@@ -56,7 +49,7 @@ public class OrderController {
     }
 
     @GetMapping("/{orderId}")
-    @Operation(summary = GET_ORDER)
+    @Operation(summary = "주문 단건 조회")
     public ResponseEntity<OrderInfoWithHistoryResponseDTO> getOrder(
         @PathVariable Long orderId
     ) {
@@ -67,7 +60,7 @@ public class OrderController {
     }
 
     @GetMapping
-    @Operation(summary = GET_ORDERS)
+    @Operation(summary = "주문 목록 조회")
     public ResponseEntity<RestPage<OrderList>> getOrders(
         HttpServletRequest httpServletRequest,
         @RequestParam(defaultValue = "0") int page,
@@ -80,7 +73,7 @@ public class OrderController {
     }
 
     @PostMapping("/{orderId}/complete")
-    @Operation(summary = COMPLETE_ORDER)
+    @Operation(summary = "주문 완료")
     public ResponseEntity<OrderInfoResponseDTO> completeOrder(
         @PathVariable Long orderId
     ) {
@@ -91,7 +84,7 @@ public class OrderController {
     }
 
     @PostMapping("/{orderId}/cancel")
-    @Operation(summary = CANCEL_ORDER)
+    @Operation(summary = "주문 취소")
     public ResponseEntity<OrderInfoResponseDTO> cancelOrder(
         @PathVariable Long orderId
     ) {
