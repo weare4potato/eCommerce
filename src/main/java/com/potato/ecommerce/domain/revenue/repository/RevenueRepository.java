@@ -1,10 +1,11 @@
 package com.potato.ecommerce.domain.revenue.repository;
 
-import com.potato.ecommerce.domain.revenue.model.Revenue;
 
-public interface RevenueRepository {
+import com.potato.ecommerce.domain.revenue.entity.RevenueEntity;
+import java.util.Optional;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-    Revenue save(Revenue revenue);
+public interface RevenueRepository extends JpaRepository<RevenueEntity, Long> {
 
-    Revenue findByNumber(String businessNumber);
+    Optional<RevenueEntity> findByNumber(String businessNumber);
 }
