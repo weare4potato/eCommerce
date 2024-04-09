@@ -1,6 +1,7 @@
 package com.potato.ecommerce.domain.member.entity;
 
-import com.potato.ecommerce.domain.member.model.Member;
+import com.potato.ecommerce.domain.member.dto.ResponseMember;
+import com.potato.ecommerce.domain.member.dto.UpdateMemberDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -18,6 +19,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Entity
 @Getter
@@ -53,6 +55,37 @@ public class MemberEntity {
     private UserRoleEnum role;
 
     private boolean authStatus;
+
+    public void confirm() {
+        this.authStatus = true;
+    }
+
+
+    public void updatePassword(String newPassword) {
+        this.password = newPassword;
+    }
+
+    public ResponseMember createResponseDTO() {
+        return ResponseMember.builder().username(this.userName).email(this.email).phone(this.phone)
+            .build();
+    }
+
+    public boolean isNotMatchPassword(PasswordEncoder encoder, String password) {
+        return !encoder.matches(password, this.password);
+    }
+
+    public boolean isNotMatchMember(Long id) {
+        return !this.id.equals(id);
+    }
+
+    public boolean isNotAuthCheck() {
+        return !this.authStatus;
+    }
+
+    public void update(UpdateMemberDto dto) {
+        this.userName = dto.getUsername();
+        this.phone = dto.getPhone();
+    }
 
 
 }
