@@ -25,6 +25,7 @@ public class StoreRequest {
     private String validatePassword;
 
     @NotBlank
+    @Size(max = 15)
     private String name;
 
     @Size(max = 50)

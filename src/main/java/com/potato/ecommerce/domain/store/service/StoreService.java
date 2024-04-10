@@ -6,7 +6,7 @@ import static com.potato.ecommerce.global.exception.ExceptionMessage.DUPLICATE_B
 import static com.potato.ecommerce.global.exception.ExceptionMessage.DUPLICATE_EMAIL;
 import static com.potato.ecommerce.global.exception.ExceptionMessage.EMAIL_NOT_MATCH;
 import static com.potato.ecommerce.global.exception.ExceptionMessage.PASSWORD_NOT_MATCH;
-import static com.potato.ecommerce.global.exception.ExceptionMessage.STORE_NOT_FOUNT;
+import static com.potato.ecommerce.global.exception.ExceptionMessage.STORE_NOT_FOUND;
 
 import com.potato.ecommerce.domain.product.dto.ProductListResponse;
 import com.potato.ecommerce.domain.product.repository.ProductQueryRepository;
@@ -26,7 +26,6 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -45,7 +44,7 @@ public class StoreService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public void signup(StoreRequest storeRequest) {
+    public StoreResponse signup(StoreRequest storeRequest) {
 
         if (storeRepository.existsByEmail(storeRequest.getEmail())) {
             throw new ValidationException(DUPLICATE_EMAIL.toString());
@@ -55,7 +54,7 @@ public class StoreService {
             throw new ValidationException(PASSWORD_NOT_MATCH.toString());
         }
 
-        validationBusinessNumber(storeRequest.getBusinessNumber());
+        usingBusinessNumber(storeRequest.getBusinessNumber());
 
         StoreEntity storeEntity = StoreEntity.builder().email(storeRequest.getEmail())
             .password(passwordEncoder.encode(storeRequest.getPassword()))
@@ -63,7 +62,16 @@ public class StoreService {
             .description(storeRequest.getDescription())
             .businessNumber(storeRequest.getBusinessNumber()).build();
 
-        storeRepository.save(storeEntity);
+        StoreEntity save = storeRepository.save(storeEntity);
+
+        return StoreResponse.builder()
+            .id(storeEntity.getId())
+            .email(storeEntity.getEmail())
+            .name(storeEntity.getName())
+            .description(storeEntity.getDescription())
+            .phone(storeEntity.getPhone())
+            .businessNumber(storeEntity.getBusinessNumber())
+            .build();
     }
 
     @Transactional
@@ -80,9 +88,14 @@ public class StoreService {
     public StoreResponse getStore(String subject) {
         StoreEntity storeEntity = findBySubject(subject);
 
-        return StoreResponse.builder().email(storeEntity.getEmail()).name(storeEntity.getName())
-            .description(storeEntity.getDescription()).phone(storeEntity.getPhone())
-            .businessNumber(storeEntity.getBusinessNumber()).build();
+        return StoreResponse.builder()
+            .id(storeEntity.getId())
+            .email(storeEntity.getEmail())
+            .name(storeEntity.getName())
+            .description(storeEntity.getDescription())
+            .phone(storeEntity.getPhone())
+            .businessNumber(storeEntity.getBusinessNumber())
+            .build();
     }
 
     @Transactional
@@ -92,9 +105,14 @@ public class StoreService {
         storeEntity.update(updateRequest.getName(), updateRequest.getDescription(),
             updateRequest.getPhone());
 
-        return StoreResponse.builder().email(storeEntity.getEmail()).name(storeEntity.getName())
-            .description(storeEntity.getDescription()).phone(storeEntity.getPhone())
-            .businessNumber(storeEntity.getBusinessNumber()).build();
+        return StoreResponse.builder()
+            .id(storeEntity.getId())
+            .email(storeEntity.getEmail())
+            .name(storeEntity.getName())
+            .description(storeEntity.getDescription())
+            .phone(storeEntity.getPhone())
+            .businessNumber(storeEntity.getBusinessNumber())
+            .build();
     }
 
     @Transactional
@@ -131,12 +149,11 @@ public class StoreService {
         storeRepository.delete(storeEntity);
     }
 
-    @Cacheable(cacheNames = "getProducts", key = "#subject", cacheManager = "rcm")
     public RestPage<ProductListResponse> getProducts(String subject, int page, int size) {
         return productQueryRepository.getProducts(subject, page, size);
     }
 
-    private void validationBusinessNumber(String businessNumber) {
+    private void usingBusinessNumber(String businessNumber) {
         RevenueEntity revenueEntity = revenueRepository.findByNumber(businessNumber)
             .orElseThrow(() -> new EntityNotFoundException(BUSINESS_NUMBER_NOT_FOUNT.toString()));
 
@@ -144,22 +161,18 @@ public class StoreService {
             throw new DataIntegrityViolationException(DUPLICATE_BUSINESS_NUMBER.toString());
         }
 
-        use(revenueEntity);
-    }
-
-    private void use(RevenueEntity revenueEntity) {
         revenueEntity.use();
         revenueRepository.save(revenueEntity);
     }
 
     private StoreEntity findByEmail(String email) {
         return storeRepository.findByEmail(email)
-            .orElseThrow(() -> new EntityNotFoundException(STORE_NOT_FOUNT.toString()));
+            .orElseThrow(() -> new EntityNotFoundException(STORE_NOT_FOUND.toString()));
     }
 
     private StoreEntity findBySubject(String subject) {
         return storeRepository.findByBusinessNumber(subject)
-            .orElseThrow(() -> new EntityNotFoundException(STORE_NOT_FOUNT.toString()));
+            .orElseThrow(() -> new EntityNotFoundException(STORE_NOT_FOUND.toString()));
     }
 
 }
