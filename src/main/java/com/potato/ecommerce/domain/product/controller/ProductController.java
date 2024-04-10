@@ -1,16 +1,5 @@
 package com.potato.ecommerce.domain.product.controller;
 
-import static com.potato.ecommerce.domain.product.message.ProductMessage.ALL_PRODUCT_LIST;
-import static com.potato.ecommerce.domain.product.message.ProductMessage.PRODUCT_API;
-import static com.potato.ecommerce.domain.product.message.ProductMessage.PRODUCT_CREATE;
-import static com.potato.ecommerce.domain.product.message.ProductMessage.PRODUCT_DELETE;
-import static com.potato.ecommerce.domain.product.message.ProductMessage.PRODUCT_DELETE_SUCCESS;
-import static com.potato.ecommerce.domain.product.message.ProductMessage.PRODUCT_DETAIL;
-import static com.potato.ecommerce.domain.product.message.ProductMessage.PRODUCT_LIST_BY_CATEGORY;
-import static com.potato.ecommerce.domain.product.message.ProductMessage.PRODUCT_LIST_BY_STORE;
-import static com.potato.ecommerce.domain.product.message.ProductMessage.PRODUCT_UPDATE;
-import static com.potato.ecommerce.domain.store.message.StoreMessage.STORE_API;
-
 import com.potato.ecommerce.domain.product.dto.ProductDetailResponse;
 import com.potato.ecommerce.domain.product.dto.ProductRequest;
 import com.potato.ecommerce.domain.product.dto.ProductResponse;
@@ -24,7 +13,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

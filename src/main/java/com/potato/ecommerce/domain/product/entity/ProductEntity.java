@@ -72,14 +72,13 @@ public class ProductEntity {
     @Builder
     private ProductEntity(StoreEntity store, CategoryEntity category, String name,
         String description,
-        Integer price, Integer stock, Boolean isDeleted, LocalDateTime createdAt) {
+        Integer price, Integer stock, LocalDateTime createdAt) {
         this.store = store;
         this.category = category;
         this.name = name;
         this.description = description;
         this.price = price;
         this.stock = stock;
-        this.isDeleted = isDeleted;
         this.createdAt = createdAt;
     }
 
