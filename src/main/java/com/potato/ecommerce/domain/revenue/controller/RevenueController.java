@@ -1,7 +1,5 @@
 package com.potato.ecommerce.domain.revenue.controller;
 
-import static com.potato.ecommerce.domain.revenue.message.RevenueMessage.CREATE_BUSINESS_NUMBER_API;
-
 import com.potato.ecommerce.domain.revenue.dto.RevenueResponse;
 import com.potato.ecommerce.domain.revenue.service.RevenueService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,7 +18,7 @@ public class RevenueController {
     private final RevenueService revenueService;
 
     @PostMapping("api/v1/revenue")
-    @Operation(summary = CREATE_BUSINESS_NUMBER_API)
+    @Operation(summary = "사업자 번호 발급")
     public ResponseEntity<RevenueResponse> getBusinessNumber() {
         return ResponseEntity.status(HttpStatus.CREATED).body(revenueService.getBusinessNumber());
     }

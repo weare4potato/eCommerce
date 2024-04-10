@@ -1,14 +1,7 @@
 package com.potato.ecommerce.domain.store.controller;
 
-import static com.potato.ecommerce.domain.store.message.StoreMessage.STORE_API;
-import static com.potato.ecommerce.domain.store.message.StoreMessage.STORE_DELETE;
 import static com.potato.ecommerce.domain.store.message.StoreMessage.STORE_DELETE_SUCCESS;
-import static com.potato.ecommerce.domain.store.message.StoreMessage.STORE_INFO;
-import static com.potato.ecommerce.domain.store.message.StoreMessage.STORE_PASSWORD_VALIDATION;
 import static com.potato.ecommerce.domain.store.message.StoreMessage.STORE_PASSWORD_VALIDATION_SUCCESS;
-import static com.potato.ecommerce.domain.store.message.StoreMessage.STORE_SIGN_IN;
-import static com.potato.ecommerce.domain.store.message.StoreMessage.STORE_SIGN_UP;
-import static com.potato.ecommerce.domain.store.message.StoreMessage.STORE_UPDATE;
 
 import com.potato.ecommerce.domain.product.dto.ProductListResponse;
 import com.potato.ecommerce.domain.store.dto.DeleteStoreRequest;
@@ -42,22 +35,22 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/shops")
-@Tag(name = STORE_API)
+@Tag(name = "Store API")
 @RequiredArgsConstructor
 public class StoreController {
 
     private final StoreService storeService;
 
     @PostMapping("/signup")
-    @Operation(summary = STORE_SIGN_UP)
-    public ResponseEntity<Void> signup(@Valid @RequestBody StoreRequest storeRequest) {
-        storeService.signup(storeRequest);
+    @Operation(summary = "상점 등록")
+    public ResponseEntity<StoreResponse> signup(@Valid @RequestBody StoreRequest storeRequest) {
+        StoreResponse storeResponse = storeService.signup(storeRequest);
 
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(storeResponse);
     }
 
     @PostMapping("/signin")
-    @Operation(summary = STORE_SIGN_IN)
+    @Operation(summary = "상점 로그인")
     public ResponseEntity<Void> signin(@Valid @RequestBody LoginRequest loginRequest) {
         String token = storeService.signin(loginRequest);
         ResponseCookie cookie = ResponseCookie
@@ -74,7 +67,7 @@ public class StoreController {
     }
 
     @GetMapping
-    @Operation(summary = STORE_INFO)
+    @Operation(summary = "판매자 상점 조회")
     public ResponseEntity<StoreResponse> getStores(
         HttpServletRequest request
     ) {
@@ -87,7 +80,7 @@ public class StoreController {
     }
 
     @PutMapping
-    @Operation(summary = STORE_UPDATE)
+    @Operation(summary = "상점 수정")
     public ResponseEntity<StoreResponse> updateStore(
         HttpServletRequest request,
         @Valid @RequestBody UpdateStoreRequest updateRequest
@@ -100,7 +93,7 @@ public class StoreController {
     }
 
     @PostMapping("/password")
-    @Operation(summary = STORE_PASSWORD_VALIDATION)
+    @Operation(summary = "비밀번호 확인")
     public ResponseEntity<String> validatePassword(
         HttpServletRequest request,
         @Valid @RequestBody ValidatePasswordRequest validatePasswordRequest
@@ -114,7 +107,7 @@ public class StoreController {
     }
 
     @DeleteMapping
-    @Operation(summary = STORE_DELETE)
+    @Operation(summary = "상점 탈퇴")
     public ResponseEntity<String> deleteStore(
         HttpServletRequest request,
         @Valid @RequestBody DeleteStoreRequest deleteStoreRequest
@@ -127,6 +120,7 @@ public class StoreController {
     }
 
     @GetMapping("/{shopsId}/products")
+    @Operation(summary = "등록한 상품 조회")
     public ResponseEntity<RestPage<ProductListResponse>> getProducts(
         HttpServletRequest httpServletRequest,
         @RequestParam(defaultValue = "0") int page,

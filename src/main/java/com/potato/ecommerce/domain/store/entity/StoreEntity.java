@@ -55,7 +55,8 @@ public class StoreEntity {
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
-    private final boolean isDeleted = Boolean.FALSE;
+    @Column(nullable = false)
+    private boolean isDeleted = false;
 
     @Builder
     private StoreEntity(Long id, String email, String password, String name, String description,

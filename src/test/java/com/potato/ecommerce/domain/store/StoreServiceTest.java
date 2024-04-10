@@ -20,6 +20,7 @@ import com.potato.ecommerce.domain.store.service.StoreService;
 import com.potato.ecommerce.global.jwt.JwtUtil;
 import jakarta.validation.ValidationException;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -54,7 +55,7 @@ public class StoreServiceTest implements StoreTestUtil {
 
         StoreEntity storeEntity = TEST_STORE;
 
-        RevenueEntity revenueEntity = new RevenueEntity(1L);
+        RevenueEntity revenueEntity = new RevenueEntity(new AtomicLong(1));
 
         given(storeRepository.existsByEmail(storeEntity.getEmail())).willReturn(false);
         given(revenueRepository.findByNumber(TEST_BUSINESS_NUMBER)).willReturn(Optional.of(revenueEntity));
@@ -97,7 +98,7 @@ public class StoreServiceTest implements StoreTestUtil {
 
         StoreEntity storeEntity = TEST_STORE;
 
-        RevenueEntity revenueEntity = new RevenueEntity(1L);
+        RevenueEntity revenueEntity = new RevenueEntity(new AtomicLong(1));
 
         given(storeRepository.existsByEmail(storeEntity.getEmail())).willReturn(false);
 
@@ -112,7 +113,7 @@ public class StoreServiceTest implements StoreTestUtil {
 
         StoreEntity storeEntity = TEST_STORE;
 
-        RevenueEntity revenueEntity = new RevenueEntity(1L);
+        RevenueEntity revenueEntity = new RevenueEntity(new AtomicLong(1));
 
         given(storeRepository.existsByEmail(storeEntity.getEmail())).willReturn(false);
         given(revenueRepository.findByNumber(TEST_BUSINESS_NUMBER)).willReturn(Optional.of(revenueEntity));
