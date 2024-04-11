@@ -29,13 +29,22 @@ public class CategoryEntity {
     @NotNull
     private CategoryType oneDepth;
 
+    @NotNull
+    private String oneDepthDescription;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "two_depth")
     @NotNull
     private CategoryType twoDepth;
 
+    @NotNull
+    private String twoDepthDescription;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "three_depth")
     @NotNull
     private CategoryType threeDepth;
+
+    @NotNull
+    private String threeDepthDescription;
 }
