@@ -1,14 +1,11 @@
 package com.potato.ecommerce.domain.order.dto;
 
 import com.potato.ecommerce.domain.member.dto.ResponseMember;
-import com.potato.ecommerce.domain.member.entity.MemberEntity;
 import com.potato.ecommerce.domain.order.entity.OrderEntity;
 import com.potato.ecommerce.domain.order.entity.OrderStatus;
 import com.potato.ecommerce.domain.payment.vo.PaymentType;
 import com.potato.ecommerce.domain.receiver.dto.ReceiverForm;
-import com.potato.ecommerce.domain.receiver.entity.ReceiverEntity;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
