@@ -9,7 +9,7 @@ import lombok.Getter;
 public class ProductSimpleResponse {
 
     String name;
-    Integer price;
+    Long price;
 
     public static ProductSimpleResponse of(ProductEntity productEntity) {
         return new ProductSimpleResponse(productEntity.getName(), productEntity.getPrice());
