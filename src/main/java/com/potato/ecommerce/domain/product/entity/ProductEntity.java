@@ -4,6 +4,7 @@ package com.potato.ecommerce.domain.product.entity;
 import com.potato.ecommerce.domain.category.entity.CategoryEntity;
 import com.potato.ecommerce.domain.product.dto.ProductUpdateRequest;
 import com.potato.ecommerce.domain.store.entity.StoreEntity;
+import com.potato.ecommerce.global.exception.ExceptionMessage;
 import com.potato.ecommerce.global.exception.custom.OutOfStockException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -54,7 +55,7 @@ public class ProductEntity {
     private String description;
 
     @Column(nullable = false)
-    private Integer price;
+    private Long price;
 
     @Column(nullable = false)
     private Integer stock;
@@ -69,7 +70,7 @@ public class ProductEntity {
     @Builder
     private ProductEntity(StoreEntity store, CategoryEntity category, String name,
         String description,
-        Integer price, Integer stock, LocalDateTime createdAt) {
+        Long price, Integer stock, LocalDateTime createdAt) {
         this.store = store;
         this.category = category;
         this.name = name;
@@ -82,13 +83,18 @@ public class ProductEntity {
     public void removeStock(Integer stock) {
         Integer restStock = this.stock - stock;
         if (restStock < 0) {
-            throw new OutOfStockException("[ERROR] 상품의 재고가 부족합니다. 현재 재고 수량: " + this.stock);
+            throw new OutOfStockException(
+                ExceptionMessage.PRODUCT_OUT_OF_STOCK.toString() + this.stock);
         }
         this.stock = restStock;
     }
 
     public void addStock(Integer stock) {
         this.stock += stock;
+    }
+
+    public Long getTotalPrice(Integer quantity) {
+        return price * quantity;
     }
 
     public void updateFromRequest(ProductUpdateRequest updateRequest) {
