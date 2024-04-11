@@ -39,7 +39,7 @@ public class OrderController {
         OrderInfo order = orderService.createOrder(
             dto.getMemberId(),
             dto.getReceiverId(),
-            dto.getTotalPrice(),
+            dto.getTotalAmount(),
             dto.getType(),
             dto.getOrderProducts()
         );

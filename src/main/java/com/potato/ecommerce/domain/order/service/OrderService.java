@@ -36,7 +36,7 @@ public class OrderService {
     public OrderInfo createOrder(
         Long memberId,
         Long receiverId,
-        Long totalPrice,
+        Long totalAmount,
         PaymentType type,
         List<OrderProduct> orderProducts
     ) {
@@ -58,7 +58,7 @@ public class OrderService {
             receiverEntity,
             type,
             UUID.randomUUID().toString(),
-            totalPrice
+            totalAmount
         );
 
         OrderEntity saved = orderJpaRepository.save(orderEntity);

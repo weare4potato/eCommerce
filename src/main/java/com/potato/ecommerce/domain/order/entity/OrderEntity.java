@@ -17,6 +17,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Min;
 import java.time.LocalDateTime;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -66,7 +68,7 @@ public class OrderEntity {
 
     @Min(value = 0)
     @Column(nullable = false)
-    private Long totalPrice;
+    private Long totalAmount;
 
     @CreatedDate
     @Column(updatable = false)
@@ -77,13 +79,13 @@ public class OrderEntity {
         ReceiverEntity receiver,
         PaymentType paymentType,
         String orderNum,
-        Long totalPrice
+        Long totalAmount
     ) {
         this.member = member;
         this.receiver = receiver;
         this.paymentType = paymentType;
         this.orderNum = orderNum;
-        this.totalPrice = totalPrice;
+        this.totalAmount = totalAmount;
         this.status = OrderStatus.READY;
     }
 
@@ -96,7 +98,7 @@ public class OrderEntity {
             .orderNum(this.orderNum)
             .status(OrderStatus.COMPLETE)
             .orderedAt(this.orderedAt)
-            .totalPrice(this.totalPrice)
+            .totalAmount(this.totalAmount)
             .build();
     }
 
@@ -109,7 +111,7 @@ public class OrderEntity {
             .orderNum(this.orderNum)
             .status(OrderStatus.CANCEL)
             .orderedAt(this.orderedAt)
-            .totalPrice(this.totalPrice)
+            .totalAmount(this.totalAmount)
             .build();
     }
 
