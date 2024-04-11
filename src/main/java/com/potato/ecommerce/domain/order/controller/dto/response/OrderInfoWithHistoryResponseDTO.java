@@ -33,9 +33,7 @@ public class OrderInfoWithHistoryResponseDTO {
         Long totalAmount = 0L;
 
         for (HistoryInfo historyInfo : info.getHistoryInfos()) {
-            Integer price = historyInfo.getProduct().getPrice();
-            Integer quantity = historyInfo.getQuantity();
-            totalAmount += price * quantity;
+            totalAmount += historyInfo.getOrderPrice();
         }
 
         return OrderInfoWithHistoryResponseDTO.builder()
