@@ -16,7 +16,9 @@ public enum ExceptionMessage {
     STORE_NOT_FOUND("해당 상점을 찾지 못했습니다."),
     CART_NOT_FOUND("해당 장바구니를 찾지 못했습니다."),
     CATEGORY_NOT_FOUND("해당 카테고리를 찾지 못했습니다."),
-    PRODUCT_OUT_OF_STOCK("상품의 재고가 부족합니다. 현재 재고: ");
+    PRODUCT_OUT_OF_STOCK("상품의 재고가 부족합니다. 현재 재고: "),
+    ONE_DEPTH_NOT_FOUND("대분류 카테고리가 존재하지 않습니다."),
+    TWO_DEPTH_NOT_FOUND("중분류 카테고리가 존재하지 않습니다.");
     private final String message;
 
     ExceptionMessage(String message) {
