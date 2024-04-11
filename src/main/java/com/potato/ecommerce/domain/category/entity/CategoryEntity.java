@@ -25,26 +25,23 @@ public class CategoryEntity {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "one_depth")
-    @NotNull
+    @Column(name = "one_depth", nullable = false)
     private CategoryType oneDepth;
 
-    @NotNull
+    @Column(nullable = false)
     private String oneDepthDescription;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "two_depth")
-    @NotNull
+    @Column(name = "two_depth", nullable = false)
     private CategoryType twoDepth;
 
-    @NotNull
+    @Column(nullable = false)
     private String twoDepthDescription;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "three_depth")
-    @NotNull
+    @Column(name = "three_depth", nullable = false)
     private CategoryType threeDepth;
 
-    @NotNull
+    @Column(nullable = false)
     private String threeDepthDescription;
 }
