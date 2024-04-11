@@ -1,6 +1,7 @@
 package com.potato.ecommerce.domain.product.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,10 +18,10 @@ public class ProductUpdateRequest {
 
     private String description;
 
-    @NotBlank
+    @NotNull
     private Long price;
 
-    @NotBlank
+    @NotNull
     private int stock;
 
 }
