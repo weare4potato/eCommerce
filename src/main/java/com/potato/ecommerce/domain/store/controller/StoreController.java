@@ -43,10 +43,10 @@ public class StoreController {
 
     @PostMapping("/signup")
     @Operation(summary = "상점 등록")
-    public ResponseEntity<StoreResponse> signup(@Valid @RequestBody StoreRequest storeRequest) {
-        StoreResponse storeResponse = storeService.signup(storeRequest);
+    public ResponseEntity<Long> signup(@Valid @RequestBody StoreRequest storeRequest) {
+        Long storeId = storeService.signup(storeRequest);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(storeResponse);
+        return ResponseEntity.status(HttpStatus.CREATED).body(storeId);
     }
 
     @PostMapping("/signin")
