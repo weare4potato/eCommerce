@@ -26,6 +26,7 @@ public class OrderInfoWithHistory {
     private String orderNum;
     private List<HistoryInfo> historyInfos;
     private LocalDateTime orderedAt;
+    private Long totalAmount;
 
     public static OrderInfoWithHistory fromEntity(
         OrderEntity order,
@@ -40,6 +41,7 @@ public class OrderInfoWithHistory {
             .orderNum(order.getOrderNum())
             .historyInfos(historyInfos)
             .orderedAt(order.getOrderedAt())
+            .totalAmount(order.getTotalAmount())
             .build();
     }
 }
