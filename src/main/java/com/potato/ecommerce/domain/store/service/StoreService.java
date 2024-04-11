@@ -44,7 +44,7 @@ public class StoreService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public StoreResponse signup(StoreRequest storeRequest) {
+    public Long signup(StoreRequest storeRequest) {
 
         if (storeRepository.existsByEmail(storeRequest.getEmail())) {
             throw new ValidationException(DUPLICATE_EMAIL.toString());
@@ -62,16 +62,9 @@ public class StoreService {
             .description(storeRequest.getDescription())
             .businessNumber(storeRequest.getBusinessNumber()).build();
 
-        StoreEntity save = storeRepository.save(storeEntity);
+        StoreEntity saveEntity = storeRepository.save(storeEntity);
 
-        return StoreResponse.builder()
-            .id(storeEntity.getId())
-            .email(storeEntity.getEmail())
-            .name(storeEntity.getName())
-            .description(storeEntity.getDescription())
-            .phone(storeEntity.getPhone())
-            .businessNumber(storeEntity.getBusinessNumber())
-            .build();
+        return saveEntity.getId();
     }
 
     @Transactional
