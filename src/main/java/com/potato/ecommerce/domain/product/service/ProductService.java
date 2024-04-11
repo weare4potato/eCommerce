@@ -83,9 +83,9 @@ public class ProductService {
             .orElseThrow(() -> new EntityNotFoundException(PRODUCT_NOT_FOUND.toString()));
 
         CategoryEntity category = productEntity.getCategory();
-        String oneDepthName = category.getOneDepth().toString();
-        String twoDepthName = category.getTwoDepth().toString();
-        String threeDepthName = category.getThreeDepth().toString();
+        String oneDepthName = category.getOneDepthDescription();
+        String twoDepthName = category.getTwoDepthDescription();
+        String threeDepthName = category.getThreeDepthDescription();
 
         return new ProductDetailResponse(
             oneDepthName,
