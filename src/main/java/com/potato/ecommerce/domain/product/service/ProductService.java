@@ -51,7 +51,6 @@ public class ProductService {
             .description(requestDto.getDescription())
             .price(requestDto.getPrice())
             .stock(requestDto.getStock())
-            .createdAt(LocalDateTime.now())
             .build();
 
         productRepository.save(productEntity);
