@@ -1,5 +1,6 @@
 package com.potato.ecommerce.domain.order.service;
 
+import com.potato.ecommerce.domain.member.dto.ResponseMember;
 import com.potato.ecommerce.domain.member.entity.MemberEntity;
 import com.potato.ecommerce.domain.member.repository.MemberJpaRepository;
 import com.potato.ecommerce.domain.order.dto.HistoryInfo;
@@ -11,6 +12,7 @@ import com.potato.ecommerce.domain.order.entity.OrderEntity;
 import com.potato.ecommerce.domain.order.repository.order.OrderJpaRepository;
 import com.potato.ecommerce.domain.order.repository.order.OrderQueryRepository;
 import com.potato.ecommerce.domain.payment.vo.PaymentType;
+import com.potato.ecommerce.domain.receiver.dto.ReceiverForm;
 import com.potato.ecommerce.domain.receiver.entity.ReceiverEntity;
 import com.potato.ecommerce.domain.receiver.repository.ReceiverJpaRepository;
 import com.potato.ecommerce.global.exception.ExceptionMessage;
@@ -65,7 +67,11 @@ public class OrderService {
 
         historyService.createHistory(saved.getId(), orderProducts);
 
-        return OrderInfo.fromEntity(saved);
+        return OrderInfo.fromEntity(
+            saved,
+            ResponseMember.fromEntity(memberEntity),
+            ReceiverForm.fromEntity(receiverEntity)
+        );
     }
 
     @Transactional(readOnly = true)
@@ -75,8 +81,11 @@ public class OrderService {
                 ExceptionMessage.ORDER_NOT_FOUND.toString())
             );
 
+        ResponseMember member = ResponseMember.fromEntity(orderEntity.getMember());
+        ReceiverForm receiver = ReceiverForm.fromEntity(orderEntity.getReceiver());
+
         List<HistoryInfo> history = historyService.getHistory(orderId);
-        return OrderInfoWithHistory.fromEntity(orderEntity, history);
+        return OrderInfoWithHistory.fromEntity(orderEntity, history, member, receiver);
     }
 
     public RestPage<OrderList> getOrders(
@@ -94,8 +103,15 @@ public class OrderService {
                 ExceptionMessage.ORDER_NOT_FOUND.toString())
             );
 
-        OrderEntity completedOrder = orderEntity.complete();
-        return OrderInfo.fromEntity(orderJpaRepository.saveAndFlush(completedOrder));
+        OrderEntity result = orderJpaRepository.saveAndFlush(orderEntity.complete());
+        ResponseMember member = ResponseMember.fromEntity(result.getMember());
+        ReceiverForm receiver = ReceiverForm.fromEntity(result.getReceiver());
+
+        return OrderInfo.fromEntity(
+            result,
+            member,
+            receiver
+        );
     }
 
     public OrderInfo cancelOrder(Long orderId) {
@@ -104,11 +120,17 @@ public class OrderService {
                 ExceptionMessage.ORDER_NOT_FOUND.toString())
             );
 
-        OrderEntity completedOrder = orderEntity.cancel();
+        OrderEntity result = orderJpaRepository.saveAndFlush(orderEntity.cancel());
+        ResponseMember member = ResponseMember.fromEntity(result.getMember());
+        ReceiverForm receiver = ReceiverForm.fromEntity(result.getReceiver());
 
         historyService.deleteHistory(orderId);
 
-        return OrderInfo.fromEntity(orderJpaRepository.saveAndFlush(completedOrder));
+        return OrderInfo.fromEntity(
+            result,
+            member,
+            receiver
+        );
     }
 }
 
