@@ -15,8 +15,8 @@ public enum ExceptionMessage {
     PRODUCT_NOT_FOUND("해당 상품을 찾지 못했습니다."),
     STORE_NOT_FOUND("해당 상점을 찾지 못했습니다."),
     CART_NOT_FOUND("해당 장바구니를 찾지 못했습니다."),
-    CATEGORY_NOT_FOUND("해당 카테고리를 찾지 못했습니다.");
-
+    CATEGORY_NOT_FOUND("해당 카테고리를 찾지 못했습니다."),
+    PRODUCT_OUT_OF_STOCK("상품의 재고가 부족합니다. 현재 재고: ");
     private final String message;
 
     ExceptionMessage(String message) {
