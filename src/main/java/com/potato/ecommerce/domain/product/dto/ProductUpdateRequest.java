@@ -18,7 +18,7 @@ public class ProductUpdateRequest {
     private String description;
 
     @NotBlank
-    private int price;
+    private Long price;
 
     @NotBlank
     private int stock;

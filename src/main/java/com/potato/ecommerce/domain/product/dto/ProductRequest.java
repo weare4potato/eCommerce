@@ -18,7 +18,7 @@ public class ProductRequest {
     private String description;
 
     @NotBlank
-    private Integer price;
+    private Long price;
 
     @NotBlank
     private Integer stock;
