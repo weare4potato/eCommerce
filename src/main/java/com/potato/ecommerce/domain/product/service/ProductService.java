@@ -72,7 +72,7 @@ public class ProductService {
         Page<ProductEntity> productPage = productRepository.findAll(pageRequest);
 
         List<ProductSimpleResponse> productSimpleResponses = productPage.getContent().stream()
-            .map(ProductSimpleResponse::new)
+            .map(ProductSimpleResponse::of)
             .toList();
 
         return new RestPage<>(productSimpleResponses, page, size, productPage.getTotalElements());
@@ -101,7 +101,7 @@ public class ProductService {
         PageRequest pageRequest = PageRequest.of(page, size);
         Page<ProductEntity> productsPage = productRepository.findByStoreId(shopId, pageRequest);
 
-        Page<ShopProductResponse> shopProductResponsesPage = productsPage.map(ShopProductResponse::new);
+        Page<ShopProductResponse> shopProductResponsesPage = productsPage.map(ShopProductResponse::of);
 
 
         return new RestPage<>(shopProductResponsesPage);
@@ -111,7 +111,7 @@ public class ProductService {
         PageRequest pageRequest = PageRequest.of(page, size);
         Page<ProductEntity> productPage = productRepository.findByCategoryId(categoryId, pageRequest);
 
-        Page<ProductSimpleResponse> productSimpleResponsesPage = productPage.map(ProductSimpleResponse::new);
+        Page<ProductSimpleResponse> productSimpleResponsesPage = productPage.map(ProductSimpleResponse::of);
 
         return new RestPage<>(productSimpleResponsesPage);
     }
