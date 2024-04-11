@@ -41,18 +41,25 @@ public class HistoryEntity {
     @Min(value = 0)
     private Integer quantity;
 
+    @Min(value = 0)
+    @Column(nullable = false)
+    private Long orderPrice;
+
     @Builder
     public HistoryEntity(
         OrderEntity order,
         ProductEntity product,
-        Integer quantity
+        Integer quantity,
+        Long orderPrice
     ) {
         this.order = order;
         this.product = product;
         this.quantity = quantity;
+        this.orderPrice = orderPrice;
     }
 
     public void cancel() {
         product.addStock(this.quantity);
     }
+
 }
