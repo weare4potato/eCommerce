@@ -40,10 +40,13 @@ public class HistoryService {
 
             productEntity.removeStock(dto.getQuantity());
 
+            Long totalOrderPrice = productEntity.getTotalPrice(dto.getQuantity());
+
             HistoryEntity historyEntity = HistoryEntity.builder()
                 .order(orderEntity)
                 .product(productEntity)
                 .quantity(dto.getQuantity())
+                .orderPrice(totalOrderPrice)
                 .build();
 
             historyJpaRepository.save(historyEntity);
