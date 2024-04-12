@@ -2,6 +2,7 @@ package com.potato.ecommerce.domain.member.controller;
 
 import com.potato.ecommerce.domain.mail.service.MailService;
 import com.potato.ecommerce.domain.member.dto.ResponseMember;
+import com.potato.ecommerce.domain.member.dto.ResponseSignInDto;
 import com.potato.ecommerce.domain.member.dto.SignInDto;
 import com.potato.ecommerce.domain.member.dto.SignUpDto;
 import com.potato.ecommerce.domain.member.dto.UpdateMemberDto;
@@ -37,10 +38,11 @@ public class MemberController {
 
     @PostMapping("/signup")
     @Operation(summary = "회원가입")
-    public ResponseEntity<String> signUp(@RequestBody @Validated SignUpDto dto) {
-        memberService.signUp(dto);
+    public ResponseEntity<ResponseSignInDto> signUp(@RequestBody @Validated SignUpDto dto) {
+        ResponseMember member = memberService.signUp(dto);
         String message = mailService.sendMail(dto.getEmail());
-        return ResponseEntity.status(HttpStatus.CREATED).body(message);
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .body(ResponseSignInDto.from(member, message));
     }
 
     @PostMapping("/signin")
@@ -69,10 +71,10 @@ public class MemberController {
 
     @PostMapping
     @Operation(summary = "비밀번호 확인")
-    public ResponseEntity<Long> passwordCheck(@RequestBody String password,
+    public ResponseEntity<ResponseMember> passwordCheck(@RequestBody String password,
         HttpServletRequest request) {
-        Long id = memberService.passwordCheck(getSubject(request), password);
-        return ResponseEntity.status(HttpStatus.OK).body(id);
+        ResponseMember member = memberService.passwordCheck(getSubject(request), password);
+        return ResponseEntity.status(HttpStatus.OK).body(member);
     }
 
     @PutMapping
@@ -85,16 +87,16 @@ public class MemberController {
 
     @PutMapping("/password")
     @Operation(summary = "비밀번호 수정")
-    public ResponseEntity<Long> updatePassword(@RequestBody @Validated UpdatePasswordDto dto,
+    public ResponseEntity<ResponseMember> updatePassword(@RequestBody @Validated UpdatePasswordDto dto,
         HttpServletRequest request) {
-        Long id = memberService.updatePassword(dto, getSubject(request));
-        return ResponseEntity.status(HttpStatus.OK).body(id);
+        ResponseMember member = memberService.updatePassword(dto, getSubject(request));
+        return ResponseEntity.status(HttpStatus.OK).body(member);
     }
 
     @GetMapping("/signup/confirm")
-    public ResponseEntity<Long> updateAuth(@RequestParam("email") String email) {
-        Long id = memberService.confirmMember(email);
-        return ResponseEntity.status(HttpStatus.CREATED).body(id);
+    public ResponseEntity<ResponseMember> updateAuth(@RequestParam("email") String email) {
+        ResponseMember member = memberService.confirmMember(email);
+        return ResponseEntity.status(HttpStatus.CREATED).body(member);
     }
 
     private String getSubject(HttpServletRequest request) {
