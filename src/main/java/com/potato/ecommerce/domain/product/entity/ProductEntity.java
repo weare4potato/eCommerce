@@ -1,7 +1,7 @@
 package com.potato.ecommerce.domain.product.entity;
 
 
-import com.potato.ecommerce.domain.category.entity.CategoryEntity;
+import com.potato.ecommerce.domain.category.entity.ProductCategoryEntity;
 import com.potato.ecommerce.domain.product.dto.ProductUpdateRequest;
 import com.potato.ecommerce.domain.store.entity.StoreEntity;
 import com.potato.ecommerce.global.exception.ExceptionMessage;
@@ -45,8 +45,8 @@ public class ProductEntity {
     private StoreEntity store;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
-    private CategoryEntity category;
+    @JoinColumn(name = "product_category_id")
+    private ProductCategoryEntity productCategory;
 
     @Column(nullable = false)
     private String name;
@@ -68,11 +68,11 @@ public class ProductEntity {
     private LocalDateTime createdAt;
 
     @Builder
-    private ProductEntity(StoreEntity store, CategoryEntity category, String name,
+    private ProductEntity(StoreEntity store, ProductCategoryEntity productCategory, String name,
         String description,
         Long price, Integer stock, LocalDateTime createdAt) {
         this.store = store;
-        this.category = category;
+        this.productCategory = productCategory;
         this.name = name;
         this.description = description;
         this.price = price;
@@ -104,8 +104,8 @@ public class ProductEntity {
         this.stock = updateRequest.getStock();
     }
 
-    public void updateCategory(CategoryEntity newCategory) {
-        this.category = newCategory;
+    public void updateProductCategory(ProductCategoryEntity newProductCategory) {
+        this.productCategory = newProductCategory;
     }
 
     public void softDelete() {

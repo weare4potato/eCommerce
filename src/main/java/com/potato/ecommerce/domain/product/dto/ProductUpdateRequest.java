@@ -10,7 +10,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class ProductUpdateRequest {
 
-    private Long categoryId;
+    private Long productCategoryId;
 
     @Size(max = 150)
     @NotBlank
