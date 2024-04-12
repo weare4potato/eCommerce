@@ -52,7 +52,7 @@ public class MemberController {
 
         ResponseCookie cookie = ResponseCookie
             .from(JwtUtil.AUTHORIZATION_HEADER, token)
-            .domain("localhost")
+            .domain("52.78.12.179")
             .path("/")
             .httpOnly(true)
             .maxAge(Duration.ofMinutes(30L))
