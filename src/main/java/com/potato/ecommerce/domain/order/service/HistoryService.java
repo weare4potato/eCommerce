@@ -6,6 +6,7 @@ import com.potato.ecommerce.domain.order.entity.HistoryEntity;
 import com.potato.ecommerce.domain.order.entity.OrderEntity;
 import com.potato.ecommerce.domain.order.repository.history.HistoryJpaRepository;
 import com.potato.ecommerce.domain.order.repository.order.OrderJpaRepository;
+import com.potato.ecommerce.domain.product.dto.ProductSimpleResponse;
 import com.potato.ecommerce.domain.product.entity.ProductEntity;
 import com.potato.ecommerce.domain.product.repository.ProductRepository;
 import com.potato.ecommerce.global.exception.ExceptionMessage;
@@ -58,7 +59,7 @@ public class HistoryService {
         Long orderId
     ) {
         return historyJpaRepository.findAllByOrderId(orderId).stream()
-            .map(HistoryInfo::fromEntity)
+            .map(e -> HistoryInfo.fromEntity(e, ProductSimpleResponse.of(e.getProduct())))
             .toList();
     }
 
