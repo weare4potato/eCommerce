@@ -1,6 +1,6 @@
 package com.potato.ecommerce.domain.product.repository;
 
-import static com.potato.ecommerce.domain.product.entity.QProductEntity.productEntity;
+import static com.potato.ecommerce.domain.product.entity.QProductEntity.*;
 import static com.querydsl.core.types.Projections.fields;
 
 import com.potato.ecommerce.domain.product.dto.ProductListResponse;
@@ -27,7 +27,7 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepository {
         List<ProductListResponse> products =
             queryFactory.select(fields(ProductListResponse.class,
                     product.name,
-                    product.category.id,
+                    product.productCategory.id,
                     product.price,
                     product.stock))
                 .from(product)
