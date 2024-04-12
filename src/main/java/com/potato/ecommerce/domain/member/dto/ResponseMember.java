@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ResponseMember {
 
+    private Long id;
     private String username;
     private String email;
     private String phone;
@@ -19,6 +20,7 @@ public class ResponseMember {
 
     public static ResponseMember fromEntity(MemberEntity member) {
         return ResponseMember.builder()
+            .id(member.getId())
             .username(member.getUserName())
             .email(member.getEmail())
             .phone(member.getPhone())
