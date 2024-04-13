@@ -14,6 +14,7 @@ import com.potato.ecommerce.domain.product.dto.ProductUpdateRequest;
 import com.potato.ecommerce.domain.product.dto.ShopProductResponse;
 import com.potato.ecommerce.domain.product.entity.ProductEntity;
 import com.potato.ecommerce.domain.product.repository.ProductRepository;
+import com.potato.ecommerce.domain.store.dto.StoreResponse;
 import com.potato.ecommerce.domain.store.entity.StoreEntity;
 import com.potato.ecommerce.domain.store.repository.StoreRepository;
 import com.potato.ecommerce.global.util.RestPage;
@@ -146,5 +147,24 @@ public class ProductService {
 
         productEntity.softDelete();
         productRepository.delete(productEntity);
+    }
+
+    public StoreResponse getProductOfStore(Long productId) {
+        ProductEntity productEntity = productRepository.findById(productId)
+            .orElseThrow(() -> new EntityNotFoundException(PRODUCT_NOT_FOUND.toString()));
+
+        StoreEntity storeEntity = productRepository.findStoreEntityByProductEntity(productEntity.getId())
+            .orElseThrow(
+                () -> new EntityNotFoundException("상품의 상점을 찾을 수 없습니다.")
+            );
+
+        return new StoreResponse(
+            storeEntity.getId(),
+            storeEntity.getEmail(),
+            storeEntity.getName(),
+            storeEntity.getDescription(),
+            storeEntity.getPhone(),
+            storeEntity.getBusinessNumber()
+        );
     }
 }
