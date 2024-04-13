@@ -92,7 +92,7 @@ public class ProductService {
             productEntity.getName(),
             productEntity.getDescription(),
             productEntity.getPrice().toString(),
-            productEntity.getStore().getId().toString()
+            productEntity.getStore().getId()
         );
     }
 
