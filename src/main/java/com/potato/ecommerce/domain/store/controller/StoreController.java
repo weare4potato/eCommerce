@@ -67,7 +67,7 @@ public class StoreController {
     }
 
     @GetMapping
-    @Operation(summary = "판매자 상점 조회")
+    @Operation(summary = "상점 조회")
     public ResponseEntity<StoreResponse> getStores(
         HttpServletRequest request
     ) {
