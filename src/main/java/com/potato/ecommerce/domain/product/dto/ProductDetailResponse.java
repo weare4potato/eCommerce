@@ -12,7 +12,7 @@ public class ProductDetailResponse {
     private String threeDepthDescription;
     private String productName;
     private String description;
-    private String price;
+    private Long price;
     private Long storeId;
 
 }
