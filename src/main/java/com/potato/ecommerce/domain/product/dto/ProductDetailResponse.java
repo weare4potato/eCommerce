@@ -1,5 +1,6 @@
 package com.potato.ecommerce.domain.product.dto;
 
+import com.potato.ecommerce.domain.store.dto.StoreResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -13,6 +14,6 @@ public class ProductDetailResponse {
     private String productName;
     private String description;
     private Long price;
-    private Long storeId;
+    private StoreResponse store;
 
 }

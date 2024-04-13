@@ -15,13 +15,11 @@ import com.potato.ecommerce.domain.product.dto.ShopProductResponse;
 import com.potato.ecommerce.domain.product.entity.ProductEntity;
 import com.potato.ecommerce.domain.product.repository.ProductQueryRepositoryImpl;
 import com.potato.ecommerce.domain.product.repository.ProductRepository;
-import com.potato.ecommerce.domain.store.dto.ProductOfStoreResponse;
 import com.potato.ecommerce.domain.store.dto.StoreResponse;
 import com.potato.ecommerce.domain.store.entity.StoreEntity;
 import com.potato.ecommerce.domain.store.repository.StoreRepository;
 import com.potato.ecommerce.global.util.RestPage;
 import jakarta.persistence.EntityNotFoundException;
-import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -45,7 +43,8 @@ public class ProductService {
         StoreEntity storeEntity = storeRepository.findByBusinessNumber(businessNumber)
             .orElseThrow(() -> new EntityNotFoundException(STORE_NOT_FOUND.toString()));
 
-        ProductCategoryEntity productCategory = productCategoryRepository.findById(requestDto.getProductCategoryId())
+        ProductCategoryEntity productCategory = productCategoryRepository.findById(
+                requestDto.getProductCategoryId())
             .orElseThrow(() -> new EntityNotFoundException(CATEGORY_NOT_FOUND.toString()));
 
         ProductEntity productEntity = ProductEntity.builder()
@@ -65,7 +64,7 @@ public class ProductService {
             productEntity.getDescription(),
             productEntity.getPrice(),
             productEntity.getStock(),
-            productEntity.getStore().getId(),
+            new StoreResponse(productEntity.getStore()),
             productCategory.getId());
     }
 
@@ -96,7 +95,7 @@ public class ProductService {
             productEntity.getName(),
             productEntity.getDescription(),
             productEntity.getPrice(),
-            productEntity.getStore().getId()
+            new StoreResponse(productEntity.getStore())
         );
     }
 
@@ -104,17 +103,20 @@ public class ProductService {
         PageRequest pageRequest = PageRequest.of(page, size);
         Page<ProductEntity> productsPage = productRepository.findByStoreId(shopId, pageRequest);
 
-        Page<ShopProductResponse> shopProductResponsesPage = productsPage.map(ShopProductResponse::of);
-
+        Page<ShopProductResponse> shopProductResponsesPage = productsPage.map(
+            ShopProductResponse::of);
 
         return new RestPage<>(shopProductResponsesPage);
     }
 
-    public RestPage<ProductSimpleResponse> findProductsByCategoryId(Long productCategoryId, int page, int size) {
+    public RestPage<ProductSimpleResponse> findProductsByCategoryId(Long productCategoryId,
+        int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        Page<ProductEntity> productPage = productRepository.findByProductCategory_Id(productCategoryId, pageRequest);
+        Page<ProductEntity> productPage = productRepository.findByProductCategory_Id(
+            productCategoryId, pageRequest);
 
-        Page<ProductSimpleResponse> productSimpleResponsesPage = productPage.map(ProductSimpleResponse::of);
+        Page<ProductSimpleResponse> productSimpleResponsesPage = productPage.map(
+            ProductSimpleResponse::of);
 
         return new RestPage<>(productSimpleResponsesPage);
     }
@@ -124,7 +126,8 @@ public class ProductService {
         ProductEntity productEntity = productRepository.findById(productId)
             .orElseThrow(() -> new EntityNotFoundException(PRODUCT_NOT_FOUND.toString()));
 
-        ProductCategoryEntity categoryEntity = productCategoryRepository.findById(updateRequest.getProductCategoryId())
+        ProductCategoryEntity categoryEntity = productCategoryRepository.findById(
+                updateRequest.getProductCategoryId())
             .orElseThrow(() -> new EntityNotFoundException(CATEGORY_NOT_FOUND.toString()));
 
         productEntity.updateFromRequest(updateRequest);
@@ -138,9 +141,10 @@ public class ProductService {
             .description(productEntity.getDescription())
             .price(productEntity.getPrice())
             .stock(productEntity.getStock())
-            .storeId(productEntity.getStore().getId())
+            .store(new StoreResponse(productEntity.getStore()))
             .productCategoryId(productEntity.getProductCategory().getId())
             .build();
+
     }
 
     @Transactional
@@ -152,13 +156,4 @@ public class ProductService {
         productRepository.delete(productEntity);
     }
 
-    public ProductOfStoreResponse getProductOfStore(Long productId) {
-        ProductEntity productEntity = productRepository.findById(productId)
-            .orElseThrow(() -> new EntityNotFoundException(PRODUCT_NOT_FOUND.toString()));
-
-        Long id = productEntity.getStore().getId();
-        String name = productEntity.getStore().getName();
-
-        return new ProductOfStoreResponse(id, name);
-    }
 }
