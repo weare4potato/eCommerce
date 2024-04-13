@@ -7,6 +7,7 @@ import com.potato.ecommerce.domain.product.dto.ProductSimpleResponse;
 import com.potato.ecommerce.domain.product.dto.ProductUpdateRequest;
 import com.potato.ecommerce.domain.product.dto.ShopProductResponse;
 import com.potato.ecommerce.domain.product.service.ProductService;
+import com.potato.ecommerce.domain.store.dto.StoreResponse;
 import com.potato.ecommerce.global.jwt.JwtUtil;
 import com.potato.ecommerce.global.util.RestPage;
 import io.swagger.v3.oas.annotations.Operation;
@@ -108,6 +109,16 @@ public class ProductController {
 
         productService.softDeleteProduct(productId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @GetMapping("/products/{productId}/shops")
+    @Operation(summary = "상품의 상점 조회")
+    public ResponseEntity<StoreResponse> getProductOfStore(
+        @PathVariable Long productId
+    ) {
+        StoreResponse storeResponse = productService.getProductOfStore(productId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(storeResponse);
     }
 
 }
