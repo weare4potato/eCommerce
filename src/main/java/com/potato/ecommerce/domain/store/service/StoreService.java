@@ -56,7 +56,9 @@ public class StoreService {
 
         usingBusinessNumber(storeRequest.getBusinessNumber());
 
-        StoreEntity storeEntity = StoreEntity.builder().email(storeRequest.getEmail())
+        StoreEntity storeEntity = StoreEntity
+            .builder()
+            .email(storeRequest.getEmail())
             .password(passwordEncoder.encode(storeRequest.getPassword()))
             .name(storeRequest.getName()).phone(storeRequest.getPhone())
             .description(storeRequest.getDescription())

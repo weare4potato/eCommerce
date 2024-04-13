@@ -53,18 +53,28 @@ public class StoreServiceTest implements StoreTestUtil {
         // given
         StoreRequest storeRequest = TEST_STORE_REQUEST;
 
-        StoreEntity storeEntity = TEST_STORE;
+        StoreEntity storeEntity = StoreEntity.builder()
+            .id(1L)
+            .email(TEST_STORE_EMAIL)
+            .password(TEST_STORE_PASSWORD)
+            .name(TEST_STORE_NAME)
+            .description(TEST_STORE_DESCRIPTION)
+            .phone(TEST_STORE_PHONE)
+            .businessNumber(TEST_BUSINESS_NUMBER)
+            .build();
 
         RevenueEntity revenueEntity = new RevenueEntity(new AtomicLong(1));
 
-        given(storeRepository.existsByEmail(storeEntity.getEmail())).willReturn(false);
+        given(storeRepository.existsByEmail(any())).willReturn(false);
         given(revenueRepository.findByNumber(TEST_BUSINESS_NUMBER)).willReturn(Optional.of(revenueEntity));
+        given(revenueRepository.save(revenueEntity)).willReturn(revenueEntity);
+        given(storeRepository.save(any())).willReturn(storeEntity);
 
         // when
-        storeService.signup(storeRequest);
+        StoreResponse storeResponse = storeService.signup(storeRequest);
 
         // then
-        verify(storeRepository, times(1)).save(any(StoreEntity.class));
+        assertThat(storeRequest.getEmail()).isEqualTo(storeResponse.getEmail());
 
     }
 
@@ -111,12 +121,21 @@ public class StoreServiceTest implements StoreTestUtil {
     void 상점_등록에_성공하면_revenue를_isUsed로_변경한다() {
         StoreRequest storeRequest = TEST_STORE_REQUEST;
 
-        StoreEntity storeEntity = TEST_STORE;
+        StoreEntity storeEntity = StoreEntity.builder()
+            .id(1L)
+            .email(TEST_STORE_EMAIL)
+            .password(TEST_STORE_PASSWORD)
+            .name(TEST_STORE_NAME)
+            .description(TEST_STORE_DESCRIPTION)
+            .phone(TEST_STORE_PHONE)
+            .businessNumber(TEST_BUSINESS_NUMBER)
+            .build();
 
         RevenueEntity revenueEntity = new RevenueEntity(new AtomicLong(1));
 
-        given(storeRepository.existsByEmail(storeEntity.getEmail())).willReturn(false);
+        given(storeRepository.existsByEmail(storeRequest.getEmail())).willReturn(false);
         given(revenueRepository.findByNumber(TEST_BUSINESS_NUMBER)).willReturn(Optional.of(revenueEntity));
+        given(storeRepository.save(any())).willReturn(storeEntity);
 
         // when
         storeService.signup(storeRequest);
