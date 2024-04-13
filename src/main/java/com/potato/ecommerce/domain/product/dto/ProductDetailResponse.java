@@ -13,5 +13,6 @@ public class ProductDetailResponse {
     private String productName;
     private String description;
     private String price;
+    private String storeId;
 
 }
