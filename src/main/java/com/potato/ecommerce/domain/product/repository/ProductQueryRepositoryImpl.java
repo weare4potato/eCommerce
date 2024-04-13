@@ -27,7 +27,7 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepository {
         List<ProductListResponse> products =
             queryFactory.select(fields(ProductListResponse.class,
                     product.name,
-                    product.productCategory.id,
+                    product.productCategory.id.as("productCategoryId"),
                     product.price,
                     product.stock))
                 .from(product)
