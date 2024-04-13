@@ -1,6 +1,5 @@
 package com.potato.ecommerce.domain.member.entity;
 
-import com.potato.ecommerce.domain.member.dto.ResponseMember;
 import com.potato.ecommerce.domain.member.dto.UpdateMemberDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,6 +16,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,6 +27,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
+@SQLDelete(sql = "UPDATE members SET is_deleted = true WHERE member_id = ?")
+@SQLRestriction("is_deleted = false")
 @Table(name = "members")
 public class MemberEntity {
 
@@ -52,6 +55,8 @@ public class MemberEntity {
 
     @Enumerated(EnumType.STRING)
     private UserRoleEnum role;
+
+    private Boolean isDeleted = false;
 
     @Builder
     public MemberEntity(String email, String userName, String password, String phone,
