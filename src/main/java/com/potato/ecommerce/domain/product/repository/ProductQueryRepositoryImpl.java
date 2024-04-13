@@ -1,6 +1,6 @@
 package com.potato.ecommerce.domain.product.repository;
 
-import static com.potato.ecommerce.domain.product.entity.QProductEntity.*;
+import static com.potato.ecommerce.domain.product.entity.QProductEntity.productEntity;
 import static com.querydsl.core.types.Projections.fields;
 
 import com.potato.ecommerce.domain.product.dto.ProductListResponse;

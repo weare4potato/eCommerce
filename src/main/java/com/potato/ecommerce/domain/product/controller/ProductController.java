@@ -7,8 +7,6 @@ import com.potato.ecommerce.domain.product.dto.ProductSimpleResponse;
 import com.potato.ecommerce.domain.product.dto.ProductUpdateRequest;
 import com.potato.ecommerce.domain.product.dto.ShopProductResponse;
 import com.potato.ecommerce.domain.product.service.ProductService;
-import com.potato.ecommerce.domain.store.dto.ProductOfStoreResponse;
-import com.potato.ecommerce.domain.store.dto.StoreResponse;
 import com.potato.ecommerce.global.jwt.JwtUtil;
 import com.potato.ecommerce.global.util.RestPage;
 import io.swagger.v3.oas.annotations.Operation;
@@ -72,7 +70,8 @@ public class ProductController {
         @RequestParam(value = "page", defaultValue = "0") int page,
         @RequestParam(value = "size", defaultValue = "10") int size) {
 
-        RestPage<ShopProductResponse> products = productService.findProductsByShopId(shopId, page, size);
+        RestPage<ShopProductResponse> products = productService.findProductsByShopId(shopId, page,
+            size);
         return ResponseEntity.status(HttpStatus.OK).body(products);
     }
 
@@ -83,7 +82,8 @@ public class ProductController {
         @RequestParam(value = "page", defaultValue = "0") int page,
         @RequestParam(value = "size", defaultValue = "10") int size) {
 
-        RestPage<ProductSimpleResponse> products = productService.findProductsByCategoryId(productCategoryId, page, size);
+        RestPage<ProductSimpleResponse> products = productService.findProductsByCategoryId(
+            productCategoryId, page, size);
         return ResponseEntity.status(HttpStatus.OK).body(products);
     }
 
@@ -110,16 +110,6 @@ public class ProductController {
 
         productService.softDeleteProduct(productId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
-
-    @GetMapping("/products/{productId}/shops")
-    @Operation(summary = "상품의 상점 조회")
-    public ResponseEntity<ProductOfStoreResponse> getProductOfStore(
-        @PathVariable Long productId
-    ) {
-        ProductOfStoreResponse productOfStoreResponse = productService.getProductOfStore(productId);
-
-        return ResponseEntity.status(HttpStatus.OK).body(productOfStoreResponse);
     }
 
 }

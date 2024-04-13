@@ -1,6 +1,7 @@
 package com.potato.ecommerce.domain.store.dto;
 
 
+import com.potato.ecommerce.domain.store.entity.StoreEntity;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -24,4 +25,15 @@ public class StoreResponse {
         this.phone = phone;
         this.businessNumber = businessNumber;
     }
+
+    public StoreResponse(StoreEntity store) {
+        this.id = store.getId();
+        this.email = store.getEmail();
+        this.name = store.getName();
+        this.description = store.getDescription();
+        this.phone = store.getPhone();
+        this.businessNumber = store.getBusinessNumber();
+    }
+
+
 }
