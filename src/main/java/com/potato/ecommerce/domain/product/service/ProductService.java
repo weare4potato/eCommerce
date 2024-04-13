@@ -91,7 +91,7 @@ public class ProductService {
             threeDepthName,
             productEntity.getName(),
             productEntity.getDescription(),
-            productEntity.getPrice().toString(),
+            productEntity.getPrice(),
             productEntity.getStore().getId()
         );
     }
