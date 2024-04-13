@@ -8,7 +8,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class ShopProductResponse {
 
-    private String productName;
+    private String name;
     private Long price;
 
     public static ShopProductResponse of(ProductEntity productEntity) {
