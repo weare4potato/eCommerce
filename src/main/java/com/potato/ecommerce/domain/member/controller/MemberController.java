@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -52,9 +53,10 @@ public class MemberController {
 
         ResponseCookie cookie = ResponseCookie
             .from(JwtUtil.AUTHORIZATION_HEADER, token)
-            .domain("52.78.12.179")
+            .domain("http://api.hahawelcomeshop.shop")
             .path("/")
-            .httpOnly(true)
+            .httpOnly(false)
+            .secure(false)
             .maxAge(Duration.ofMinutes(30L))
             .build();
 
@@ -67,14 +69,6 @@ public class MemberController {
     public ResponseEntity<ResponseMember> getMember(HttpServletRequest request) {
         ResponseMember response = memberService.getMember(getSubject(request));
         return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
-
-    @PostMapping
-    @Operation(summary = "비밀번호 확인")
-    public ResponseEntity<ResponseMember> passwordCheck(@RequestBody String password,
-        HttpServletRequest request) {
-        ResponseMember member = memberService.passwordCheck(getSubject(request), password);
-        return ResponseEntity.status(HttpStatus.OK).body(member);
     }
 
     @PutMapping
@@ -90,6 +84,22 @@ public class MemberController {
     public ResponseEntity<ResponseMember> updatePassword(@RequestBody @Validated UpdatePasswordDto dto,
         HttpServletRequest request) {
         ResponseMember member = memberService.updatePassword(dto, getSubject(request));
+        return ResponseEntity.status(HttpStatus.OK).body(member);
+    }
+
+    @DeleteMapping
+    @Operation(summary = "회원 탈퇴")
+    public ResponseEntity<Void> deleteMember(HttpServletRequest request) {
+        memberService.deleteMember(getSubject(request));
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+
+    @PostMapping
+    @Operation(summary = "비밀번호 확인")
+    public ResponseEntity<ResponseMember> passwordCheck(@RequestBody String password,
+        HttpServletRequest request) {
+        ResponseMember member = memberService.passwordCheck(getSubject(request), password);
         return ResponseEntity.status(HttpStatus.OK).body(member);
     }
 

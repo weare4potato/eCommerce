@@ -74,6 +74,13 @@ public class MemberService {
     }
 
     @Transactional
+    public void deleteMember(String email){
+        MemberEntity member = findByEmail(email);
+
+        memberJpaRepository.delete(member);
+    }
+
+    @Transactional
     public ResponseMember confirmMember(String email) {
         MemberEntity member = findByEmail(email);
 
