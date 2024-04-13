@@ -13,7 +13,9 @@ import com.potato.ecommerce.domain.product.dto.ProductSimpleResponse;
 import com.potato.ecommerce.domain.product.dto.ProductUpdateRequest;
 import com.potato.ecommerce.domain.product.dto.ShopProductResponse;
 import com.potato.ecommerce.domain.product.entity.ProductEntity;
+import com.potato.ecommerce.domain.product.repository.ProductQueryRepositoryImpl;
 import com.potato.ecommerce.domain.product.repository.ProductRepository;
+import com.potato.ecommerce.domain.store.dto.ProductOfStoreResponse;
 import com.potato.ecommerce.domain.store.dto.StoreResponse;
 import com.potato.ecommerce.domain.store.entity.StoreEntity;
 import com.potato.ecommerce.domain.store.repository.StoreRepository;
@@ -33,6 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final ProductQueryRepositoryImpl productQueryRepository;
     private final StoreRepository storeRepository;
     private final ProductCategoryRepository productCategoryRepository;
 
@@ -149,22 +152,13 @@ public class ProductService {
         productRepository.delete(productEntity);
     }
 
-    public StoreResponse getProductOfStore(Long productId) {
+    public ProductOfStoreResponse getProductOfStore(Long productId) {
         ProductEntity productEntity = productRepository.findById(productId)
             .orElseThrow(() -> new EntityNotFoundException(PRODUCT_NOT_FOUND.toString()));
 
-        StoreEntity storeEntity = productRepository.findStoreEntityByProductEntity(productEntity.getId())
-            .orElseThrow(
-                () -> new EntityNotFoundException("상품의 상점을 찾을 수 없습니다.")
-            );
+        Long id = productEntity.getStore().getId();
+        String name = productEntity.getStore().getName();
 
-        return new StoreResponse(
-            storeEntity.getId(),
-            storeEntity.getEmail(),
-            storeEntity.getName(),
-            storeEntity.getDescription(),
-            storeEntity.getPhone(),
-            storeEntity.getBusinessNumber()
-        );
+        return new ProductOfStoreResponse(id, name);
     }
 }
