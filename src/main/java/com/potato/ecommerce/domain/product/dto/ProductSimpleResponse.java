@@ -8,11 +8,12 @@ import lombok.Getter;
 @AllArgsConstructor
 public class ProductSimpleResponse {
 
+    Long id;
     String name;
     Long price;
 
     public static ProductSimpleResponse of(ProductEntity productEntity) {
-        return new ProductSimpleResponse(productEntity.getName(), productEntity.getPrice());
+        return new ProductSimpleResponse(productEntity.getId(), productEntity.getName(), productEntity.getPrice());
     }
 
 }
