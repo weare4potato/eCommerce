@@ -119,7 +119,7 @@ public class StoreController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(STORE_DELETE_SUCCESS);
     }
 
-    @GetMapping("/{shopsId}/products")
+    @GetMapping("/products")
     @Operation(summary = "등록한 상품 조회")
     public ResponseEntity<RestPage<ProductListResponse>> getProducts(
         HttpServletRequest httpServletRequest,
