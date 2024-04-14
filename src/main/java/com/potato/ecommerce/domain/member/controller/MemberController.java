@@ -12,11 +12,8 @@ import com.potato.ecommerce.global.jwt.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
-import java.time.Duration;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -51,17 +48,8 @@ public class MemberController {
     public ResponseEntity<Void> signIn(@RequestBody @Validated SignInDto dto) {
         String token = memberService.signIn(dto);
 
-        ResponseCookie cookie = ResponseCookie
-            .from(JwtUtil.AUTHORIZATION_HEADER, token)
-            .domain("http://api.hahawelcomeshop.shop")
-            .path("/")
-            .httpOnly(false)
-            .secure(false)
-            .maxAge(Duration.ofMinutes(30L))
-            .build();
-
         return ResponseEntity.status(HttpStatus.OK)
-            .header(HttpHeaders.SET_COOKIE, cookie.toString()).build();
+            .header(JwtUtil.AUTHORIZATION_HEADER, token).build();
     }
 
     @GetMapping
