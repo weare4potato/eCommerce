@@ -18,7 +18,7 @@ public class AuthInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
         Object handler) throws Exception {
-        String token = jwtUtil.getTokenFromRequest(request);
+        String token = jwtUtil.getTokenFromHeader(request);
 
         if(ObjectUtils.isEmpty(token)){
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
