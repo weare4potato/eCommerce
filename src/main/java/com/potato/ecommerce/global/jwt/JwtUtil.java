@@ -49,19 +49,11 @@ public class JwtUtil {
         String tokenValue = request.getHeader(AUTHORIZATION_HEADER);
         log.info(tokenValue);
         if (StringUtils.hasText(tokenValue) && tokenValue.startsWith(BEARER_PREFIX)) {
-            return tokenValue.substring(6);
+            return tokenValue.substring(7);
         }
         return null;
     }
 
-    // 토큰 뽑아오기
-    public String substringToken(String tokenValue) {
-        if(StringUtils.hasText(tokenValue) && tokenValue.startsWith(BEARER_PREFIX)) {
-            return tokenValue.substring(7);
-        }
-        log.info("Not Found Token");
-        throw new NullPointerException("Not found Token");
-    }
     // 토큰 검증
     public boolean validateToken(String token) {
         try {
@@ -114,8 +106,5 @@ public class JwtUtil {
         long curTime = (new Date()).getTime();
         return new Date(curTime + expireDate);
     }
-//    public void addJwtToHeader(String token, HttpServletResponse response) {
-//        response.addHeader(AUTHORIZATION_HEADER, token);
-//    }
 
 }
