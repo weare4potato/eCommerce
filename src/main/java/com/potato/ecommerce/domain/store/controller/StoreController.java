@@ -11,17 +11,15 @@ import com.potato.ecommerce.domain.store.dto.StoreResponse;
 import com.potato.ecommerce.domain.store.dto.UpdateStoreRequest;
 import com.potato.ecommerce.domain.store.dto.ValidatePasswordRequest;
 import com.potato.ecommerce.domain.store.service.StoreService;
+import com.potato.ecommerce.global.jwt.JwtUtil;
 import com.potato.ecommerce.global.util.RestPage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import java.time.Duration;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -53,17 +51,9 @@ public class StoreController {
     @Operation(summary = "상점 로그인")
     public ResponseEntity<Void> signin(@Valid @RequestBody LoginRequest loginRequest) {
         String token = storeService.signin(loginRequest);
-        ResponseCookie cookie = ResponseCookie
-            .from("Authorization", token)
-            .domain("localhost")
-            .path("/")
-            .httpOnly(true)
-            .maxAge(Duration.ofMinutes(30L))
-            .build();
 
         return ResponseEntity.status(HttpStatus.OK)
-            .header(HttpHeaders.SET_COOKIE, cookie.toString())
-            .build();
+            .header(JwtUtil.AUTHORIZATION_HEADER, token).build();
     }
 
     @GetMapping
