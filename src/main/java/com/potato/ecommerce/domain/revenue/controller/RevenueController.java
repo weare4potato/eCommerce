@@ -17,7 +17,7 @@ public class RevenueController {
 
     private final RevenueService revenueService;
 
-    @PostMapping("api/v1/revenue")
+    @PostMapping("/api/v1/revenue")
     @Operation(summary = "사업자 번호 발급")
     public ResponseEntity<RevenueResponse> getBusinessNumber() {
         return ResponseEntity.status(HttpStatus.CREATED).body(revenueService.getBusinessNumber());

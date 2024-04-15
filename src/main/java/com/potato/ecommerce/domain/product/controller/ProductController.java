@@ -63,7 +63,7 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).body(productDetail);
     }
 
-    @GetMapping("/shops/{shopId}/shop-products")
+    @GetMapping("/products/shops/{shopId}")
     @Operation(summary = "상점별 상품 조회")
     public ResponseEntity<RestPage<ShopProductResponse>> getProductsByShop(
         @PathVariable Long shopId,
