@@ -70,14 +70,13 @@ public class ProductEntity {
     @Builder
     private ProductEntity(StoreEntity store, ProductCategoryEntity productCategory, String name,
         String description,
-        Long price, Integer stock, LocalDateTime createdAt) {
+        Long price, Integer stock) {
         this.store = store;
         this.productCategory = productCategory;
         this.name = name;
         this.description = description;
         this.price = price;
         this.stock = stock;
-        this.createdAt = createdAt;
     }
 
     public void removeStock(Integer stock) {
