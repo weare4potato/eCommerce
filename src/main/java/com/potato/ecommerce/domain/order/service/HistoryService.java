@@ -34,6 +34,10 @@ public class HistoryService {
             .orElseThrow(() -> new EntityNotFoundException(
                 ExceptionMessage.ORDER_NOT_FOUND.toString()));
 
+        // Todo : 한번에 리스트로 받아서 벌크로 저장하는 방식을 생각해 볼 것
+
+//        List<HistoryEntity> entities = new ArrayList<>();
+
         for (OrderProduct dto : orderProducts) {
             ProductEntity productEntity = productRepository.findById(dto.getProductId())
                 .orElseThrow(() -> new EntityNotFoundException(
@@ -51,7 +55,9 @@ public class HistoryService {
                 .build();
 
             historyJpaRepository.save(historyEntity);
+//            entities.add(historyEntity);
         }
+//        historyJpaRepository.saveAll(entities);
     }
 
     @Transactional(readOnly = true)
