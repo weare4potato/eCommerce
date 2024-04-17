@@ -4,7 +4,6 @@ import com.potato.ecommerce.domain.member.dto.ResponseMember;
 import com.potato.ecommerce.domain.order.dto.HistoryInfo;
 import com.potato.ecommerce.domain.order.dto.OrderInfoWithHistory;
 import com.potato.ecommerce.domain.order.entity.OrderStatus;
-import com.potato.ecommerce.domain.payment.vo.PaymentType;
 import com.potato.ecommerce.domain.receiver.dto.ReceiverForm;
 import java.time.LocalDateTime;
 import java.util.List;

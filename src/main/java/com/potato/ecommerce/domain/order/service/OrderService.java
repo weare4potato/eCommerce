@@ -11,7 +11,6 @@ import com.potato.ecommerce.domain.order.dto.OrderProduct;
 import com.potato.ecommerce.domain.order.entity.OrderEntity;
 import com.potato.ecommerce.domain.order.repository.order.OrderJpaRepository;
 import com.potato.ecommerce.domain.order.repository.order.OrderQueryRepository;
-import com.potato.ecommerce.domain.payment.vo.PaymentType;
 import com.potato.ecommerce.domain.receiver.dto.ReceiverForm;
 import com.potato.ecommerce.domain.receiver.entity.ReceiverEntity;
 import com.potato.ecommerce.domain.receiver.repository.ReceiverJpaRepository;

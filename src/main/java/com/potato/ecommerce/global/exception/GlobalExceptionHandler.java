@@ -6,6 +6,7 @@ import com.potato.ecommerce.global.exception.dto.ExceptionDto;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ValidationException;
 import java.util.Objects;
+import javax.security.auth.login.LoginException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -25,7 +26,8 @@ public class GlobalExceptionHandler {
         EntityNotFoundException.class,
         AuthenticationFailedException.class,
         ValidationException.class,
-        OutOfStockException.class
+        OutOfStockException.class,
+        LoginException.class
     })
     public ResponseEntity<ExceptionDto> badRequestExceptionHandler(RuntimeException e) {
         return createResponse(HttpStatus.BAD_REQUEST, e.getMessage());
