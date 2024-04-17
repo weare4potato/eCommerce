@@ -18,7 +18,10 @@ public enum ExceptionMessage {
     CATEGORY_NOT_FOUND("해당 카테고리를 찾지 못했습니다."),
     PRODUCT_OUT_OF_STOCK("상품의 재고가 부족합니다. 현재 재고: "),
     ONE_DEPTH_NOT_FOUND("대분류 카테고리가 존재하지 않습니다."),
-    TWO_DEPTH_NOT_FOUND("중분류 카테고리가 존재하지 않습니다.");
+    TWO_DEPTH_NOT_FOUND("중분류 카테고리가 존재하지 않습니다."),
+    INVALID_PAYMENT_AMOUNT("최소 주문 금액은 1000원 입니다."),
+    ALREADY_APPROVED("이미 완료된 주문입니다."),
+    PAYMENT_NOT_FOUND("결제 정보를 찾을 수 없습니다.");
     private final String message;
 
     ExceptionMessage(String message) {

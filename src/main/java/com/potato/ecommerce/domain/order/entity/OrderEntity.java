@@ -1,7 +1,6 @@
 package com.potato.ecommerce.domain.order.entity;
 
 import com.potato.ecommerce.domain.member.entity.MemberEntity;
-import com.potato.ecommerce.domain.payment.vo.PaymentType;
 import com.potato.ecommerce.domain.receiver.entity.ReceiverEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
