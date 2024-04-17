@@ -22,11 +22,8 @@ repositories {
 }
 
 dependencies {
-    // prometheus
-    implementation 'io.micrometer:micrometer-registry-prometheus'
-
-    // actuator
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+       // actuator
+//    implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
     // Swagger
     implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.2.0'
