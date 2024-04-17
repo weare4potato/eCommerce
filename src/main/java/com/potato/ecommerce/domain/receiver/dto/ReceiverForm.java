@@ -1,7 +1,6 @@
 package com.potato.ecommerce.domain.receiver.dto;
 
 import com.potato.ecommerce.domain.receiver.entity.ReceiverEntity;
-import jakarta.persistence.criteria.From;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -16,11 +15,13 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ReceiverForm {
 
+    private String id;
+
     @NotBlank
     private String name;
 
     @NotBlank
-    @Pattern(regexp = "^01(0)-([0-9]{4})-([0-9]{4})$")
+    @Pattern(regexp = "^01(0)([0-9]{4})([0-9]{4})$")
     private String phone;
 
     @Size(max = 12)
