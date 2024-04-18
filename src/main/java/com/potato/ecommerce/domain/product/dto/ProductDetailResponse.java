@@ -8,6 +8,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class ProductDetailResponse {
 
+    private Long productId;
     private String oneDepthDescription;
     private String twoDepthDescription;
     private String threeDepthDescription;
