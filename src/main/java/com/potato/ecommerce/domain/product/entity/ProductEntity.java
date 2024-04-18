@@ -5,9 +5,11 @@ import com.potato.ecommerce.domain.category.entity.ProductCategoryEntity;
 import com.potato.ecommerce.domain.product.dto.ProductUpdateRequest;
 import com.potato.ecommerce.domain.store.entity.StoreEntity;
 import com.potato.ecommerce.global.exception.ExceptionMessage;
+import com.potato.ecommerce.global.exception.custom.AuthenticationFailedException;
 import com.potato.ecommerce.global.exception.custom.OutOfStockException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -28,6 +30,7 @@ import org.springframework.data.annotation.CreatedDate;
 
 @Entity
 @Getter
+@EntityListeners(AuthenticationFailedException.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "UPDATE products SET is_deleted = true WHERE product_id = ?")
 @Where(clause = "is_deleted=false")
