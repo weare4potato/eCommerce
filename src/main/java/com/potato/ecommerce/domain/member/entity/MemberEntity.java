@@ -1,16 +1,23 @@
 package com.potato.ecommerce.domain.member.entity;
 
 import com.potato.ecommerce.domain.member.dto.UpdateMemberDto;
+import com.potato.ecommerce.domain.payment.entity.CancelPayment;
+import com.potato.ecommerce.domain.payment.entity.Payment;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -58,6 +65,9 @@ public class MemberEntity {
 
     private Boolean isDeleted = false;
 
+    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    private List<Payment> payments = new ArrayList<>();
+
     @Builder
     public MemberEntity(String email, String userName, String password, String phone,
         LocalDateTime createdAt, UserRoleEnum role, boolean authStatus) {
@@ -97,5 +107,17 @@ public class MemberEntity {
         this.phone = dto.getPhone();
     }
 
+    public void addPayment(Payment payment) {
+        this.payments.add(payment);
+        payment.setCustomer(this);
+    }
+
+    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    private List<CancelPayment> cancelPayments = new ArrayList<>();
+
+    public void addCancelPayment(CancelPayment cancelPayment) {
+        this.cancelPayments.add(cancelPayment);
+        cancelPayment.setCustomer(this);
+    }
 
 }

@@ -94,6 +94,15 @@ public class OrderController {
             .body(OrderInfoResponseDTO.from(order));
     }
 
+//    @GetMapping("/member")
+//    public ResponseEntity<OrderInfoWithHistoryResponseDTO> getMemberOfOrder (
+//        HttpServletRequest httpServletRequest
+//    ) {
+//        String subject = getSubject(httpServletRequest);
+//
+//        orderService.getMemberOfOrder(subject);
+//    }
+
     private String getSubject(HttpServletRequest request) {
         return (String) request.getAttribute("subject");
     }
