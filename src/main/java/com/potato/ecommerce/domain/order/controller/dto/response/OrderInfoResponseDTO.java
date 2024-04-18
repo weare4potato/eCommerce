@@ -3,6 +3,7 @@ package com.potato.ecommerce.domain.order.controller.dto.response;
 import com.potato.ecommerce.domain.member.dto.ResponseMember;
 import com.potato.ecommerce.domain.order.dto.OrderInfo;
 import com.potato.ecommerce.domain.order.entity.OrderStatus;
+import com.potato.ecommerce.domain.payment.dto.PAY_TYPE;
 import com.potato.ecommerce.domain.receiver.dto.ReceiverForm;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
@@ -19,7 +20,7 @@ public class OrderInfoResponseDTO {
     private Long id;
     private ResponseMember member;
     private ReceiverForm receiver;
-    private PaymentType paymentType;
+    private PAY_TYPE payType;
     private OrderStatus status;
     private String orderNum;
     private LocalDateTime orderedAt;
@@ -29,7 +30,7 @@ public class OrderInfoResponseDTO {
             .id(info.getId())
             .member(info.getMember())
             .receiver(info.getReceiver())
-            .paymentType(info.getPaymentType())
+            .payType(info.getPayType())
             .status(info.getStatus())
             .orderNum(info.getOrderNum())
             .orderedAt(info.getOrderedAt())

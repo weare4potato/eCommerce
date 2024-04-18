@@ -4,6 +4,7 @@ import com.potato.ecommerce.domain.member.dto.ResponseMember;
 import com.potato.ecommerce.domain.order.dto.HistoryInfo;
 import com.potato.ecommerce.domain.order.dto.OrderInfoWithHistory;
 import com.potato.ecommerce.domain.order.entity.OrderStatus;
+import com.potato.ecommerce.domain.payment.dto.PAY_TYPE;
 import com.potato.ecommerce.domain.receiver.dto.ReceiverForm;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,7 +24,7 @@ public class OrderInfoWithHistoryResponseDTO {
     private Long id;
     private ResponseMember member;
     private ReceiverForm receiver;
-    private PaymentType paymentType;
+    private PAY_TYPE payType;
     private OrderStatus status;
     private String orderNum;
     private List<HistoryInfo> historyInfos;
@@ -41,7 +42,7 @@ public class OrderInfoWithHistoryResponseDTO {
             .id(info.getId())
             .member(info.getMember())
             .receiver(info.getReceiver())
-            .paymentType(info.getPaymentType())
+            .payType(info.getPayType())
             .status(info.getStatus())
             .orderNum(info.getOrderNum())
             .historyInfos(info.getHistoryInfos())

@@ -1,6 +1,7 @@
 package com.potato.ecommerce.domain.order.entity;
 
 import com.potato.ecommerce.domain.member.entity.MemberEntity;
+import com.potato.ecommerce.domain.payment.dto.PAY_TYPE;
 import com.potato.ecommerce.domain.receiver.entity.ReceiverEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -49,7 +50,7 @@ public class OrderEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private PaymentType paymentType;
+    private PAY_TYPE payType;
 
     @Column(nullable = false)
     private String orderNum;
@@ -74,13 +75,13 @@ public class OrderEntity {
     public OrderEntity(
         MemberEntity member,
         ReceiverEntity receiver,
-        PaymentType paymentType,
+        PAY_TYPE payType,
         String orderNum,
         Long totalAmount
     ) {
         this.member = member;
         this.receiver = receiver;
-        this.paymentType = paymentType;
+        this.payType = payType;
         this.orderNum = orderNum;
         this.totalAmount = totalAmount;
         this.status = OrderStatus.READY;
@@ -91,7 +92,7 @@ public class OrderEntity {
             .id(this.id)
             .member(this.member)
             .receiver(this.receiver)
-            .paymentType(this.paymentType)
+            .payType(this.payType)
             .orderNum(this.orderNum)
             .status(OrderStatus.COMPLETE)
             .orderedAt(this.orderedAt)
@@ -104,7 +105,7 @@ public class OrderEntity {
             .id(this.id)
             .member(this.member)
             .receiver(this.receiver)
-            .paymentType(this.paymentType)
+            .payType(this.payType)
             .orderNum(this.orderNum)
             .status(OrderStatus.CANCEL)
             .orderedAt(this.orderedAt)
