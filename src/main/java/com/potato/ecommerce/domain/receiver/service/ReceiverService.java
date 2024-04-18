@@ -59,7 +59,7 @@ public class ReceiverService {
     }
 
     @Transactional
-    public void deleteMember(String subject, Long receiverId) {
+    public void deleteReceiver(String subject, Long receiverId) {
         MemberEntity member = findByEmail(subject);
         ReceiverEntity receiver = findById(receiverId);
 
@@ -74,6 +74,15 @@ public class ReceiverService {
         return receiverJpaRepository.findAllByMember_Id(member.getId()).stream()
             .map(ReceiverForm::fromEntity)
             .toList();
+    }
+
+    public ReceiverForm findOneReceiver(String subject, Long receiverId) {
+        MemberEntity member = findByEmail(subject);
+        ReceiverEntity receiver = findById(receiverId);
+
+        validateMember(receiver, member);
+
+        return ReceiverForm.fromEntity(receiver);
     }
 
 
@@ -94,4 +103,6 @@ public class ReceiverService {
             throw new EntityExistsException(RECEIVER_NOT_MATCH.toString());
         }
     }
+
+
 }
