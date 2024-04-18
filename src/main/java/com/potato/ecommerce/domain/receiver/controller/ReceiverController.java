@@ -51,6 +51,16 @@ public class ReceiverController {
 
     }
 
+    @GetMapping("/{receiverId}")
+    @Operation(summary = "배송 단일 조회")
+    public ResponseEntity<ReceiverForm> findOneReceiver(
+        @PathVariable Long receiverId,
+        HttpServletRequest request){
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(receiverService.findOneReceiver(getSubject(request), receiverId));
+    }
+
     @PutMapping("/{receiverId}")
     @Operation(summary = "배송지 수정")
     public ResponseEntity<ReceiverForm> updateReceiver(
@@ -70,7 +80,7 @@ public class ReceiverController {
         HttpServletRequest request,
         @PathVariable Long receiverId
     ){
-        receiverService.deleteMember(getSubject(request), receiverId);
+        receiverService.deleteReceiver(getSubject(request), receiverId);
         return ResponseEntity
             .status(HttpStatus.NO_CONTENT)
             .build();
