@@ -89,6 +89,7 @@ public class ProductService {
         String threeDepthName = productCategory.getThreeDepth().getThreeDepth();
 
         return new ProductDetailResponse(
+            productEntity.getId(),
             oneDepthName,
             twoDepthName,
             threeDepthName,
