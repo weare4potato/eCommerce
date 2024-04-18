@@ -85,7 +85,6 @@ public class HistoryService {
     }
 
 
-
     @Transactional(readOnly = true)
     public List<HistoryInfo> getHistory(
         Long orderId
@@ -99,7 +98,8 @@ public class HistoryService {
     public void deleteHistory(
         String orderNum
     ) {
-        List<HistoryEntity> historyEntityList = historyJpaRepository.findAllByOrder_OrderNum(orderNum);
+        List<HistoryEntity> historyEntityList = historyJpaRepository.findAllByOrder_OrderNum(
+            orderNum);
 
         for (HistoryEntity historyEntity : historyEntityList) {
 
