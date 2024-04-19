@@ -76,7 +76,7 @@ public class PaymentService {
         String customerEmail = paymentReq.getCustomerEmail();
         String orderName = paymentReq.getOrderName().name();
 
-        if (amount == null || amount != 3000) {
+        if (amount == null || amount < 1000) {
             throw new BusinessException(PAYMENT_ERROR_ORDER_PRICE);
         }
 
