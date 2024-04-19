@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Getter
-public enum PAY_TYPE {
+public enum PayType {
     CARD("카드"), VIRTUAL_ACCOUNT("가상계좌");
 
     private final String name;

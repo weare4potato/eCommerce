@@ -1,14 +1,14 @@
 package com.potato.ecommerce.domain.payment.service;
 
-import static com.potato.ecommerce.domain.payment.dto.PAY_TYPE.CARD;
-import static com.potato.ecommerce.domain.payment.dto.PAY_TYPE.VIRTUAL_ACCOUNT;
+import static com.potato.ecommerce.domain.payment.dto.PayType.CARD;
+import static com.potato.ecommerce.domain.payment.dto.PayType.VIRTUAL_ACCOUNT;
 import static com.potato.ecommerce.domain.payment.util.ExMessage.PAYMENT_ERROR_ORDER_NOTFOUND;
 
 import com.google.gson.Gson;
 import com.potato.ecommerce.domain.member.repository.MemberJpaRepository;
 import com.potato.ecommerce.domain.payment.dto.CancelPaymentReq;
 import com.potato.ecommerce.domain.payment.dto.CancelPaymentRes;
-import com.potato.ecommerce.domain.payment.dto.PAY_TYPE;
+import com.potato.ecommerce.domain.payment.dto.PayType;
 import com.potato.ecommerce.domain.payment.dto.PaymentResHandleDto;
 import com.potato.ecommerce.domain.payment.dto.REFUND_BANK_TYPE;
 import com.potato.ecommerce.domain.payment.dto.TossErrorDto;
@@ -117,7 +117,7 @@ public class CancelPaymentService {
     }
 
     private void cancelPaymentSave(
-        PAY_TYPE payType, String paymentKey, PaymentResHandleDto paymentCancelResDto,
+        PayType payType, String paymentKey, PaymentResHandleDto paymentCancelResDto,
         Long cancelAmount, REFUND_BANK_TYPE refundBank, String refundAccount
     ) {
         paymentRepository

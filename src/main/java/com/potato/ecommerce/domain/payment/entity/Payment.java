@@ -2,7 +2,7 @@ package com.potato.ecommerce.domain.payment.entity;
 
 import com.potato.ecommerce.domain.member.entity.MemberEntity;
 import com.potato.ecommerce.domain.payment.dto.ORDER_NAME_TYPE;
-import com.potato.ecommerce.domain.payment.dto.PAY_TYPE;
+import com.potato.ecommerce.domain.payment.dto.PayType;
 import com.potato.ecommerce.domain.payment.dto.PaymentDto;
 import com.potato.ecommerce.domain.payment.dto.PaymentRes;
 import jakarta.persistence.CascadeType;
@@ -35,7 +35,7 @@ public class Payment {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private PAY_TYPE payType;
+    private PayType payType;
 
     @Column(nullable = false)
     private Long amount;

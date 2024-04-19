@@ -1,7 +1,7 @@
 package com.potato.ecommerce.domain.order.entity;
 
 import com.potato.ecommerce.domain.member.entity.MemberEntity;
-import com.potato.ecommerce.domain.payment.dto.PAY_TYPE;
+import com.potato.ecommerce.domain.payment.dto.PayType;
 import com.potato.ecommerce.domain.receiver.entity.ReceiverEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -50,7 +50,7 @@ public class OrderEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private PAY_TYPE payType;
+    private PayType payType;
 
     @Column(nullable = false)
     private String orderNum;
@@ -75,7 +75,7 @@ public class OrderEntity {
     public OrderEntity(
         MemberEntity member,
         ReceiverEntity receiver,
-        PAY_TYPE payType,
+        PayType payType,
         String orderNum,
         Long totalAmount
     ) {

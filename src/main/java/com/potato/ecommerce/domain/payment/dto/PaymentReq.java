@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PaymentReq {
 
-    private PAY_TYPE payType;
+    private PayType payType;
     private Long amount;
     private ORDER_NAME_TYPE orderName;
     private String customerEmail;
