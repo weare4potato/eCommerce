@@ -27,6 +27,6 @@ public class SignUpDto {
     private String password;
 
     @NotBlank
-    @Pattern(regexp = "^01(0)([0-9]{4})([0-9]{4})$", message = "전화번호 양식에 맞게 작성해주세요.")
+    @Pattern(regexp = "^01(0)([0-9]{4})([0-9]{4})$", message = "-없이 작성해주세요")
     private String phone;
 }
