@@ -11,7 +11,7 @@ import com.potato.ecommerce.domain.order.dto.OrderProduct;
 import com.potato.ecommerce.domain.order.entity.OrderEntity;
 import com.potato.ecommerce.domain.order.repository.order.OrderJpaRepository;
 import com.potato.ecommerce.domain.order.repository.order.OrderQueryRepository;
-import com.potato.ecommerce.domain.payment.dto.PAY_TYPE;
+import com.potato.ecommerce.domain.payment.dto.PayType;
 import com.potato.ecommerce.domain.receiver.dto.ReceiverForm;
 import com.potato.ecommerce.domain.receiver.entity.ReceiverEntity;
 import com.potato.ecommerce.domain.receiver.repository.ReceiverJpaRepository;
@@ -39,7 +39,7 @@ public class OrderService {
         Long memberId,
         Long receiverId,
         Long totalAmount,
-        PAY_TYPE type,
+        PayType type,
         List<OrderProduct> orderProducts
     ) {
 

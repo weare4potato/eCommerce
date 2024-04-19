@@ -3,7 +3,7 @@ package com.potato.ecommerce.domain.order.dto;
 import com.potato.ecommerce.domain.member.dto.ResponseMember;
 import com.potato.ecommerce.domain.order.entity.OrderEntity;
 import com.potato.ecommerce.domain.order.entity.OrderStatus;
-import com.potato.ecommerce.domain.payment.dto.PAY_TYPE;
+import com.potato.ecommerce.domain.payment.dto.PayType;
 import com.potato.ecommerce.domain.receiver.dto.ReceiverForm;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,7 +23,7 @@ public class OrderInfoWithHistory {
     private Long id;
     private ResponseMember member;
     private ReceiverForm receiver;
-    private PAY_TYPE payType;
+    private PayType payType;
     private OrderStatus status;
     private String orderNum;
     private List<HistoryInfo> historyInfos;

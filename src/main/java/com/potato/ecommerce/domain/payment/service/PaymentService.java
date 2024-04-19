@@ -13,7 +13,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import com.google.gson.Gson;
 import com.potato.ecommerce.domain.member.repository.MemberJpaRepository;
 import com.potato.ecommerce.domain.payment.dto.ORDER_NAME_TYPE;
-import com.potato.ecommerce.domain.payment.dto.PAY_TYPE;
+import com.potato.ecommerce.domain.payment.dto.PayType;
 import com.potato.ecommerce.domain.payment.dto.PaymentDto;
 import com.potato.ecommerce.domain.payment.dto.PaymentReq;
 import com.potato.ecommerce.domain.payment.dto.PaymentRes;
@@ -101,7 +101,7 @@ public class PaymentService {
             paymentRes = payment.toRes();
             paymentRes.setSuccessUrl(successCallBackUrl);
             paymentRes.setFailUrl(failCallBackUrl);
-            if (payment.getPayType().equals(PAY_TYPE.VIRTUAL_ACCOUNT)) {
+            if (payment.getPayType().equals(PayType.VIRTUAL_ACCOUNT)) {
                 paymentRes.setValidHours(6);
                 paymentRes.setCashReceiptType("소득공제");
             }
@@ -132,7 +132,7 @@ public class PaymentService {
     public PaymentResHandleDto requestFinalPayment(String paymentKey, String orderId, Long amount) {
         Payment pay = paymentRepository.findByPaymentKey(paymentKey)
             .orElseThrow(() -> new BusinessException(PAYMENT_ERROR_ORDER_NOTFOUND));
-        PAY_TYPE payType = pay.getPayType();
+        PayType payType = pay.getPayType();
 
         RestTemplate rest = new RestTemplate();
 
@@ -169,7 +169,7 @@ public class PaymentService {
             throw new BusinessException(errorMessage);
         }
 
-        if (payType.equals(PAY_TYPE.CARD)) {
+        if (payType.equals(PayType.CARD)) {
             PaymentResHandleCardDto card = payResDto.getCard();
             paymentRepository.findByOrderId(payResDto.getOrderId())
                 .ifPresent(payment -> {
@@ -178,7 +178,7 @@ public class PaymentService {
                     payment.setCardReceiptUrl(card.getReceiptUrl());
                     payment.setPaySuccessYn("Y");
                 });
-        } else if (payType.equals(PAY_TYPE.VIRTUAL_ACCOUNT)) {
+        } else if (payType.equals(PayType.VIRTUAL_ACCOUNT)) {
             PaymentResHandleVirtualDto virtualAccount = payResDto.getVirtualAccount();
             paymentRepository.findByOrderId(payResDto.getOrderId())
                 .ifPresent(payment -> {
