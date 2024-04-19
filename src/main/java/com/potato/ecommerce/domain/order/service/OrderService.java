@@ -93,6 +93,7 @@ public class OrderService {
         return OrderInfoWithHistory.fromEntity(orderEntity, history, member, receiver);
     }
 
+    @Transactional(readOnly = true)
     public RestPage<OrderList> getOrders(
         String subject,
         int page,
