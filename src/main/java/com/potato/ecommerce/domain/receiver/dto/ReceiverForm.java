@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ReceiverForm {
 
-    private String id;
+    private Long id;
 
     @NotBlank
     private String name;
