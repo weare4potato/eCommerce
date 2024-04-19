@@ -42,6 +42,7 @@ public class ReceiverForm {
 
     public static ReceiverForm fromEntity(ReceiverEntity entity) {
         return ReceiverForm.builder()
+            .id(entity.getId())
             .name(entity.getName())
             .phone(entity.getPhone())
             .addressName(entity.getAddressName())
