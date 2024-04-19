@@ -25,6 +25,9 @@ dependencies {
        // actuator
 //    implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
+    //s3
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
     // Swagger
     implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.2.0'
 
