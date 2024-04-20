@@ -15,18 +15,22 @@ import com.potato.ecommerce.domain.payment.dto.PayType;
 import com.potato.ecommerce.domain.receiver.dto.ReceiverForm;
 import com.potato.ecommerce.domain.receiver.entity.ReceiverEntity;
 import com.potato.ecommerce.domain.receiver.repository.ReceiverJpaRepository;
+import com.potato.ecommerce.global.config.redisson.DistributedLock;
 import com.potato.ecommerce.global.exception.ExceptionMessage;
 import com.potato.ecommerce.global.util.RestPage;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
+@Component
+@Slf4j
 public class OrderService {
 
     private final MemberJpaRepository memberJpaRepository;
@@ -35,6 +39,7 @@ public class OrderService {
     private final OrderQueryRepository orderQueryRepository;
     private final HistoryService historyService;
 
+    @Transactional
     public OrderInfo createOrder(
         Long memberId,
         Long receiverId,
@@ -96,7 +101,7 @@ public class OrderService {
         return orderQueryRepository.getOrders(subject, page, size);
     }
 
-
+    @Transactional
     public OrderInfo completeOrder(String orderNum) {
         OrderEntity orderEntity = orderJpaRepository.findByOrderNum(orderNum)
             .orElseThrow(() -> new EntityNotFoundException(
@@ -114,6 +119,7 @@ public class OrderService {
         );
     }
 
+    @Transactional
     public OrderInfo cancelOrder(String orderNum) {
         OrderEntity orderEntity = orderJpaRepository.findByOrderNum(orderNum)
             .orElseThrow(() -> new EntityNotFoundException(
