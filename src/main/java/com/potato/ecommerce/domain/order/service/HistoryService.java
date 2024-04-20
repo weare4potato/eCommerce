@@ -9,17 +9,14 @@ import com.potato.ecommerce.domain.order.repository.order.OrderJpaRepository;
 import com.potato.ecommerce.domain.product.dto.ProductSimpleResponse;
 import com.potato.ecommerce.domain.product.entity.ProductEntity;
 import com.potato.ecommerce.domain.product.repository.ProductRepository;
-import com.potato.ecommerce.global.config.redisson.DistributedLock;
 import com.potato.ecommerce.global.exception.ExceptionMessage;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Component
 @RequiredArgsConstructor
 public class HistoryService {
 
@@ -60,7 +57,6 @@ public class HistoryService {
 ////        historyJpaRepository.saveAll(entities);
 //    }
 
-    @DistributedLock(key = "#dto.productId")
     public void createHistory(Long orderId, List<OrderProduct> orderProducts) {
         OrderEntity orderEntity = orderJpaRepository.findById(orderId)
             .orElseThrow(() -> new EntityNotFoundException(
