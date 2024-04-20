@@ -73,7 +73,7 @@ public class TossService {
             .method(tossPayment.getMethod())
             .orderId(tossPayment.getOrderId())
             .build();
-            //결제 응답에서 필요한 부분만 사용하여 업데이트(receipt, paidAt, method, orderId, provider)
+        //결제 응답에서 필요한 부분만 사용하여 업데이트(receipt, paidAt, method, orderId, provider)
         return new PaymentResponse(paymentRepository.save(payment));
     }
 

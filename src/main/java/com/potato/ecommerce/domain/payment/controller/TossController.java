@@ -33,9 +33,9 @@ public class TossController {
         @RequestBody TossPaymentRequest tossPaymentRequest,
         @PathVariable String orderId
     ) throws BadRequestException {
-            String subject = getSubject(httpServletRequest);
-            return ResponseEntity.status(HttpStatus.OK)
-                .body(tossService.createPayment(orderId, subject, tossPaymentRequest));
+        String subject = getSubject(httpServletRequest);
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(tossService.createPayment(orderId, subject, tossPaymentRequest));
     }
 
     private String getSubject(HttpServletRequest request) {
