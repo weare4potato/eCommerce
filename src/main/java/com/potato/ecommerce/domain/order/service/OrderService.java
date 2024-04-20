@@ -29,8 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Component
-@Slf4j
+@Transactional
 public class OrderService {
 
     private final MemberJpaRepository memberJpaRepository;
@@ -39,7 +38,6 @@ public class OrderService {
     private final OrderQueryRepository orderQueryRepository;
     private final HistoryService historyService;
 
-    @Transactional
     public OrderInfo createOrder(
         Long memberId,
         Long receiverId,
@@ -102,7 +100,6 @@ public class OrderService {
         return orderQueryRepository.getOrders(subject, page, size);
     }
 
-    @Transactional
     public OrderInfo completeOrder(String orderNum) {
         OrderEntity orderEntity = orderJpaRepository.findByOrderNum(orderNum)
             .orElseThrow(() -> new EntityNotFoundException(
@@ -120,7 +117,6 @@ public class OrderService {
         );
     }
 
-    @Transactional
     public OrderInfo cancelOrder(String orderNum) {
         OrderEntity orderEntity = orderJpaRepository.findByOrderNum(orderNum)
             .orElseThrow(() -> new EntityNotFoundException(
