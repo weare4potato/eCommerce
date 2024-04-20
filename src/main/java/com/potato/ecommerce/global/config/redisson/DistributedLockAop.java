@@ -67,7 +67,7 @@ public class DistributedLockAop {
                     distributedLock.leaseTime(), distributedLock.timeUnit());
 
                 if (available) {
-                    System.out.println("Lock acquired with key: " + key); // key 출력
+                    System.out.println("Lock acquired with key: " + key);
                     try {
                         return aopForTransaction.proceed(joinPoint);
                     } finally {
