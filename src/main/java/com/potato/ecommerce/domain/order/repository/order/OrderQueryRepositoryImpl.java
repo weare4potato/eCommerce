@@ -9,6 +9,7 @@ import com.potato.ecommerce.global.util.RestPage;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
+@Slf4j
 public class OrderQueryRepositoryImpl implements OrderQueryRepository {
 
     private final JPAQueryFactory jpaQueryFactory;
@@ -39,6 +41,7 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepository {
 
         Pageable pageable = PageRequest.of(page, size);
 
+        log.info(String.valueOf(orders.size()));
         return new RestPage<>(new PageImpl<>(orders, pageable, orders.size()));
     }
 }
