@@ -25,11 +25,6 @@ public class DistributedLockAop {
     private final RedissonClient redissonClient;
     private final AopForTransaction aopForTransaction;
 
-    // Redis 데이터 초기화
-    public void flushAll() {
-        redissonClient.getKeys().flushall();
-    }
-
     @Around("@annotation(com.potato.ecommerce.global.config.redisson.DistributedLock)")
     public Object lock(final ProceedingJoinPoint joinPoint) throws Throwable {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
@@ -72,23 +67,26 @@ public class DistributedLockAop {
                     distributedLock.leaseTime(), distributedLock.timeUnit());
 
                 if (available) {
-                    return aopForTransaction.proceed(joinPoint);
+                    System.out.println("Lock acquired with key: " + key); // key 출력
+                    try {
+                        return aopForTransaction.proceed(joinPoint);
+                    } finally {
+                        if (rLock.isLocked() && rLock.isHeldByCurrentThread()) {
+                            System.out.println("Lock released with key: " + key);
+                            rLock.unlock();
+                        }
+                    }
                 } else {
+                    System.out.println("!Lock acquisition failed. Retrying...");
                     retryCount++;
                     Thread.sleep(RETRY_DELAY);
                 }
             } catch (InterruptedException e) {
                 log.error("DistributedLock lock interrupted");
+                System.out.println("DistributedLock lock interrupted");
                 throw new InterruptedException(e.getMessage());
-            } finally {
-                if (rLock.isLocked() && rLock.isHeldByCurrentThread()) {
-                    // Todo: flushAll 은 현재 test 환경에서만 사용
-                    flushAll();
-                    rLock.unlock();
-                }
             }
         }
-
         throw new IllegalStateException("DistributedLock lock failed after retries");
     }
 }
