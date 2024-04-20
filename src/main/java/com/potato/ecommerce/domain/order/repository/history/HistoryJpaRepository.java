@@ -7,4 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface HistoryJpaRepository extends JpaRepository<HistoryEntity, Long> {
 
     List<HistoryEntity> findAllByOrderId(Long orderId);
+
+    List<HistoryEntity> findAllByOrder_OrderNum(String orderNum);
 }

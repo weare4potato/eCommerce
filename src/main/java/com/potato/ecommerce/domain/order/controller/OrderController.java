@@ -72,23 +72,23 @@ public class OrderController {
             .body(orderService.getOrders(subject, page, size));
     }
 
-    @PostMapping("/{orderId}/complete")
+    @PostMapping("/{orderNum}/complete")
     @Operation(summary = "주문 완료")
     public ResponseEntity<OrderInfoResponseDTO> completeOrder(
-        @PathVariable Long orderId
+        @PathVariable String orderNum
     ) {
-        OrderInfo order = orderService.completeOrder(orderId);
+        OrderInfo order = orderService.completeOrder(orderNum);
 
         return ResponseEntity.status(HttpStatus.OK)
             .body(OrderInfoResponseDTO.from(order));
     }
 
-    @PostMapping("/{orderId}/cancel")
+    @PostMapping("/{orderNum}/cancel")
     @Operation(summary = "주문 취소")
     public ResponseEntity<OrderInfoResponseDTO> cancelOrder(
-        @PathVariable Long orderId
+        @PathVariable String orderNum
     ) {
-        OrderInfo order = orderService.cancelOrder(orderId);
+        OrderInfo order = orderService.cancelOrder(orderNum);
 
         return ResponseEntity.status(HttpStatus.OK)
             .body(OrderInfoResponseDTO.from(order));
