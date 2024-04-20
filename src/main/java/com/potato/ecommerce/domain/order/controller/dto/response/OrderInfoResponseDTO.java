@@ -30,7 +30,6 @@ public class OrderInfoResponseDTO {
             .id(info.getId())
             .member(info.getMember())
             .receiver(info.getReceiver())
-            .payType(info.getPayType())
             .status(info.getStatus())
             .orderNum(info.getOrderNum())
             .orderedAt(info.getOrderedAt())

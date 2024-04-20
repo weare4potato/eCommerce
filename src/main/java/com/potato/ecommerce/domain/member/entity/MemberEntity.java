@@ -1,7 +1,6 @@
 package com.potato.ecommerce.domain.member.entity;
 
 import com.potato.ecommerce.domain.member.dto.UpdateMemberDto;
-import com.potato.ecommerce.domain.payment.entity.CancelPayment;
 import com.potato.ecommerce.domain.payment.entity.Payment;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -65,9 +64,6 @@ public class MemberEntity {
 
     private Boolean isDeleted = false;
 
-    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    private List<Payment> payments = new ArrayList<>();
-
     @Builder
     public MemberEntity(String email, String userName, String password, String phone,
         LocalDateTime createdAt, UserRoleEnum role, boolean authStatus) {
@@ -105,19 +101,6 @@ public class MemberEntity {
     public void update(UpdateMemberDto dto) {
         this.userName = dto.getUsername();
         this.phone = dto.getPhone();
-    }
-
-    public void addPayment(Payment payment) {
-        this.payments.add(payment);
-        payment.setCustomer(this);
-    }
-
-    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    private List<CancelPayment> cancelPayments = new ArrayList<>();
-
-    public void addCancelPayment(CancelPayment cancelPayment) {
-        this.cancelPayments.add(cancelPayment);
-        cancelPayment.setCustomer(this);
     }
 
 }
