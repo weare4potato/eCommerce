@@ -97,8 +97,8 @@ public class OrderService {
     }
 
 
-    public OrderInfo completeOrder(Long orderId) {
-        OrderEntity orderEntity = orderJpaRepository.findById(orderId)
+    public OrderInfo completeOrder(String orderNum) {
+        OrderEntity orderEntity = orderJpaRepository.findByOrderNum(orderNum)
             .orElseThrow(() -> new EntityNotFoundException(
                 ExceptionMessage.ORDER_NOT_FOUND.toString())
             );
@@ -114,8 +114,8 @@ public class OrderService {
         );
     }
 
-    public OrderInfo cancelOrder(Long orderId) {
-        OrderEntity orderEntity = orderJpaRepository.findById(orderId)
+    public OrderInfo cancelOrder(String orderNum) {
+        OrderEntity orderEntity = orderJpaRepository.findByOrderNum(orderNum)
             .orElseThrow(() -> new EntityNotFoundException(
                 ExceptionMessage.ORDER_NOT_FOUND.toString())
             );
@@ -124,7 +124,7 @@ public class OrderService {
         ResponseMember member = ResponseMember.fromEntity(result.getMember());
         ReceiverForm receiver = ReceiverForm.fromEntity(result.getReceiver());
 
-        historyService.deleteHistory(orderId);
+        historyService.deleteHistory(orderNum);
 
         return OrderInfo.fromEntity(
             result,

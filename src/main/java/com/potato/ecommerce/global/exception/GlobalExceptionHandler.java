@@ -7,6 +7,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ValidationException;
 import java.util.Objects;
 import javax.security.auth.login.LoginException;
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -27,7 +28,8 @@ public class GlobalExceptionHandler {
         AuthenticationFailedException.class,
         ValidationException.class,
         OutOfStockException.class,
-        LoginException.class
+        LoginException.class,
+        BadRequestException.class
     })
     public ResponseEntity<ExceptionDto> badRequestExceptionHandler(RuntimeException e) {
         return createResponse(HttpStatus.BAD_REQUEST, e.getMessage());
