@@ -1,5 +1,6 @@
 package com.potato.ecommerce.global.config.redis;
 
+import com.querydsl.core.annotations.Config;
 import java.time.Duration;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
@@ -15,12 +16,15 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @Configuration
 @EnableCaching
 public class RedisCacheConfig {
+
     @Bean
-    public CacheManager rcm(RedisConnectionFactory cf) {
+    public CacheManager redisCacheManager(RedisConnectionFactory cf) {
         RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
             .serializeKeysWith(
-                RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
-            .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()))
+                RedisSerializationContext.SerializationPair.fromSerializer(
+                    new StringRedisSerializer()))
+            .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(
+                new GenericJackson2JsonRedisSerializer()))
             .entryTtl(Duration.ofMinutes(3L));
 
         return RedisCacheManager
