@@ -1,6 +1,5 @@
 package com.potato.ecommerce.global.config.redis;
 
-import com.querydsl.core.annotations.Config;
 import java.time.Duration;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
