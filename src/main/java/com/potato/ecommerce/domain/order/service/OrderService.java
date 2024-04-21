@@ -15,7 +15,7 @@ import com.potato.ecommerce.domain.payment.dto.PayType;
 import com.potato.ecommerce.domain.receiver.dto.ReceiverForm;
 import com.potato.ecommerce.domain.receiver.entity.ReceiverEntity;
 import com.potato.ecommerce.domain.receiver.repository.ReceiverJpaRepository;
-import com.potato.ecommerce.global.config.redisson.DistributedLock;
+import com.potato.ecommerce.global.config.redis.lock.DistributedLock;
 import com.potato.ecommerce.global.exception.ExceptionMessage;
 import com.potato.ecommerce.global.util.RestPage;
 import jakarta.persistence.EntityNotFoundException;
