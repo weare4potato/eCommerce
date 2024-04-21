@@ -1,4 +1,4 @@
-package com.potato.ecommerce.global.config.redisson;
+package com.potato.ecommerce.global.config.redis.lock;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.springframework.stereotype.Component;

@@ -1,4 +1,4 @@
-package com.potato.ecommerce.global.config.redisson;
+package com.potato.ecommerce.global.config.redis.lock;
 
 import java.lang.reflect.Method;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ public class DistributedLockAop {
     private final RedissonClient redissonClient;
     private final AopForTransaction aopForTransaction;
 
-    @Around("@annotation(com.potato.ecommerce.global.config.redisson.DistributedLock)")
+    @Around("@annotation(com.potato.ecommerce.global.config.redis.lock.DistributedLock)")
     public Object lock(final ProceedingJoinPoint joinPoint) throws Throwable {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();

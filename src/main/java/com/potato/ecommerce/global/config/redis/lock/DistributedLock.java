@@ -1,4 +1,4 @@
-package com.potato.ecommerce.global.config.redisson;
+package com.potato.ecommerce.global.config.redis.lock;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

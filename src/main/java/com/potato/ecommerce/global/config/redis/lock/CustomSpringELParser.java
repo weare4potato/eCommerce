@@ -1,4 +1,4 @@
-package com.potato.ecommerce.global.config.redisson;
+package com.potato.ecommerce.global.config.redis.lock;
 
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
