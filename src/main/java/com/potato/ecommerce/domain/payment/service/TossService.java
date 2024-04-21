@@ -48,7 +48,7 @@ public class TossService {
         OrderEntity order = getOrder(orderName);
         isAuthorized(order, memberEntity);
         String authorization = Base64.getEncoder()
-            .encodeToString(tossSecretKey.getBytes());    //TOSS_SECRET Base64 인코딩
+            .encodeToString((tossSecretKey + ":").getBytes());    //TOSS_SECRET Base64 인코딩
         RestTemplate restTemplate = new RestTemplate();
 
         //헤더구성
