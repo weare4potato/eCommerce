@@ -15,12 +15,12 @@ import com.potato.ecommerce.domain.product.dto.ShopProductResponse;
 import com.potato.ecommerce.domain.product.entity.ProductEntity;
 import com.potato.ecommerce.domain.product.repository.ProductQueryRepositoryImpl;
 import com.potato.ecommerce.domain.product.repository.ProductRepository;
+import com.potato.ecommerce.domain.s3.service.ImageService;
 import com.potato.ecommerce.domain.store.dto.StoreResponse;
 import com.potato.ecommerce.domain.store.entity.StoreEntity;
 import com.potato.ecommerce.domain.store.repository.StoreRepository;
 import com.potato.ecommerce.global.util.RestPage;
 import jakarta.persistence.EntityNotFoundException;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -37,8 +37,11 @@ public class ProductService {
     private final StoreRepository storeRepository;
     private final ProductCategoryRepository productCategoryRepository;
 
+    private final ImageService imageService;
+
     @Transactional
-    public ProductResponse createProduct(String businessNumber, ProductRequest requestDto) {
+    public ProductResponse createProduct(String businessNumber, ProductRequest requestDto,
+        String url) {
 
         StoreEntity storeEntity = storeRepository.findByBusinessNumber(businessNumber)
             .orElseThrow(() -> new EntityNotFoundException(STORE_NOT_FOUND.toString()));
@@ -56,7 +59,9 @@ public class ProductService {
             .stock(requestDto.getStock())
             .build();
 
-        productRepository.save(productEntity);
+        ProductEntity save = productRepository.save(productEntity);
+
+        imageService.save(save, url);
 
         return new ProductResponse(
             productEntity.getId(),
@@ -69,14 +74,7 @@ public class ProductService {
     }
 
     public RestPage<ProductSimpleResponse> findAllProducts(int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page, size);
-        Page<ProductEntity> productPage = productRepository.findAll(pageRequest);
-
-        List<ProductSimpleResponse> productSimpleResponses = productPage.getContent().stream()
-            .map(ProductSimpleResponse::of)
-            .toList();
-
-        return new RestPage<>(productSimpleResponses, page, size, productPage.getTotalElements());
+        return productQueryRepository.getSimpleProducts(page, size);
     }
 
     public ProductDetailResponse findProductDetail(Long productId) {
