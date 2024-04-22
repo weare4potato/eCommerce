@@ -1,10 +1,8 @@
 package com.potato.ecommerce.domain.s3.service;
 
-import com.potato.ecommerce.domain.s3.dto.FileDto;
-import com.potato.ecommerce.domain.s3.dto.ResponseFileDto;
+import com.potato.ecommerce.domain.product.entity.ProductEntity;
 import com.potato.ecommerce.domain.s3.entity.ImageEntity;
 import com.potato.ecommerce.domain.s3.repository.ImageRepository;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,11 +11,8 @@ import org.springframework.stereotype.Service;
 public class ImageService {
     private final ImageRepository imageRepository;
 
-    public void save(FileDto dto){
-        imageRepository.save(new ImageEntity(dto.getTitle(), dto.getUrl()));
+    public void save(ProductEntity product, String url){
+        imageRepository.save(new ImageEntity(product, url));
     }
 
-    public List<ResponseFileDto> findAll(){
-        return imageRepository.findAll().stream().map(ResponseFileDto::new).toList();
-    }
 }
