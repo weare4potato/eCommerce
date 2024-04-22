@@ -7,7 +7,7 @@ import com.potato.ecommerce.domain.product.dto.ProductSimpleResponse;
 import com.potato.ecommerce.domain.product.dto.ProductUpdateRequest;
 import com.potato.ecommerce.domain.product.dto.ShopProductResponse;
 import com.potato.ecommerce.domain.product.service.ProductService;
-import com.potato.ecommerce.global.jwt.JwtUtil;
+import com.potato.ecommerce.domain.s3.service.S3Service;
 import com.potato.ecommerce.global.util.RestPage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -33,16 +33,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProductController {
 
     private final ProductService productService;
-    private final JwtUtil jwtUtil;
+    private final S3Service s3Service;
 
     @PostMapping("/products")
     @Operation(summary = "상품 등록")
     public ResponseEntity<ProductResponse> createProduct(
-        @Valid @RequestBody ProductRequest requestDto, HttpServletRequest request
+        @Valid ProductRequest requestDto, HttpServletRequest request
     ) {
         String subject = (String) request.getAttribute("subject");
 
-        ProductResponse productResponse = productService.createProduct(subject, requestDto);
+        String url = s3Service.upload(requestDto.getImage());
+        ProductResponse productResponse = productService.createProduct(subject, requestDto, url);
         return ResponseEntity.status(HttpStatus.CREATED).body(productResponse);
     }
 
