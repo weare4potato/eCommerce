@@ -1,5 +1,7 @@
 package com.potato.ecommerce.domain.cart.service;
 
+import static com.potato.ecommerce.global.config.redis.CacheConfig.CACHE_180_SECOND;
+
 import com.potato.ecommerce.domain.cart.dto.CartInfo;
 import com.potato.ecommerce.domain.cart.entity.CartEntity;
 import com.potato.ecommerce.domain.cart.repository.CartJpaRepository;
@@ -12,6 +14,8 @@ import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,12 +28,13 @@ public class CartService {
     private final MemberJpaRepository memberJpaRepository;
     private final ProductRepository productRepository;
 
+    @CacheEvict(cacheNames = CACHE_180_SECOND, key = "'cart:' + #p0", beforeInvocation = false)
     public CartInfo addCart(
-        Long memberId,
+        String email,
         Long productId,
         Integer quantity
     ) {
-        MemberEntity memberEntity = memberJpaRepository.findById(memberId)
+        MemberEntity memberEntity = memberJpaRepository.findByEmail(email)
             .orElseThrow(() -> new EntityNotFoundException(
                 ExceptionMessage.MEMBER_NOT_FOUND.toString()));
 
@@ -39,7 +44,7 @@ public class CartService {
 
         CartEntity cartEntity =
             cartJpaRepository.
-                findByMember_IdAndProduct_Id(memberEntity.getId(), productEntity.getId())
+                findByMemberEmailAndProductId(memberEntity.getEmail(), productEntity.getId())
                 .orElseGet(() -> CartEntity.builder()
                     .member(memberEntity)
                     .product(productEntity)
@@ -55,12 +60,13 @@ public class CartService {
         return CartInfo.fromEntity(cartEntity);
     }
 
+    @CacheEvict(cacheNames = CACHE_180_SECOND, key = "'cart:' + #p0", beforeInvocation = false)
     public CartInfo updateCart(
-        Long memberId,
+        String email,
         Long cartId,
         Integer quantity
     ) {
-        CartEntity cartEntity = cartJpaRepository.findByMemberIdAndId(memberId, cartId)
+        CartEntity cartEntity = cartJpaRepository.findByMemberEmailAndId(email, cartId)
             .orElseThrow(() -> new EntityNotFoundException(
                 ExceptionMessage.CART_NOT_FOUND.toString()));
 
@@ -69,6 +75,7 @@ public class CartService {
         return CartInfo.fromEntity(cartEntity);
     }
 
+    @CacheEvict(cacheNames = CACHE_180_SECOND, key = "'cart:' + #p0", beforeInvocation = false)
     public void deleteCart(
         String email,
         Long cartId
@@ -81,6 +88,7 @@ public class CartService {
     }
 
     @Transactional(readOnly = true)
+    @Cacheable(cacheNames = CACHE_180_SECOND, key = "'cart:' + #p0")
     public List<CartInfo> getCarts(String email) {
 
         return cartJpaRepository.findAllByMember_Email(email).stream().map(CartInfo::fromEntity)
