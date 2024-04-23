@@ -11,7 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CartRequest {
 
-    private Long memberId;
+    private String email;
 
     @NotNull(message = "상품 아이디는 필수 입력 값입니다.")
     private Long productId;
@@ -20,11 +20,11 @@ public class CartRequest {
     private Integer quantity;
 
     public CartRequest(
-        Long memberId,
+        String email,
         Long productId,
         Integer quantity
     ) {
-        this.memberId = memberId;
+        this.email = email;
         this.productId = productId;
         this.quantity = quantity;
     }
