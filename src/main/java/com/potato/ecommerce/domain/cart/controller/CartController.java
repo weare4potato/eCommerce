@@ -1,5 +1,6 @@
 package com.potato.ecommerce.domain.cart.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.potato.ecommerce.domain.cart.controller.dto.response.CartInfoResponseDto;
 import com.potato.ecommerce.domain.cart.dto.CartInfo;
 import com.potato.ecommerce.domain.cart.dto.CartRequest;
@@ -8,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class CartController {
 
     private final CartService cartService;
+    private final ObjectMapper mapper;
 
     @PostMapping
     @Operation(summary = "장바구니 생성")
@@ -35,7 +38,7 @@ public class CartController {
         @RequestBody @Valid CartRequest dto
     ) {
         CartInfo cartInfo = cartService.addCart(
-            dto.getMemberId(),
+            dto.getEmail(),
             dto.getProductId(),
             dto.getQuantity()
         );
@@ -51,7 +54,7 @@ public class CartController {
         @RequestBody @Valid CartRequest dto
     ) {
         CartInfo cartInfo = cartService.updateCart(
-            dto.getMemberId(),
+            dto.getEmail(),
             cartId,
             dto.getQuantity()
         );
@@ -78,12 +81,16 @@ public class CartController {
         HttpServletRequest httpServletRequest
     ) {
         String subject = getSubject(httpServletRequest);
+        List<CartInfo> carts = cartService.getCarts(subject);
+        ArrayList<CartInfo> list = new ArrayList<>();
 
-        List<CartInfoResponseDto> carts = cartService.getCarts(subject).stream()
-            .map(CartInfoResponseDto::from)
-            .toList();
+        for (Object cart : carts) {
+            list.add(mapper.convertValue(cart, CartInfo.class));
+        }
 
-        return ResponseEntity.status(HttpStatus.OK).body(carts);
+        return ResponseEntity.status(HttpStatus.OK).body(
+            list.stream().map(CartInfoResponseDto::from).toList()
+        );
     }
 
     private String getSubject(HttpServletRequest request) {
