@@ -35,13 +35,13 @@ public class OrderQueryRepositoryImpl implements OrderQueryRepository {
                 .from(order)
                 .where(order.member.email.eq(subject))
                 .orderBy(order.orderedAt.desc())
-                .offset(page)
+                .offset((long) page * size)
                 .limit(size)
                 .fetch();
 
+        long count = jpaQueryFactory.select(order.id.count()).from(order).where(order.member.email.eq(subject)).fetchOne();
         Pageable pageable = PageRequest.of(page, size);
 
-        log.info(String.valueOf(orders.size()));
-        return new RestPage<>(new PageImpl<>(orders, pageable, orders.size()));
+        return new RestPage<>(new PageImpl<>(orders, pageable, count));
     }
 }
