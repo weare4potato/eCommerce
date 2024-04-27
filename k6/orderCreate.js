@@ -3,8 +3,8 @@ import { check, fail } from "k6";
 
 export let options = {
   stages: [
-    {duration: '1s', target: 1},
-    // {duration: '50s', target: 500},
+    {duration: '10s', target: 100},
+    {duration: '50s', target: 500},
     // {duration: '1m', target: 500},
     // {duration: '1m', target: 750},
     // {duration: '1m', target: 1000}
