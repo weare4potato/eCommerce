@@ -18,7 +18,7 @@ jobs:
           node-version: '20'
 
       - name: 자바 17 세팅
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'adopt'
