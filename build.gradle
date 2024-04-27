@@ -22,10 +22,10 @@ repositories {
 }
 
 dependencies {
-       // actuator
-//    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    // actuator
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
-    //s3
+    // s3
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 
     // Swagger
@@ -35,7 +35,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-mail'
 
     // prometheus
-//    implementation 'io.micrometer:micrometer-registry-prometheus'
+    implementation 'io.micrometer:micrometer-registry-prometheus'
 
     // JWT
     compileOnly group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
