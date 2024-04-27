@@ -3,7 +3,7 @@ name: CI
 on:
   push:
     branches:
-      - main
+      - feat/deploy
 
 jobs:
   deploy:
@@ -43,7 +43,7 @@ jobs:
           script: |
             sudo docker rm -f $(docker ps -aq)
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/potato:latest
-            sudo docker run -d --name potato -p 8080:8080 yallo468/potato
+            sudo docker run -it --rm -e JAVA_OPTS="-Xms1G -Xmx2G" -d --name potato -p 8080:8080 yallo468/potato
             sudo docker image prune -f
 
 #      - name: SSH Commands
