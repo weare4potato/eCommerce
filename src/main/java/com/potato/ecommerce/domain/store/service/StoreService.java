@@ -9,7 +9,7 @@ import static com.potato.ecommerce.global.exception.ExceptionMessage.PASSWORD_NO
 import static com.potato.ecommerce.global.exception.ExceptionMessage.STORE_NOT_FOUND;
 
 import com.potato.ecommerce.domain.product.dto.ProductListResponse;
-import com.potato.ecommerce.domain.product.repository.ProductQueryRepository;
+import com.potato.ecommerce.domain.product.repository.ProductQueryRepositoryImpl;
 import com.potato.ecommerce.domain.revenue.entity.RevenueEntity;
 import com.potato.ecommerce.domain.revenue.repository.RevenueRepository;
 import com.potato.ecommerce.domain.store.dto.DeleteStoreRequest;
@@ -39,7 +39,7 @@ public class StoreService {
 
     private final StoreRepository storeRepository;
     private final RevenueRepository revenueRepository;
-    private final ProductQueryRepository productQueryRepository;
+    private final ProductQueryRepositoryImpl productQueryRepositoryImpl;
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
 
@@ -152,7 +152,7 @@ public class StoreService {
     }
 
     public RestPage<ProductListResponse> getProducts(String subject, int page, int size) {
-        return productQueryRepository.getProducts(subject, page, size);
+        return productQueryRepositoryImpl.getProducts(subject, page, size);
     }
 
     private void usingBusinessNumber(String businessNumber) {

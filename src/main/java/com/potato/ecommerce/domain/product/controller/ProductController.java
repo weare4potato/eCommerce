@@ -76,6 +76,18 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).body(products);
     }
 
+    @GetMapping("/products/search")
+    @Operation(summary = "상품 검색 조회")
+    public ResponseEntity<RestPage<ProductSimpleResponse>> getProductBySearch(
+        @RequestParam String keyword,
+        @RequestParam(value = "page", defaultValue = "0") int page,
+        @RequestParam(value = "size", defaultValue = "10") int size) {
+
+        RestPage<ProductSimpleResponse> products =
+            productService.findAllByContainingKeyword(keyword, page, size);
+        return ResponseEntity.status(HttpStatus.OK).body(products);
+    }
+
     @GetMapping("/products/categories")
     @Operation(summary = "카테고리별 상품 조회")
     public ResponseEntity<RestPage<ProductSimpleResponse>> findProductsByCategory(
@@ -92,10 +104,7 @@ public class ProductController {
     @Operation(summary = "상품 수정")
     public ResponseEntity<ProductResponse> updateProduct(
         @PathVariable Long productId,
-        @Valid @RequestBody ProductUpdateRequest updateRequest,
-        HttpServletRequest request) {
-
-        String subject = (String) request.getAttribute("subject");
+        @Valid @RequestBody ProductUpdateRequest updateRequest) {
 
         ProductResponse updatedProduct = productService.updateProduct(productId, updateRequest);
         return ResponseEntity.status(HttpStatus.OK).body(updatedProduct);
@@ -104,10 +113,7 @@ public class ProductController {
     @DeleteMapping("/products/{productId}")
     @Operation(summary = "상품 삭제")
     public ResponseEntity<Void> deleteProduct(
-        @PathVariable Long productId,
-        HttpServletRequest request) {
-
-        String subject = (String) request.getAttribute("subject");
+        @PathVariable Long productId) {
 
         productService.softDeleteProduct(productId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

@@ -13,6 +13,7 @@ import com.potato.ecommerce.domain.product.dto.ProductSimpleResponse;
 import com.potato.ecommerce.domain.product.dto.ProductUpdateRequest;
 import com.potato.ecommerce.domain.product.dto.ShopProductResponse;
 import com.potato.ecommerce.domain.product.entity.ProductEntity;
+import com.potato.ecommerce.domain.product.repository.ProductJdbcRepository;
 import com.potato.ecommerce.domain.product.repository.ProductQueryRepositoryImpl;
 import com.potato.ecommerce.domain.product.repository.ProductRepository;
 import com.potato.ecommerce.domain.s3.service.ImageService;
@@ -34,6 +35,7 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final ProductQueryRepositoryImpl productQueryRepository;
+    private final ProductJdbcRepository jdbcRepository;
     private final StoreRepository storeRepository;
     private final ProductCategoryRepository productCategoryRepository;
 
@@ -99,19 +101,20 @@ public class ProductService {
     }
 
     public RestPage<ShopProductResponse> findProductsByShopId(Long shopId, int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page, size);
-        Page<ProductEntity> productsPage = productRepository.findByStoreId(shopId, pageRequest);
-
-        Page<ShopProductResponse> shopProductResponsesPage = productsPage.map(
-            ShopProductResponse::of);
-
-        return new RestPage<>(shopProductResponsesPage);
+        return productQueryRepository.findByStoreId(shopId, page, size);
     }
 
-    public RestPage<ProductSimpleResponse> findProductsByCategoryId(Long categoryId, int page, int size) {
+
+    public RestPage<ProductSimpleResponse> findProductsByCategoryId(Long categoryId, int page,
+        int size) {
         return productQueryRepository.findProductsByCategory(categoryId, page, size);
     }
 
+
+    public RestPage<ProductSimpleResponse> findAllByContainingKeyword(String keyword, int page,
+        int size) {
+        return jdbcRepository.findAllByKeyword(searchKeywordEncoding(keyword), page, size);
+    }
 
 
     @Transactional
@@ -147,6 +150,17 @@ public class ProductService {
 
         productEntity.softDelete();
         productRepository.delete(productEntity);
+    }
+
+
+    private String searchKeywordEncoding(String keyword) {
+        String[] words = keyword.split(" ");
+        StringBuilder sb = new StringBuilder();
+        for (String word : words) {
+            sb.append("+").append(word).append("* ");
+        }
+
+        return sb.toString().trim();
     }
 
 }
