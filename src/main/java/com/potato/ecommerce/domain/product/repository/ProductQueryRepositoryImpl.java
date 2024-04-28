@@ -6,6 +6,7 @@ import static com.querydsl.core.types.Projections.fields;
 
 import com.potato.ecommerce.domain.product.dto.ProductListResponse;
 import com.potato.ecommerce.domain.product.dto.ProductSimpleResponse;
+import com.potato.ecommerce.domain.product.dto.ShopProductResponse;
 import com.potato.ecommerce.domain.product.entity.QProductEntity;
 import com.potato.ecommerce.global.util.RestPage;
 import com.querydsl.core.types.Projections;
@@ -56,14 +57,68 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepository {
             .from(productEntity)
             .leftJoin(imageEntity).on(imageEntity.productEntity.id.eq(productEntity.id))
             .orderBy(productEntity.createdAt.asc())
+            .where(productEntity.id.gt((long) page * size))
+            .limit(size)
+            .fetch();
+
+        Long total = queryFactory.select(productEntity.id.count()).from(productEntity).fetchOne();
+        Pageable pageable = PageRequest.of(page, size);
+        return new RestPage<>(new PageImpl<>(productSimpleResponses, pageable, total));
+    }
+
+    @Override
+    public RestPage<ShopProductResponse> findByStoreId(Long shopId, int page, int size) {
+        List<Long> ids = queryFactory.select(productEntity.id).from(productEntity)
+            .where(productEntity.store.id.eq(shopId)
+                .and(productEntity.isDeleted.eq(false)))
+            .orderBy(productEntity.id.asc())
             .offset((long) page * size)
             .limit(size)
             .fetch();
 
-        long total = queryFactory.select(productEntity.count()).from(productEntity).fetchOne();
+        List<ShopProductResponse> shopProductResponses = queryFactory.select(
+                fields(ShopProductResponse.class,
+                    productEntity.id,
+                    productEntity.name,
+                    productEntity.price
+                ))
+            .from(productEntity)
+            .where(productEntity.id.in(ids))
+            .fetch();
+
+        Long total = queryFactory.select(productEntity.id.count()).from(productEntity)
+            .where(productEntity.store.id.eq(shopId)).fetchOne();
 
         Pageable pageable = PageRequest.of(page, size);
-        return new RestPage<>(new PageImpl<>(productSimpleResponses, pageable, total));
+        return new RestPage<>(new PageImpl<>(shopProductResponses, pageable, total));
+    }
+
+    @Override
+    public RestPage<ProductSimpleResponse> findAllByProductName(String productName, int page,
+        int size) {
+        List<Long> ids = queryFactory.select(productEntity.id).from(productEntity)
+            .where(productEntity.name.stringValue().contains(productName)
+                .and(productEntity.isDeleted.eq(false)))
+            .orderBy(productEntity.id.asc())
+            .offset((long) page * size)
+            .limit(size)
+            .fetch();
+
+        List<ProductSimpleResponse> shopProductResponses = queryFactory.select(
+                fields(ProductSimpleResponse.class,
+                    productEntity.id,
+                    productEntity.name,
+                    productEntity.price
+                ))
+            .from(productEntity)
+            .where(productEntity.id.in(ids))
+            .fetch();
+
+        Long total = queryFactory.select(productEntity.id.count()).from(productEntity)
+            .where(productEntity.name.stringValue().contains(productName)).fetchOne();
+
+        Pageable pageable = PageRequest.of(page, size);
+        return new RestPage<>(new PageImpl<>(shopProductResponses, pageable, total));
     }
 
     @Override

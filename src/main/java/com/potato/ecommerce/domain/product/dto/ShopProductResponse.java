@@ -3,9 +3,11 @@ package com.potato.ecommerce.domain.product.dto;
 import com.potato.ecommerce.domain.product.entity.ProductEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 public class ShopProductResponse {
 
     private Long id;
