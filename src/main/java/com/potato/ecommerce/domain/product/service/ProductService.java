@@ -108,7 +108,7 @@ public class ProductService {
         return new RestPage<>(shopProductResponsesPage);
     }
 
-    public RestPage<ProductSimpleResponse> findProductsByCategoryId2(Long categoryId, int page, int size) {
+    public RestPage<ProductSimpleResponse> findProductsByCategoryId(Long categoryId, int page, int size) {
         return productQueryRepository.findProductsByCategory(categoryId, page, size);
     }
 
