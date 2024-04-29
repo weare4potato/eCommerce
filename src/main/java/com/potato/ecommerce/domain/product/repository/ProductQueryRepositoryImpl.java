@@ -8,6 +8,7 @@ import com.potato.ecommerce.domain.product.dto.ProductListResponse;
 import com.potato.ecommerce.domain.product.dto.ProductSimpleResponse;
 import com.potato.ecommerce.domain.product.entity.QProductEntity;
 import com.potato.ecommerce.global.util.RestPage;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -62,6 +63,31 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepository {
         long total = queryFactory.select(productEntity.count()).from(productEntity).fetchOne();
 
         Pageable pageable = PageRequest.of(page, size);
+        return new RestPage<>(new PageImpl<>(productSimpleResponses, pageable, total));
+    }
+
+    @Override
+    public RestPage<ProductSimpleResponse> findProductsByCategory(Long categoryId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        List<ProductSimpleResponse> productSimpleResponses = queryFactory.select(
+            Projections.fields(
+                ProductSimpleResponse.class,
+                productEntity.id,
+                productEntity.name,
+                productEntity.price))
+                .from(productEntity)
+                .where(productEntity.productCategory.id.eq(categoryId))
+            .orderBy(productEntity.id.asc())
+            .offset(pageable.getOffset())
+            .limit(pageable.getPageSize())
+            .fetch();
+
+        long total = queryFactory.
+            select(productEntity.id.count())
+            .from(productEntity)
+            .where(productEntity.productCategory.id.eq(categoryId))
+            .fetchOne();
+
         return new RestPage<>(new PageImpl<>(productSimpleResponses, pageable, total));
     }
 }

@@ -78,12 +78,12 @@ public class ProductController {
 
     @GetMapping("/products/categories")
     @Operation(summary = "카테고리별 상품 조회")
-    public ResponseEntity<RestPage<ProductSimpleResponse>> getProductsByCategory(
+    public ResponseEntity<RestPage<ProductSimpleResponse>> findProductsByCategory(
         @RequestParam("productCategoryId") Long productCategoryId,
         @RequestParam(value = "page", defaultValue = "0") int page,
         @RequestParam(value = "size", defaultValue = "10") int size) {
 
-        RestPage<ProductSimpleResponse> products = productService.findProductsByCategoryId(
+        RestPage<ProductSimpleResponse> products = productService.findProductsByCategoryId2(
             productCategoryId, page, size);
         return ResponseEntity.status(HttpStatus.OK).body(products);
     }

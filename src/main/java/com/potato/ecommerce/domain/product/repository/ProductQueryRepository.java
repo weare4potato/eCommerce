@@ -8,4 +8,6 @@ public interface ProductQueryRepository {
 
     RestPage<ProductListResponse> getProducts(String subject, int page, int size);
     RestPage<ProductSimpleResponse> getSimpleProducts(int page, int size);
+
+    RestPage<ProductSimpleResponse> findProductsByCategory(Long categoryId, int page, int size);
 }
