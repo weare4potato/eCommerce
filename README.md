@@ -1,5 +1,5 @@
 ## 🏗아키텍쳐
-![제목 없는 다이어그램.drawio.png](..%2F..%2FUsers%2FUser%2FDownloads%2F%EC%A0%9C%EB%AA%A9%20%EC%97%86%EB%8A%94%20%EB%8B%A4%EC%9D%B4%EC%96%B4%EA%B7%B8%EB%9E%A8.drawio.png)
+![제목 없는 다이어그램 drawio](https://github.com/weare4potato/eCommerce/assets/131866367/b6669871-fdc7-4296-a57d-70367f5ed60e)
 
 ## 🍀주요 기술
 
