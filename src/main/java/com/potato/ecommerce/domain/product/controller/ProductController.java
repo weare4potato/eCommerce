@@ -83,7 +83,7 @@ public class ProductController {
         @RequestParam(value = "page", defaultValue = "0") int page,
         @RequestParam(value = "size", defaultValue = "10") int size) {
 
-        RestPage<ProductSimpleResponse> products = productService.findProductsByCategoryId2(
+        RestPage<ProductSimpleResponse> products = productService.findProductsByCategoryId(
             productCategoryId, page, size);
         return ResponseEntity.status(HttpStatus.OK).body(products);
     }
