@@ -108,17 +108,11 @@ public class ProductService {
         return new RestPage<>(shopProductResponsesPage);
     }
 
-    public RestPage<ProductSimpleResponse> findProductsByCategoryId(Long productCategoryId,
-        int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page, size);
-        Page<ProductEntity> productPage = productRepository.findByProductCategory_Id(
-            productCategoryId, pageRequest);
-
-        Page<ProductSimpleResponse> productSimpleResponsesPage = productPage.map(
-            ProductSimpleResponse::of);
-
-        return new RestPage<>(productSimpleResponsesPage);
+    public RestPage<ProductSimpleResponse> findProductsByCategoryId2(Long categoryId, int page, int size) {
+        return productQueryRepository.findProductsByCategory(categoryId, page, size);
     }
+
+
 
     @Transactional
     public ProductResponse updateProduct(Long productId, ProductUpdateRequest updateRequest) {
