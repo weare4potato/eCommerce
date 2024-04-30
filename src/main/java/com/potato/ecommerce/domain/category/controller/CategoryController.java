@@ -32,14 +32,16 @@ public class CategoryController {
 
     @GetMapping("/twoDepth/{oneDepthId}")
     @Operation(summary = "중분류 카테고리 조회")
-    public ResponseEntity<List<TwoDepthDto>> getAllTwoDepthCategories(@PathVariable Long oneDepthId) {
+    public ResponseEntity<List<TwoDepthDto>> getAllTwoDepthCategories(
+        @PathVariable Long oneDepthId) {
         List<TwoDepthDto> twoDepthList = categoryService.getTwoDepthsByOneDepth(oneDepthId);
         return ResponseEntity.status(HttpStatus.OK).body(twoDepthList);
     }
 
     @GetMapping("/threeDepth/{twoDepthId}")
     @Operation(summary = "소분류 카테고리 조회")
-    public ResponseEntity<List<ThreeDepthDto>> getThreeDepthsByTwoDepth(@PathVariable Long twoDepthId) {
+    public ResponseEntity<List<ThreeDepthDto>> getThreeDepthsByTwoDepth(
+        @PathVariable Long twoDepthId) {
         List<ThreeDepthDto> threeDepthList = categoryService.getThreeDepthsByTwoDepth(twoDepthId);
         return ResponseEntity.status(HttpStatus.OK).body(threeDepthList);
     }

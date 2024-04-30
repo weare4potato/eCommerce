@@ -15,7 +15,8 @@ public class ShopProductResponse {
     private Long price;
 
     public static ShopProductResponse of(ProductEntity productEntity) {
-        return new ShopProductResponse(productEntity.getId(), productEntity.getName(), productEntity.getPrice());
+        return new ShopProductResponse(productEntity.getId(), productEntity.getName(),
+            productEntity.getPrice());
     }
 
 }

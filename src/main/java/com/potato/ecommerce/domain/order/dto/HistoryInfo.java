@@ -20,7 +20,8 @@ public class HistoryInfo {
     private Integer quantity;
     private Long orderPrice;
 
-    public static HistoryInfo fromEntity(HistoryEntity historyEntity, ProductSimpleResponse product) {
+    public static HistoryInfo fromEntity(HistoryEntity historyEntity,
+        ProductSimpleResponse product) {
         return HistoryInfo.builder()
             .id(historyEntity.getId())
             .product(product)

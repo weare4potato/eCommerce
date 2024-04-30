@@ -35,7 +35,8 @@ public class SwaggerConfig {
     }
 
     private SecurityScheme authScheme() {
-        return new SecurityScheme().type(Type.APIKEY).scheme("Bearer").in(In.HEADER).name("Authorization");
+        return new SecurityScheme().type(Type.APIKEY).scheme("Bearer").in(In.HEADER)
+            .name("Authorization");
     }
 
     @Bean
@@ -47,7 +48,6 @@ public class SwaggerConfig {
             .packagesToScan(packagesToScan)
             .build();
     }
-
 
 
 }

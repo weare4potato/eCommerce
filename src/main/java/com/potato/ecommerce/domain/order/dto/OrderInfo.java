@@ -29,7 +29,7 @@ public class OrderInfo {
         OrderEntity orderEntity,
         ResponseMember member,
         ReceiverForm receiver
-        ) {
+    ) {
         return OrderInfo.builder()
             .id(orderEntity.getId())
             .member(member)

@@ -22,7 +22,8 @@ public class ProductSimpleResponse {
     }
 
     public static ProductSimpleResponse of(ProductEntity productEntity) {
-        return new ProductSimpleResponse(productEntity.getId(), productEntity.getName(), productEntity.getPrice());
+        return new ProductSimpleResponse(productEntity.getId(), productEntity.getName(),
+            productEntity.getPrice());
     }
 
 }

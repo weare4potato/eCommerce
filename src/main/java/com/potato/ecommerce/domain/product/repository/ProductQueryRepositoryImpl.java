@@ -122,16 +122,17 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepository {
     }
 
     @Override
-    public RestPage<ProductSimpleResponse> findProductsByCategory(Long categoryId, int page, int size) {
+    public RestPage<ProductSimpleResponse> findProductsByCategory(Long categoryId, int page,
+        int size) {
         Pageable pageable = PageRequest.of(page, size);
         List<ProductSimpleResponse> productSimpleResponses = queryFactory.select(
-            Projections.fields(
-                ProductSimpleResponse.class,
-                productEntity.id,
-                productEntity.name,
-                productEntity.price))
-                .from(productEntity)
-                .where(productEntity.productCategory.id.eq(categoryId))
+                Projections.fields(
+                    ProductSimpleResponse.class,
+                    productEntity.id,
+                    productEntity.name,
+                    productEntity.price))
+            .from(productEntity)
+            .where(productEntity.productCategory.id.eq(categoryId))
             .orderBy(productEntity.id.asc())
             .offset(pageable.getOffset())
             .limit(pageable.getPageSize())
