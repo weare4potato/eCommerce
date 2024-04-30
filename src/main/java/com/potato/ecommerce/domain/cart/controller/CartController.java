@@ -75,6 +75,7 @@ public class CartController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    // ObjectMapper 를 사용하여 CartInfoResponseDto 로 변환
     @GetMapping
     @Operation(summary = "장바구니 조회")
     public ResponseEntity<List<CartInfoResponseDto>> getCarts(
