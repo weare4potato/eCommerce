@@ -24,12 +24,12 @@ public class JwtUtil {
 
     public static final String AUTHORIZATION_HEADER = "Authorization";
 
-    // 사용자 권한 값의 KEY
+
     public static final String AUTHORIZATION_KEY = "auth";
 
     public static final String BEARER_PREFIX = "Bearer ";
 
-    private final long TOKEN_TIME = 30 * 60 * 1000L; // 30 분
+    private final long TOKEN_TIME = 30 * 60 * 1000L;
 
     @Value("${jwt.secret.key}")
     private String secretKey;
@@ -82,7 +82,7 @@ public class JwtUtil {
         return BEARER_PREFIX +
             Jwts.builder()
                 .setSubject(email)
-                .claim(AUTHORIZATION_KEY, role) // 사용자 권한
+                .claim(AUTHORIZATION_KEY, role)
                 .setExpiration(expireDate)
                 .setIssuedAt(new Date())
                 .signWith(key, signatureAlgorithm)
@@ -101,7 +101,6 @@ public class JwtUtil {
                 .compact();
     }
 
-    // Seller 토큰과 Member 토큰의 정책 차별 가능성
     private Date createExpireDate(long expireDate) {
         long curTime = (new Date()).getTime();
         return new Date(curTime + expireDate);

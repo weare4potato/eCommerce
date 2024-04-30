@@ -44,12 +44,6 @@ public class Payment {
     @Column
     private String orderId;
 
-//    @Column
-//    private String provider;
-
-//    @Column
-//    private String receipt;
-
     @Builder
     public Payment(MemberEntity member, Integer price, String payType,
         String paidAt, String method, String orderId) {
@@ -59,7 +53,5 @@ public class Payment {
         this.paidAt = paidAt;
         this.method = method;
         this.orderId = orderId;
-//        this.provider = provider;
-//        this.receipt = receipt;
     }
 }
