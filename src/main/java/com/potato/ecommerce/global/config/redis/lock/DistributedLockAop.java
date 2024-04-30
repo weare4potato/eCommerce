@@ -38,26 +38,6 @@ public class DistributedLockAop {
 
         RLock rLock = redissonClient.getLock(key);
 
-//        try {
-//            System.out.println("key: " + key);
-//            boolean available = rLock.tryLock(distributedLock.waitTime(),
-//                distributedLock.leaseTime(), distributedLock.timeUnit());
-//
-//            if (!available) {
-//                throw new IllegalStateException("DistributedLock lock failed");
-//            }
-//            return aopForTransaction.proceed(joinPoint);
-//
-//        } catch (InterruptedException e) {
-//            // TODO: replace error statement
-//            log.error("DistributedLock lock interrupted");
-//            throw new InterruptedException(e.getMessage());
-//        } finally {
-//            if (rLock.isLocked() && rLock.isHeldByCurrentThread()) {
-//                rLock.unlock();
-//            }
-//        }
-
         // 예외 처리 및 락 획득을 재시도하는 로직
         int retryCount = 0;
 

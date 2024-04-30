@@ -25,38 +25,6 @@ public class HistoryService {
     private final ProductRepository productRepository;
     private final OrderJpaRepository orderJpaRepository;
 
-//    public void createHistory(
-//        Long orderId,
-//        List<OrderProduct> orderProducts
-//    ) {
-//        OrderEntity orderEntity = orderJpaRepository.findById(orderId)
-//            .orElseThrow(() -> new EntityNotFoundException(
-//                ExceptionMessage.ORDER_NOT_FOUND.toString()));
-//
-////        List<HistoryEntity> entities = new ArrayList<>();
-//
-//        for (OrderProduct dto : orderProducts) {
-//            ProductEntity productEntity = productRepository.findById(dto.getProductId())
-//                .orElseThrow(() -> new EntityNotFoundException(
-//                    ExceptionMessage.PRODUCT_NOT_FOUND.toString()));
-//
-//            productEntity.removeStock(dto.getQuantity());
-//
-//            Long totalOrderPrice = productEntity.getTotalPrice(dto.getQuantity());
-//
-//            HistoryEntity historyEntity = HistoryEntity.builder()
-//                .order(orderEntity)
-//                .product(productEntity)
-//                .quantity(dto.getQuantity())
-//                .orderPrice(totalOrderPrice)
-//                .build();
-//
-//            historyJpaRepository.save(historyEntity);
-////            entities.add(historyEntity);
-//        }
-////        historyJpaRepository.saveAll(entities);
-//    }
-
     public void createHistory(Long orderId, List<OrderProduct> orderProducts) {
         OrderEntity orderEntity = orderJpaRepository.findById(orderId)
             .orElseThrow(() -> new EntityNotFoundException(
@@ -81,7 +49,6 @@ public class HistoryService {
             historyJpaRepository.save(historyEntity);
         });
     }
-
 
     @Transactional(readOnly = true)
     public List<HistoryInfo> getHistory(
