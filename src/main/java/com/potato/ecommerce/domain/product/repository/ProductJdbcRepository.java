@@ -26,9 +26,10 @@ public class ProductJdbcRepository {
         log.info("DB 접근");
 
         String sql = "SELECT product_id, name, price FROM products WHERE MATCH(name) AGAINST(? IN BOOLEAN MODE) LIMIT ?, ?";
-        String countSql  = "SELECT count(product_id) FROM products WHERE MATCH(name) AGAINST(? IN BOOLEAN MODE)";
+        String countSql = "SELECT count(product_id) FROM products WHERE MATCH(name) AGAINST(? IN BOOLEAN MODE)";
 
-        List<ProductSimpleResponse> dtos = jdbcTemplate.query(sql, new Object[]{keyword, page * size, size},
+        List<ProductSimpleResponse> dtos = jdbcTemplate.query(sql,
+            new Object[]{keyword, page * size, size},
             (ResultSet rs, int rowNum) -> new ProductSimpleResponse(
                 rs.getLong("product_id"),
                 rs.getString("name"),

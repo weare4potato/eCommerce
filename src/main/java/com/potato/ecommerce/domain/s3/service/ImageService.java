@@ -9,9 +9,10 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class ImageService {
+
     private final ImageRepository imageRepository;
 
-    public void save(ProductEntity product, String url){
+    public void save(ProductEntity product, String url) {
         imageRepository.save(new ImageEntity(product, url));
     }
 

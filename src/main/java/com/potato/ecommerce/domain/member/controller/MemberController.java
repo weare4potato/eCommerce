@@ -69,7 +69,8 @@ public class MemberController {
 
     @PutMapping("/password")
     @Operation(summary = "비밀번호 수정")
-    public ResponseEntity<ResponseMember> updatePassword(@RequestBody @Validated UpdatePasswordDto dto,
+    public ResponseEntity<ResponseMember> updatePassword(
+        @RequestBody @Validated UpdatePasswordDto dto,
         HttpServletRequest request) {
         ResponseMember member = memberService.updatePassword(dto, getSubject(request));
         return ResponseEntity.status(HttpStatus.OK).body(member);

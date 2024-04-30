@@ -22,7 +22,7 @@ public class SignUpDto {
     private String username;
 
     @NotBlank
-    @Size(min = 8, max = 15,  message = "최소 8글자 최대 15글자로 작성해주세요.")
+    @Size(min = 8, max = 15, message = "최소 8글자 최대 15글자로 작성해주세요.")
     @Pattern(regexp = "^[a-zA-Z0-9.!@#$]*$", message = "소문자, 대문자, 특수문자가 1개씩 포함되어야 합니다.")
     private String password;
 

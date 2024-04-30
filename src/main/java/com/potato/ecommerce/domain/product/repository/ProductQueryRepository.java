@@ -8,8 +8,11 @@ import com.potato.ecommerce.global.util.RestPage;
 public interface ProductQueryRepository {
 
     RestPage<ProductListResponse> getProducts(String subject, int page, int size);
+
     RestPage<ProductSimpleResponse> getSimpleProducts(int page, int size);
+
     RestPage<ShopProductResponse> findByStoreId(Long shopId, int page, int size);
+
     RestPage<ProductSimpleResponse> findAllByProductName(String productName, int page, int size);
 
     RestPage<ProductSimpleResponse> findProductsByCategory(Long categoryId, int page, int size);

@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ThreeDepthRepository extends JpaRepository<ThreeDepthEntity, Long> {
+
     List<ThreeDepthEntity> findByTwoDepth(TwoDepthEntity twoDepth);
 
 }

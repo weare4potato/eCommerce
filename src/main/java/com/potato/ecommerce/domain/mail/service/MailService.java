@@ -1,8 +1,9 @@
 package com.potato.ecommerce.domain.mail.service;
 
-import static com.potato.ecommerce.domain.mail.message.MailMessage.*;
+import static com.potato.ecommerce.domain.mail.message.MailMessage.AUTH_API;
+import static com.potato.ecommerce.domain.mail.message.MailMessage.EMAIL_SUBJECT;
+import static com.potato.ecommerce.domain.mail.message.MailMessage.RETURN_MESSAGE;
 
-import com.potato.ecommerce.domain.mail.message.MailMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
@@ -22,7 +23,7 @@ public class MailService {
     }
 
 
-    private SimpleMailMessage createMessage(String email){
+    private SimpleMailMessage createMessage(String email) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(email);
         message.setSubject(EMAIL_SUBJECT);

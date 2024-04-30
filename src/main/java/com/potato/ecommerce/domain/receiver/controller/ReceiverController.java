@@ -55,7 +55,7 @@ public class ReceiverController {
     @Operation(summary = "배송 단일 조회")
     public ResponseEntity<ReceiverForm> findOneReceiver(
         @PathVariable Long receiverId,
-        HttpServletRequest request){
+        HttpServletRequest request) {
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(receiverService.findOneReceiver(getSubject(request), receiverId));
@@ -79,12 +79,13 @@ public class ReceiverController {
     public ResponseEntity<String> deleteReceiver(
         HttpServletRequest request,
         @PathVariable Long receiverId
-    ){
+    ) {
         receiverService.deleteReceiver(getSubject(request), receiverId);
         return ResponseEntity
             .status(HttpStatus.NO_CONTENT)
             .build();
     }
+
     private String getSubject(HttpServletRequest request) {
         return (String) request.getAttribute("subject");
     }

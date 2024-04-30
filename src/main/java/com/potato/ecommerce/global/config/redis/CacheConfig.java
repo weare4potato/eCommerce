@@ -22,11 +22,13 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @Configuration
 @EnableCaching
 public class CacheConfig {
+
     public static final String CACHE_180_SECOND = "cache180";
 
     @Bean
     public RedisCacheManager redisCacheManager(RedisConnectionFactory cf, ResourceLoader rl) {
-        RedisCacheManager.RedisCacheManagerBuilder builder = RedisCacheManager.RedisCacheManagerBuilder.fromConnectionFactory(cf);
+        RedisCacheManager.RedisCacheManagerBuilder builder = RedisCacheManager.RedisCacheManagerBuilder.fromConnectionFactory(
+            cf);
 
         ObjectMapper objectMapper = new ObjectMapper()
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
@@ -37,13 +39,15 @@ public class CacheConfig {
             .defaultCacheConfig(rl.getClassLoader())
             .disableCachingNullValues()
             .serializeKeysWith(fromSerializer(new StringRedisSerializer()))
-            .serializeValuesWith(fromSerializer(new GenericJackson2JsonRedisSerializer(objectMapper)))
+            .serializeValuesWith(
+                fromSerializer(new GenericJackson2JsonRedisSerializer(objectMapper)))
             .entryTtl(Duration.ofDays(1));
 
-
         Map<String, RedisCacheConfiguration> cacheConfigurationMap = new HashMap<>();
-        cacheConfigurationMap.put(CACHE_180_SECOND, configuration.entryTtl(Duration.ofSeconds(180L)));
+        cacheConfigurationMap.put(CACHE_180_SECOND,
+            configuration.entryTtl(Duration.ofSeconds(180L)));
 
-        return builder.cacheDefaults(configuration).withInitialCacheConfigurations(cacheConfigurationMap).build();
+        return builder.cacheDefaults(configuration)
+            .withInitialCacheConfigurations(cacheConfigurationMap).build();
     }
 }

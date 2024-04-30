@@ -13,7 +13,8 @@ public class ThreeDepthDto {
     private String threeDepth;
 
     public static ThreeDepthDto of(ThreeDepthEntity entity) {
-        return new ThreeDepthDto(entity.getId(), entity.getTwoDepth().getId(), entity.getThreeDepth());
+        return new ThreeDepthDto(entity.getId(), entity.getTwoDepth().getId(),
+            entity.getThreeDepth());
     }
 
 }
