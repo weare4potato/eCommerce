@@ -38,7 +38,7 @@ public class TossService {
 
     @Transactional
     public PaymentResponse createPayment(String orderName, String subject,
-        TossPaymentRequest tossPaymentRequest)        //paymentKey, orderId, amount
+        TossPaymentRequest tossPaymentRequest)
         throws BadRequestException {
         log.info("orderId : " + tossPaymentRequest.getOrderId());
         MemberEntity memberEntity = memberRepository.findByEmail(subject).orElseThrow(
@@ -48,19 +48,16 @@ public class TossService {
         OrderEntity order = getOrder(orderName);
         isAuthorized(order, memberEntity);
         String authorization = Base64.getEncoder()
-            .encodeToString((tossSecretKey + ":").getBytes());    //TOSS_SECRET Base64 인코딩
+            .encodeToString((tossSecretKey + ":").getBytes());
         RestTemplate restTemplate = new RestTemplate();
 
-        //헤더구성
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Basic " + authorization);     //TOSS_SECRET
+        headers.add("Authorization", "Basic " + authorization);
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        //요청 객체 생성
         HttpEntity<TossPaymentRequest> requestHttpEntity = new HttpEntity<>(tossPaymentRequest,
             headers);
 
-        //응답 객체 TossPayment객체로 결제 응답받기
         TossPayment tossPayment = restTemplate.postForObject(URL, requestHttpEntity,
             TossPayment.class);
 
@@ -73,7 +70,7 @@ public class TossService {
             .method(tossPayment.getMethod())
             .orderId(tossPayment.getOrderId())
             .build();
-        //결제 응답에서 필요한 부분만 사용하여 업데이트(receipt, paidAt, method, orderId, provider)
+
         return new PaymentResponse(paymentRepository.save(payment));
     }
 
