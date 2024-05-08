@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - feat/main
-      - publish
 
 jobs:
   deploy:
