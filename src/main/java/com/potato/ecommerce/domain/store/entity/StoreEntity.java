@@ -25,7 +25,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EntityListeners(AuditingEntityListener.class)
 @SQLDelete(sql = "UPDATE stores SET is_deleted = true WHERE store_id = ?")
 @Where(clause = "is_deleted=false")
-@Table(name = "stores", indexes = @Index(name = "idx_business_number", columnList = "business_number"))
+@Table(name = "stores", indexes = @Index(name = "idx_is_deleted_and_business_number", columnList = "is_deleted, business_number"))
 public class StoreEntity {
 
     @Id

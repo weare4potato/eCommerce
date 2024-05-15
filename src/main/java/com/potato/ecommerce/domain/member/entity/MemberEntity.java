@@ -49,6 +49,8 @@ public class MemberEntity {
     @Column(nullable = false)
     private String phone;
 
+    private Long kakaoId;
+
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdAt;
@@ -60,7 +62,7 @@ public class MemberEntity {
 
     @Builder
     public MemberEntity(String email, String userName, String password, String phone,
-        LocalDateTime createdAt, UserRoleEnum role, boolean authStatus) {
+        LocalDateTime createdAt, UserRoleEnum role, boolean authStatus, Long kakaoId) {
         this.email = email;
         this.userName = userName;
         this.password = password;
@@ -68,6 +70,7 @@ public class MemberEntity {
         this.createdAt = createdAt;
         this.role = role;
         this.authStatus = authStatus;
+        this.kakaoId = kakaoId;
     }
 
     private boolean authStatus;
@@ -97,4 +100,8 @@ public class MemberEntity {
         this.phone = dto.getPhone();
     }
 
+    public MemberEntity kakaoIdUpdate(Long kakaoId) {
+        this.kakaoId = kakaoId;
+        return this;
+    }
 }

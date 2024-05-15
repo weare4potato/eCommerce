@@ -11,6 +11,7 @@ import com.potato.ecommerce.domain.product.entity.ProductEntity;
 import com.potato.ecommerce.domain.product.repository.ProductRepository;
 import com.potato.ecommerce.global.exception.ExceptionMessage;
 import jakarta.persistence.EntityNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,8 @@ public class HistoryService {
             .orElseThrow(() -> new EntityNotFoundException(
                 ExceptionMessage.ORDER_NOT_FOUND.toString()));
 
+        List<HistoryEntity> historyEntities = new ArrayList<>();
+
         orderProducts.forEach(dto -> {
             ProductEntity productEntity = productRepository.findById(dto.getProductId())
                 .orElseThrow(() -> new EntityNotFoundException(
@@ -46,8 +49,10 @@ public class HistoryService {
                 .orderPrice(totalOrderPrice)
                 .build();
 
-            historyJpaRepository.save(historyEntity);
+            historyEntities.add(historyEntity);
         });
+
+        historyJpaRepository.saveAll(historyEntities);
     }
 
     @Transactional(readOnly = true)

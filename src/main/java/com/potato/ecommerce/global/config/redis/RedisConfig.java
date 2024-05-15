@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
 import com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.potato.ecommerce.domain.order.dto.OrderList;
+import com.potato.ecommerce.global.util.RestPage;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
@@ -61,6 +63,28 @@ public class RedisConfig {
             .disable(SerializationFeature.WRITE_DATE_KEYS_AS_TIMESTAMPS);
 
         var template = new RedisTemplate<String, Object>();
+
+        template.setConnectionFactory(connectionFactory);
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(new GenericJackson2JsonRedisSerializer(objectMapper));
+        return template;
+    }
+
+    @Bean
+    public RedisTemplate<String, RestPage<OrderList>> restPageRedisTemplate(
+        RedisConnectionFactory connectionFactory) {
+        PolymorphicTypeValidator ptv = BasicPolymorphicTypeValidator
+            .builder()
+            .allowIfSubType(Object.class)
+            .build();
+
+        var objectMapper = new ObjectMapper()
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+            .registerModule(new JavaTimeModule())
+            .activateDefaultTyping(ptv, ObjectMapper.DefaultTyping.NON_FINAL)
+            .disable(SerializationFeature.WRITE_DATE_KEYS_AS_TIMESTAMPS);
+
+        var template = new RedisTemplate<String, RestPage<OrderList>>();
 
         template.setConnectionFactory(connectionFactory);
         template.setKeySerializer(new StringRedisSerializer());

@@ -21,7 +21,9 @@ import com.potato.ecommerce.global.util.RestPage;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +38,7 @@ public class OrderService {
     private final OrderJpaRepository orderJpaRepository;
     private final OrderQueryRepository orderQueryRepository;
     private final HistoryService historyService;
+    private final RedisTemplate<String, RestPage<OrderList>> redisTemplate;
 
     @DistributedLock(key = "#orderProducts.![productId].toString()")
     public OrderInfo createOrder(
@@ -97,7 +100,13 @@ public class OrderService {
         int page,
         int size
     ) {
-        return orderQueryRepository.getOrders(subject, page, size);
+        RestPage<OrderList> orderLists = redisTemplate.opsForValue().get(subject);
+        if(orderLists != null){
+            return orderLists;
+        }
+        RestPage<OrderList> orders = orderQueryRepository.getOrders(subject, page, size);
+        redisTemplate.opsForValue().set(subject, orders, 3, TimeUnit.MINUTES);
+        return orders;
     }
 
     @Transactional

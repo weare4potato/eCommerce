@@ -3,8 +3,8 @@ import { check, fail } from "k6";
 
 export let options = {
   stages: [
-    {duration: '10s', target: 100},
-    {duration: '50s', target: 500},
+    {duration: '20s', target: 200},
+    {duration: '40s', target: 200},
     // {duration: '1m', target: 500},
     // {duration: '1m', target: 750},
     // {duration: '1m', target: 1000}
@@ -37,7 +37,7 @@ export function setup() {
   return token;
 }
 
-const uri = "http://52.78.12.179:8080";
+const uri = "http://54.180.79.141:8080";
 const URI = uri + "/api/v1";
 
 const params = {

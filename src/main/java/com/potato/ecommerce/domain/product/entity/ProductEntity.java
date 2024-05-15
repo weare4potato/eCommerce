@@ -35,8 +35,10 @@ import org.springframework.data.annotation.CreatedDate;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "UPDATE products SET is_deleted = true WHERE product_id = ?")
 @Where(clause = "is_deleted=false")
-@Table(name = "products",
-    indexes = @Index(name = "idx_is_deleted_and_product_category_id", columnList = "is_deleted, product_category_id"))
+@Table(name = "products", indexes = {
+    @Index(name = "idx_is_deleted_and_product_category_id", columnList = "is_deleted, product_category_id"),
+    @Index(name = "idx_created_at", columnList = "created_at")
+})
 public class ProductEntity {
 
     @Id

@@ -1,5 +1,6 @@
 package com.potato.ecommerce.domain.member.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.potato.ecommerce.domain.mail.service.MailService;
 import com.potato.ecommerce.domain.member.dto.ResponseMember;
 import com.potato.ecommerce.domain.member.dto.ResponseSignInDto;
@@ -8,10 +9,13 @@ import com.potato.ecommerce.domain.member.dto.SignUpDto;
 import com.potato.ecommerce.domain.member.dto.UpdateMemberDto;
 import com.potato.ecommerce.domain.member.dto.UpdatePasswordDto;
 import com.potato.ecommerce.domain.member.service.MemberService;
+import com.potato.ecommerce.domain.oauth.kakao.service.KakaoService;
 import com.potato.ecommerce.global.jwt.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +37,7 @@ public class MemberController {
 
     private final MemberService memberService;
     private final MailService mailService;
+    private final KakaoService kakaoService;
 
     @PostMapping("/signup")
     @Operation(summary = "회원가입")
@@ -96,6 +101,14 @@ public class MemberController {
     public ResponseEntity<ResponseMember> updateAuth(@RequestParam("email") String email) {
         ResponseMember member = memberService.confirmMember(email);
         return ResponseEntity.status(HttpStatus.CREATED).body(member);
+    }
+
+    @GetMapping("/user/kakao/callback")
+    public ResponseEntity<Void> kakaoLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
+        String token = kakaoService.kakaoLogin(code);
+
+        return ResponseEntity.status(HttpStatus.OK)
+            .header(JwtUtil.AUTHORIZATION_HEADER, token).build();
     }
 
     private String getSubject(HttpServletRequest request) {
