@@ -1,4 +1,6 @@
 팀 프로젝트로 진행하던 ECommerce 프로젝트를 개인적으로 추가 개발하고 있습니다.
+## 이전 프로젝트 링크
+[https://github.com/weare4potato/eCommerce]
 
 ## 🏗아키텍쳐
 ![potato drawio](https://github.com/tangpoo/eCommerce/assets/131866367/c76b0c58-4b8a-4a34-87e8-0d98a6b228d7)
