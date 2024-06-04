@@ -3,7 +3,6 @@ package com.potato.ecommerce.domain.member;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.potato.ecommerce.domain.member.entity.MemberEntity;
-import com.potato.ecommerce.domain.member.entity.UserRoleEnum;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -18,7 +17,7 @@ public class MemberTests {
         @Test
         void same_password() {
             // Arrange
-            MemberEntity member = createMember("123456789");
+            MemberEntity member = MemberSteps.createMember("123456789", passwordEncoder);
 
             String requestPassword = "123456789";
 
@@ -33,7 +32,7 @@ public class MemberTests {
         @Test
         void diff_password() {
             // Arrange
-            MemberEntity member = createMember("123456789");
+            MemberEntity member = MemberSteps.createMember("123456789", passwordEncoder);
 
             String requestPassword = "987654321";
 
@@ -53,7 +52,7 @@ public class MemberTests {
         void check_member() {
             // Arrange
 
-            MemberEntity member = createAuthMember(true);
+            MemberEntity member = MemberSteps.createAuthMember(true, passwordEncoder);
             // Act
             boolean authCheck = member.isNotAuthCheck();
 
@@ -64,7 +63,7 @@ public class MemberTests {
         @Test
         void un_check_member() {
             // Arrange
-            MemberEntity member = createAuthMember(false);
+            MemberEntity member = MemberSteps.createAuthMember(false, passwordEncoder);
 
             // Act
             boolean authCheck = member.isNotAuthCheck();
@@ -75,26 +74,4 @@ public class MemberTests {
     }
 
 
-
-    private MemberEntity createMember(String password) {
-        return MemberEntity.builder()
-            .email("test@email.com")
-            .userName("testName")
-            .password(passwordEncoder.encode(password))
-            .phone("01011112222")
-            .role(UserRoleEnum.USER)
-            .authStatus(true)
-            .build();
-    }
-
-    private MemberEntity createAuthMember(boolean auth) {
-        return MemberEntity.builder()
-            .email("test@email.com")
-            .userName("testName")
-            .password(passwordEncoder.encode("123456789"))
-            .phone("01011112222")
-            .role(UserRoleEnum.USER)
-            .authStatus(auth)
-            .build();
-    }
 }
