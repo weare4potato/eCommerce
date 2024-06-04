@@ -55,11 +55,6 @@ public class OrderEntity {
     @Column(nullable = false)
     private String orderNum;
 
-    /*
-    TODO : 지금은 모든 주문을 완료상태로 처리
-    TODO : READY는 추후에 뼈대를 다 만들고 추가
-     */
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private OrderStatus status;
