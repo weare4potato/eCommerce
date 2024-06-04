@@ -10,14 +10,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class StoreTests {
 
-    PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Nested
     class Store_password_matches {
         @Test
         void same_password() {
             // Arrange
-            StoreEntity store = createStore(passwordEncoder);
+            StoreEntity store = StoreSteps.createStore(passwordEncoder);
             String requestPassword = "12345678";
 
             // Act
@@ -30,7 +30,7 @@ public class StoreTests {
         @Test
         void diff_password() {
             // Arrange
-            StoreEntity store = createStore(passwordEncoder);
+            StoreEntity store = StoreSteps.createStore(passwordEncoder);
             String requestPassword = "987654321";
 
             // Act
@@ -47,7 +47,7 @@ public class StoreTests {
         @Test
         void same_email() {
             // Arrange
-            final StoreEntity store = createStore(passwordEncoder);
+            final StoreEntity store = StoreSteps.createStore(passwordEncoder);
             String requestEmail = "test@email.com";
 
             // Act
@@ -60,7 +60,7 @@ public class StoreTests {
         @Test
         void diff_email() {
             // Arrange
-            final StoreEntity store = createStore(passwordEncoder);
+            final StoreEntity store = StoreSteps.createStore(passwordEncoder);
             String requestEmail = "diff@email.com";
 
             // Act
@@ -77,7 +77,7 @@ public class StoreTests {
         @Test
         void save_business_number() {
             // Arrange
-            final StoreEntity store = createStore(passwordEncoder);
+            final StoreEntity store = StoreSteps.createStore(passwordEncoder);
             String requestBusinessNumber = "1111111111";
 
             // Act
@@ -90,7 +90,7 @@ public class StoreTests {
         @Test
         void diff_business_number() {
             // Arrange
-            final StoreEntity store = createStore(passwordEncoder);
+            final StoreEntity store = StoreSteps.createStore(passwordEncoder);
             String requestBusinessNumber = "0000000000";
 
             // Act
@@ -101,15 +101,4 @@ public class StoreTests {
         }
     }
 
-    private static StoreEntity createStore(final PasswordEncoder passwordEncoder) {
-        return StoreEntity.builder()
-            .id(1L)
-            .password(passwordEncoder.encode("12345678"))
-            .phone("01011112222")
-            .email("test@email.com")
-            .name("store")
-            .description("hello")
-            .businessNumber("1111111111")
-            .build();
-    }
 }
