@@ -17,7 +17,7 @@ public class MemberTests {
         @Test
         void same_password() {
             // Arrange
-            MemberEntity member = MemberSteps.createMember("123456789", passwordEncoder);
+            MemberEntity member = MemberSteps.createMemberWithPassword("123456789", passwordEncoder);
 
             String requestPassword = "123456789";
 
@@ -32,7 +32,7 @@ public class MemberTests {
         @Test
         void diff_password() {
             // Arrange
-            MemberEntity member = MemberSteps.createMember("123456789", passwordEncoder);
+            MemberEntity member = MemberSteps.createMemberWithPassword("123456789", passwordEncoder);
 
             String requestPassword = "987654321";
 
@@ -51,8 +51,7 @@ public class MemberTests {
         @Test
         void check_member() {
             // Arrange
-
-            MemberEntity member = MemberSteps.createAuthMember(true, passwordEncoder);
+            MemberEntity member = MemberSteps.createMemberWithAuth(true, passwordEncoder);
             // Act
             boolean authCheck = member.isNotAuthCheck();
 
@@ -63,7 +62,7 @@ public class MemberTests {
         @Test
         void un_check_member() {
             // Arrange
-            MemberEntity member = MemberSteps.createAuthMember(false, passwordEncoder);
+            MemberEntity member = MemberSteps.createMemberWithAuth(false, passwordEncoder);
 
             // Act
             boolean authCheck = member.isNotAuthCheck();

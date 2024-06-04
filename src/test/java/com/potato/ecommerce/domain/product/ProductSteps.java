@@ -11,7 +11,7 @@ public class ProductSteps {
 
     private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    public static ProductEntity createProductWithStoreAndCategory(int stock, Long price) {
+    public static ProductEntity createProductWithStockAndPrice(int stock, Long price) {
         StoreEntity store = StoreSteps.createStore(passwordEncoder);
         ProductCategoryEntity productCategory = new ProductCategoryEntity();
         return ProductEntity.builder()

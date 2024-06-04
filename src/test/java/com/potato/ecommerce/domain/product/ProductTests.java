@@ -19,7 +19,7 @@ public class ProductTests {
         @Test
         void success_stock_remove() {
             // Arrange
-            ProductEntity product = ProductSteps.createProductWithStoreAndCategory(10, 1000L);
+            ProductEntity product = ProductSteps.createProductWithStockAndPrice(10, 1000L);
 
             // Act
             product.removeStock(5);
@@ -32,7 +32,7 @@ public class ProductTests {
         @ValueSource(ints = {11, 100, 1000})
         void fail_stock_remove(int stock) {
             // Arrange
-            ProductEntity product = ProductSteps.createProductWithStoreAndCategory(10, 1000L);
+            ProductEntity product = ProductSteps.createProductWithStockAndPrice(10, 1000L);
 
             // Act + Assert
             assertThatThrownBy(() -> {
@@ -45,7 +45,7 @@ public class ProductTests {
     @Test
     void Product_add_stock() {
         // Arrange
-        ProductEntity product = ProductSteps.createProductWithStoreAndCategory(10, 1000L);
+        ProductEntity product = ProductSteps.createProductWithStockAndPrice(10, 1000L);
 
         // Act
         product.addStock(5);
@@ -57,7 +57,7 @@ public class ProductTests {
     @Test
     void Product_calculate_total_price() {
         // Arrange
-        ProductEntity product = ProductSteps.createProductWithStoreAndCategory(5, 1000L);
+        ProductEntity product = ProductSteps.createProductWithStockAndPrice(5, 1000L);
 
         // Act
         final Long totalPrice = product.getTotalPrice(2);
