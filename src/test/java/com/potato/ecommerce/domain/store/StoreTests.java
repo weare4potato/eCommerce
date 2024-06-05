@@ -1,8 +1,12 @@
 package com.potato.ecommerce.domain.store;
 
+import static com.potato.ecommerce.global.exception.ExceptionMessage.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.potato.ecommerce.domain.store.entity.StoreEntity;
+import com.potato.ecommerce.global.exception.ExceptionMessage;
+import jakarta.xml.bind.ValidationException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -20,11 +24,8 @@ public class StoreTests {
             StoreEntity store = StoreSteps.createStore(passwordEncoder);
             String requestPassword = "12345678";
 
-            // Act
-            final boolean isMatches = store.passwordMatches(requestPassword, passwordEncoder);
-
-            // Assert
-            assertThat(isMatches).isTrue();
+            // Act + Assert
+            store.passwordMatches(requestPassword, passwordEncoder);
         }
 
         @Test
@@ -33,11 +34,9 @@ public class StoreTests {
             StoreEntity store = StoreSteps.createStore(passwordEncoder);
             String requestPassword = "987654321";
 
-            // Act
-            final boolean isMatches = store.passwordMatches(requestPassword, passwordEncoder);
-
-            // Assert
-            assertThat(isMatches).isFalse();
+            // Act + Assert
+            assertThatThrownBy(() -> {store.passwordMatches(requestPassword, passwordEncoder);}).isInstanceOf(
+                ValidationException.class).hasMessageContaining(PASSWORD_NOT_MATCH.toString());
         }
     }
 
@@ -50,11 +49,8 @@ public class StoreTests {
             final StoreEntity store = StoreSteps.createStore(passwordEncoder);
             String requestEmail = "test@email.com";
 
-            // Act
-            final boolean isMatches = store.emailMatches(requestEmail);
-
-            // Assert
-            assertThat(isMatches).isTrue();
+            // Act + Assert
+            store.emailMatches(requestEmail);
         }
 
         @Test
@@ -64,10 +60,8 @@ public class StoreTests {
             String requestEmail = "diff@email.com";
 
             // Act
-            final boolean isMatches = store.emailMatches(requestEmail);
-
-            // Assert
-            assertThat(isMatches).isFalse();
+            assertThatThrownBy(() -> {store.emailMatches(requestEmail);}).isInstanceOf(
+                ValidationException.class).hasMessageContaining(EMAIL_NOT_MATCH.toString());
         }
     }
 
@@ -80,11 +74,8 @@ public class StoreTests {
             final StoreEntity store = StoreSteps.createStore(passwordEncoder);
             String requestBusinessNumber = "1111111111";
 
-            // Act
-            final boolean isMatches = store.businessNumberMatches(requestBusinessNumber);
-
-            // Assert
-            assertThat(isMatches).isTrue();
+            // Act + Assert
+            store.businessNumberMatches(requestBusinessNumber);
         }
 
         @Test
@@ -93,11 +84,9 @@ public class StoreTests {
             final StoreEntity store = StoreSteps.createStore(passwordEncoder);
             String requestBusinessNumber = "0000000000";
 
-            // Act
-            final boolean isMatches = store.businessNumberMatches(requestBusinessNumber);
-
-            // Assert
-            assertThat(isMatches).isFalse();
+            // Act + Assert
+            assertThatThrownBy(() -> {store.businessNumberMatches(requestBusinessNumber);}).isInstanceOf(
+                ValidationException.class).hasMessageContaining(BUSINESS_NUMBER_NOT_MATCH.toString());
         }
     }
 

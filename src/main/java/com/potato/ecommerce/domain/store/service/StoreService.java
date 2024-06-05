@@ -45,41 +45,23 @@ public class StoreService {
 
     @Transactional
     public StoreResponse signup(StoreRequest storeRequest) {
-
         storeRequest.validatePassword();
         validateEmail(storeRequest);
 
         usingBusinessNumber(storeRequest.getBusinessNumber());
 
-        StoreEntity storeEntity = StoreEntity
-            .builder()
-            .email(storeRequest.getEmail())
-            .password(passwordEncoder.encode(storeRequest.getPassword()))
-            .name(storeRequest.getName()).phone(storeRequest.getPhone())
-            .description(storeRequest.getDescription())
-            .businessNumber(storeRequest.getBusinessNumber()).build();
+        StoreEntity storeEntity = createStore(storeRequest);
 
         StoreEntity saveEntity = storeRepository.save(storeEntity);
 
-        return new StoreResponse(
-            saveEntity.getId(),
-            saveEntity.getEmail(),
-            saveEntity.getName(),
-            saveEntity.getDescription(),
-            saveEntity.getPhone(),
-            saveEntity.getBusinessNumber()
-        );
+        return createStoreResponse(saveEntity);
     }
-
-
 
     @Transactional
     public String signin(LoginRequest loginRequest) {
         StoreEntity storeEntity = findByEmail(loginRequest.getEmail());
 
-        if (!storeEntity.passwordMatches(loginRequest.getPassword(), passwordEncoder)) {
-            throw new ValidationException(PASSWORD_NOT_MATCH.toString());
-        }
+        storeEntity.passwordMatches(loginRequest.getPassword(), passwordEncoder);
 
         return jwtUtil.createSellerToken(storeEntity.getBusinessNumber());
     }
@@ -87,14 +69,7 @@ public class StoreService {
     public StoreResponse getStore(String subject) {
         StoreEntity storeEntity = findBySubject(subject);
 
-        return StoreResponse.builder()
-            .id(storeEntity.getId())
-            .email(storeEntity.getEmail())
-            .name(storeEntity.getName())
-            .description(storeEntity.getDescription())
-            .phone(storeEntity.getPhone())
-            .businessNumber(storeEntity.getBusinessNumber())
-            .build();
+        return createStoreResponse(storeEntity);
     }
 
     @Transactional
@@ -104,52 +79,52 @@ public class StoreService {
         storeEntity.update(updateRequest.getName(), updateRequest.getDescription(),
             updateRequest.getPhone());
 
-        return StoreResponse.builder()
-            .id(storeEntity.getId())
-            .email(storeEntity.getEmail())
-            .name(storeEntity.getName())
-            .description(storeEntity.getDescription())
-            .phone(storeEntity.getPhone())
-            .businessNumber(storeEntity.getBusinessNumber())
-            .build();
+        return createStoreResponse(storeEntity);
     }
 
     @Transactional
     public void validatePassword(String subject, ValidatePasswordRequest validatePasswordRequest) {
         StoreEntity storeEntity = findBySubject(subject);
 
-        if (!storeEntity.passwordMatches(validatePasswordRequest.getFirstPassword(),
-            passwordEncoder)) {
-            throw new ValidationException(PASSWORD_NOT_MATCH.toString());
-        }
+        validatePasswordRequest.validatePassword();
 
-        if (!validatePasswordRequest.getFirstPassword()
-            .equals(validatePasswordRequest.getSecondPassword())) {
-            throw new ValidationException(PASSWORD_NOT_MATCH.toString());
-        }
+        storeEntity.passwordMatches(validatePasswordRequest.getFirstPassword(), passwordEncoder);
     }
 
     @Transactional
     public void deleteStore(String subject, DeleteStoreRequest deleteStoreRequest) {
         StoreEntity storeEntity = findBySubject(subject);
 
-        if (!storeEntity.emailMatches(deleteStoreRequest.getEmail())) {
-            throw new ValidationException(EMAIL_NOT_MATCH.toString());
-        }
-
-        if (!storeEntity.passwordMatches(deleteStoreRequest.getPassword(), passwordEncoder)) {
-            throw new ValidationException(PASSWORD_NOT_MATCH.toString());
-        }
-
-        if (!storeEntity.businessNumberMatches(deleteStoreRequest.getBusinessNumber())) {
-            throw new ValidationException(BUSINESS_NUMBER_NOT_MATCH.toString());
-        }
+        storeEntity.emailMatches(deleteStoreRequest.getEmail());
+        storeEntity.passwordMatches(deleteStoreRequest.getPassword(), passwordEncoder);
+        storeEntity.businessNumberMatches(deleteStoreRequest.getBusinessNumber());
 
         storeRepository.delete(storeEntity);
     }
 
     public RestPage<ProductListResponse> getProducts(String subject, int page, int size) {
         return productQueryRepositoryImpl.getProducts(subject, page, size);
+    }
+
+    private StoreEntity createStore(final StoreRequest storeRequest) {
+        return StoreEntity
+            .builder()
+            .email(storeRequest.getEmail())
+            .password(passwordEncoder.encode(storeRequest.getPassword()))
+            .name(storeRequest.getName()).phone(storeRequest.getPhone())
+            .description(storeRequest.getDescription())
+            .businessNumber(storeRequest.getBusinessNumber()).build();
+    }
+
+    private static StoreResponse createStoreResponse(final StoreEntity saveEntity) {
+        return new StoreResponse(
+            saveEntity.getId(),
+            saveEntity.getEmail(),
+            saveEntity.getName(),
+            saveEntity.getDescription(),
+            saveEntity.getPhone(),
+            saveEntity.getBusinessNumber()
+        );
     }
 
     private void usingBusinessNumber(String businessNumber) {
