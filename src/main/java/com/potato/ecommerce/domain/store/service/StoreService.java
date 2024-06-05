@@ -46,13 +46,8 @@ public class StoreService {
     @Transactional
     public StoreResponse signup(StoreRequest storeRequest) {
 
-        if (storeRepository.existsByEmail(storeRequest.getEmail())) {
-            throw new ValidationException(DUPLICATE_EMAIL.toString());
-        }
-
-        if (!storeRequest.getPassword().equals(storeRequest.getValidatePassword())) {
-            throw new ValidationException(PASSWORD_NOT_MATCH.toString());
-        }
+        storeRequest.validatePassword();
+        validateEmail(storeRequest);
 
         usingBusinessNumber(storeRequest.getBusinessNumber());
 
@@ -75,6 +70,8 @@ public class StoreService {
             saveEntity.getBusinessNumber()
         );
     }
+
+
 
     @Transactional
     public String signin(LoginRequest loginRequest) {
@@ -175,6 +172,12 @@ public class StoreService {
     private StoreEntity findBySubject(String subject) {
         return storeRepository.findByBusinessNumber(subject)
             .orElseThrow(() -> new EntityNotFoundException(STORE_NOT_FOUND.toString()));
+    }
+
+    private void validateEmail(final StoreRequest storeRequest) {
+        if (storeRepository.existsByEmail(storeRequest.getEmail())) {
+            throw new ValidationException(DUPLICATE_EMAIL.toString());
+        }
     }
 
 }
