@@ -1,5 +1,8 @@
 package com.potato.ecommerce.domain.store.dto;
 
+import static com.potato.ecommerce.global.exception.ExceptionMessage.PASSWORD_NOT_MATCH;
+
+import jakarta.validation.ValidationException;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -38,4 +41,10 @@ public class StoreRequest {
     @NotBlank
     @Pattern(regexp = "^[0-9]{10}+$")
     private String businessNumber;
+
+    public void validatePassword(){
+        if(!password.equals(validatePassword)){
+            throw new ValidationException(PASSWORD_NOT_MATCH.toString());
+        }
+    }
 }
