@@ -1,5 +1,9 @@
 package com.potato.ecommerce.domain.store.entity;
 
+import static com.potato.ecommerce.global.exception.ExceptionMessage.BUSINESS_NUMBER_NOT_MATCH;
+import static com.potato.ecommerce.global.exception.ExceptionMessage.EMAIL_NOT_MATCH;
+import static com.potato.ecommerce.global.exception.ExceptionMessage.PASSWORD_NOT_MATCH;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -8,6 +12,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
+import jakarta.validation.ValidationException;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -77,15 +82,21 @@ public class StoreEntity {
         this.phone = phone;
     }
 
-    public boolean passwordMatches(String password, PasswordEncoder passwordEncoder) {
-        return passwordEncoder.matches(password, this.password);
+    public void passwordMatches(String password, PasswordEncoder passwordEncoder) {
+        if(!passwordEncoder.matches(password, this.password)){
+            throw new ValidationException(PASSWORD_NOT_MATCH.toString());
+        }
     }
 
-    public boolean emailMatches(String email) {
-        return email.equals(this.email);
+    public void emailMatches(String email) {
+        if(!this.email.equals(email)){
+            throw new ValidationException(EMAIL_NOT_MATCH.toString());
+        }
     }
 
-    public boolean businessNumberMatches(String businessNumber) {
-        return businessNumber.equals(this.businessNumber);
+    public void businessNumberMatches(String businessNumber) {
+        if(!this.businessNumber.equals(businessNumber)){
+            throw new ValidationException(BUSINESS_NUMBER_NOT_MATCH.toString());
+        }
     }
 }
