@@ -9,7 +9,7 @@ public class StoreSteps {
     public static StoreEntity createStore(final PasswordEncoder passwordEncoder) {
         return StoreEntity.builder()
             .id(1L)
-            .password(passwordEncoder.encode("12345678"))
+            .password(passwordEncoder.encode("123456789"))
             .phone("01011112222")
             .email("test@email.com")
             .name("store")
@@ -18,7 +18,7 @@ public class StoreSteps {
             .build();
     }
 
-    public static StoreRequest createStoreRequest(){
+    public static StoreRequest createStoreRequest() {
         final String email = "test@email.com";
         final String password = "123456789";
         final String validatePassword = "123456789";
