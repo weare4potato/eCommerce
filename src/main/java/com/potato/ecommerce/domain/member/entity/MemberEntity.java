@@ -60,6 +60,8 @@ public class MemberEntity {
 
     private Boolean isDeleted = false;
 
+    private boolean authStatus;
+
     @Builder
     public MemberEntity(String email, String userName, String password, String phone,
         LocalDateTime createdAt, UserRoleEnum role, boolean authStatus, Long kakaoId) {
@@ -72,8 +74,6 @@ public class MemberEntity {
         this.authStatus = authStatus;
         this.kakaoId = kakaoId;
     }
-
-    private boolean authStatus;
 
     public void confirm() {
         this.authStatus = true;

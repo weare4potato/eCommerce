@@ -32,9 +32,13 @@ public class MemberService {
 
     @Transactional
     public ResponseMember signUp(SignUpDto dto) {
-        MemberEntity member = MemberEntity.builder().email(dto.getEmail())
-            .password(passwordEncoder.encode(dto.getPassword())).userName(dto.getUsername())
-            .phone(dto.getPhone()).role(UserRoleEnum.USER).authStatus(false).build();
+        MemberEntity member = MemberEntity.builder()
+            .email(dto.getEmail())
+            .password(passwordEncoder.encode(dto.getPassword()))
+            .userName(dto.getUsername())
+            .phone(dto.getPhone())
+            .role(UserRoleEnum.USER)
+            .authStatus(false).build();
 
         return ResponseMember.fromEntity(memberJpaRepository.save(member));
     }
