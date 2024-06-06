@@ -9,7 +9,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class MemberTests {
-    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Nested
     class Member_password_matches {
@@ -17,7 +18,8 @@ public class MemberTests {
         @Test
         void same_password() {
             // Arrange
-            MemberEntity member = MemberSteps.createMemberWithPassword("123456789", passwordEncoder);
+            MemberEntity member = MemberSteps.createMemberWithPassword("123456789",
+                passwordEncoder);
 
             String requestPassword = "123456789";
 
@@ -32,7 +34,8 @@ public class MemberTests {
         @Test
         void diff_password() {
             // Arrange
-            MemberEntity member = MemberSteps.createMemberWithPassword("123456789", passwordEncoder);
+            MemberEntity member = MemberSteps.createMemberWithPassword("123456789",
+                passwordEncoder);
 
             String requestPassword = "987654321";
 

@@ -17,7 +17,8 @@ public class MemberSteps {
             .build();
     }
 
-    public static MemberEntity createMemberWithPassword(String password, PasswordEncoder passwordEncoder) {
+    public static MemberEntity createMemberWithPassword(String password,
+        PasswordEncoder passwordEncoder) {
         return MemberEntity.builder()
             .email("test@email.com")
             .userName("testName")

@@ -3,7 +3,6 @@ package com.potato.ecommerce.domain.member;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.atMostOnce;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -208,7 +207,7 @@ public class MemberServiceTests {
             .authStatus(true).build();
     }
 
-    private SignInDto createSignInDto(){
+    private SignInDto createSignInDto() {
         String email = "test@email.com";
         String password = "123456789";
         return new SignInDto(email, password);
