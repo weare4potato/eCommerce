@@ -1,11 +1,11 @@
 package com.potato.ecommerce.domain.store;
 
-import static com.potato.ecommerce.global.exception.ExceptionMessage.*;
-import static org.assertj.core.api.Assertions.assertThat;
+import static com.potato.ecommerce.global.exception.ExceptionMessage.BUSINESS_NUMBER_NOT_MATCH;
+import static com.potato.ecommerce.global.exception.ExceptionMessage.EMAIL_NOT_MATCH;
+import static com.potato.ecommerce.global.exception.ExceptionMessage.PASSWORD_NOT_MATCH;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.potato.ecommerce.domain.store.entity.StoreEntity;
-import com.potato.ecommerce.global.exception.ExceptionMessage;
 import jakarta.xml.bind.ValidationException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -14,10 +14,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class StoreTests {
 
-    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Nested
     class Store_password_matches {
+
         @Test
         void same_password() {
             // Arrange
@@ -35,13 +36,15 @@ public class StoreTests {
             String requestPassword = "987654321";
 
             // Act + Assert
-            assertThatThrownBy(() -> {store.passwordMatches(requestPassword, passwordEncoder);}).isInstanceOf(
+            assertThatThrownBy(() -> {
+                store.passwordMatches(requestPassword, passwordEncoder);
+            }).isInstanceOf(
                 ValidationException.class).hasMessageContaining(PASSWORD_NOT_MATCH.toString());
         }
     }
 
     @Nested
-    class Store_smail_matches {
+    class Store_email_matches {
 
         @Test
         void same_email() {
@@ -60,7 +63,9 @@ public class StoreTests {
             String requestEmail = "diff@email.com";
 
             // Act
-            assertThatThrownBy(() -> {store.emailMatches(requestEmail);}).isInstanceOf(
+            assertThatThrownBy(() -> {
+                store.emailMatches(requestEmail);
+            }).isInstanceOf(
                 ValidationException.class).hasMessageContaining(EMAIL_NOT_MATCH.toString());
         }
     }
@@ -85,8 +90,11 @@ public class StoreTests {
             String requestBusinessNumber = "0000000000";
 
             // Act + Assert
-            assertThatThrownBy(() -> {store.businessNumberMatches(requestBusinessNumber);}).isInstanceOf(
-                ValidationException.class).hasMessageContaining(BUSINESS_NUMBER_NOT_MATCH.toString());
+            assertThatThrownBy(() -> {
+                store.businessNumberMatches(requestBusinessNumber);
+            }).isInstanceOf(
+                    ValidationException.class)
+                .hasMessageContaining(BUSINESS_NUMBER_NOT_MATCH.toString());
         }
     }
 
