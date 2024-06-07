@@ -88,7 +88,7 @@ public class ReceiverServiceTests {
 
     @Test
     public void Receiver_update() throws Exception {
-        // given
+        // Arrange
         final ReceiverForm receiverForm = ReceiverSteps.createReceiverForm();
         final MemberEntity member = MemberSteps.createMember(passwordEncoder);
         final ReceiverEntity receiver = ReceiverSteps.createReceiverWithMember(member);
@@ -98,11 +98,10 @@ public class ReceiverServiceTests {
         given(memberJpaRepository.findByEmail(anyString())).willReturn(Optional.of(member));
         given(receiverJpaRepository.findById(anyLong())).willReturn(Optional.of(receiver));
 
-
-        // when
+        // Act
         ReceiverForm response = receiverService.updateReceiver("test@example.com", 1L, receiverForm);
 
-        // then
+        // Assert
         assertThat(response.getName()).isEqualTo(receiver.getName());
     }
 
