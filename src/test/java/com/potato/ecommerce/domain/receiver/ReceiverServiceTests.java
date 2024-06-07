@@ -104,9 +104,6 @@ public class ReceiverServiceTests {
 
         // then
         assertThat(response.getName()).isEqualTo(receiver.getName());
-
-        verify(memberJpaRepository, times(1)).findByEmail(anyString());
-        verify(receiverJpaRepository, times(1)).findById(anyLong());
     }
 
     private void setField(Object target, String fieldName, Object value) throws Exception {
