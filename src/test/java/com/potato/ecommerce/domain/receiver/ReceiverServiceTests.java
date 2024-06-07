@@ -3,7 +3,11 @@ package com.potato.ecommerce.domain.receiver;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import com.potato.ecommerce.domain.member.MemberSteps;
 import com.potato.ecommerce.domain.member.entity.MemberEntity;
@@ -12,6 +16,7 @@ import com.potato.ecommerce.domain.receiver.dto.ReceiverForm;
 import com.potato.ecommerce.domain.receiver.entity.ReceiverEntity;
 import com.potato.ecommerce.domain.receiver.repository.ReceiverJpaRepository;
 import com.potato.ecommerce.domain.receiver.service.ReceiverService;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -79,6 +84,35 @@ public class ReceiverServiceTests {
         assertThat(receiverList.size()).isEqualTo(2);
         assertThat(response.get(0).getName()).isEqualTo(receiver1.getName());
 
+    }
+
+    @Test
+    public void Receiver_update() throws Exception {
+        // given
+        final ReceiverForm receiverForm = ReceiverSteps.createReceiverForm();
+        final MemberEntity member = MemberSteps.createMember(passwordEncoder);
+        final ReceiverEntity receiver = ReceiverSteps.createReceiverWithMember(member);
+
+        setField(member, "id", 1L);
+
+        given(memberJpaRepository.findByEmail(anyString())).willReturn(Optional.of(member));
+        given(receiverJpaRepository.findById(anyLong())).willReturn(Optional.of(receiver));
+
+
+        // when
+        ReceiverForm response = receiverService.updateReceiver("test@example.com", 1L, receiverForm);
+
+        // then
+        assertThat(response.getName()).isEqualTo(receiver.getName());
+
+        verify(memberJpaRepository, times(1)).findByEmail(anyString());
+        verify(receiverJpaRepository, times(1)).findById(anyLong());
+    }
+
+    private void setField(Object target, String fieldName, Object value) throws Exception {
+        Field field = target.getClass().getDeclaredField(fieldName);
+        field.setAccessible(true);
+        field.set(target, value);
     }
 
 }
