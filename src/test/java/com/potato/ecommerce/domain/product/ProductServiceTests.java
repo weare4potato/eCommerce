@@ -56,34 +56,15 @@ public class ProductServiceTests {
     @Mock
     private BCryptPasswordEncoder passwordEncoder;
 
-    private static ProductUpdateRequest createProductUpdate(final Long productId,
-        final Long categoryId) {
-        String productName = "updateName";
-        String description = "updateDescription";
-        Long price = 2000L;
-        int stock = 15;
-        return new ProductUpdateRequest(categoryId,
-            productName, description, price, stock);
-    }
-
-    private static ProductRequest createProductRequest() {
-        Long productCategoryId = 1L;
-        String name = "name";
-        String description = "description";
-        Long price = 1000L;
-        Integer stock = 10;
-        return new ProductRequest(productCategoryId, name, description, price, stock, null);
-    }
-
     @Test
     void Product_create() {
         // Arrange
         String businessNumber = "1111111111";
         String url = "http://image.url";
-        final ProductRequest productRequest = createProductRequest();
+        final ProductRequest productRequest = ProductSteps.createProductRequest();
         final StoreEntity store = StoreSteps.createStore(passwordEncoder);
         final ProductCategoryEntity productCategory = new ProductCategoryEntity();
-        final ProductEntity product = createProductWithStoreAndCategory(productRequest, store,
+        final ProductEntity product = ProductSteps.createProductWithStoreAndCategory(productRequest, store,
             productCategory);
 
         given(storeRepository.findByBusinessNumber(businessNumber)).willReturn(Optional.of(store));
@@ -106,9 +87,9 @@ public class ProductServiceTests {
         // Arrange
         Long productId = 1L;
         Long categoryId = 1L;
-        final ProductUpdateRequest productUpdate = createProductUpdate(productId, categoryId);
+        final ProductUpdateRequest productUpdate = ProductSteps.createProductUpdate(productId, categoryId);
 
-        final ProductEntity product = createProduct();
+        final ProductEntity product = ProductSteps.createProduct();
         final ProductCategoryEntity productCategory = new ProductCategoryEntity();
 
         given(productRepository.findById(productId)).willReturn(Optional.of(product));
@@ -129,7 +110,7 @@ public class ProductServiceTests {
     void Product_delete() {
         // Arrange
         Long productId = 1L;
-        final ProductEntity product = createProduct();
+        final ProductEntity product = ProductSteps.createProduct();
 
         given(productRepository.findById(productId)).willReturn(Optional.of(product));
 
@@ -141,31 +122,4 @@ public class ProductServiceTests {
         assertThat(product.getIsDeleted()).isTrue();
     }
 
-    private ProductEntity createProduct() {
-        String name = "name";
-        String description = "description";
-        Long price = 1000L;
-        int stock = 10;
-
-        return ProductEntity.builder()
-            .store(StoreSteps.createStore(passwordEncoder))
-            .productCategory(new ProductCategoryEntity())
-            .name(name)
-            .description(description)
-            .price(price)
-            .stock(stock)
-            .build();
-    }
-
-    private ProductEntity createProductWithStoreAndCategory(final ProductRequest productRequest,
-        final StoreEntity store, final ProductCategoryEntity productCategory) {
-        return ProductEntity.builder()
-            .store(store)
-            .productCategory(productCategory)
-            .name(productRequest.getName())
-            .description(productRequest.getDescription())
-            .price(productRequest.getPrice())
-            .stock(productRequest.getStock())
-            .build();
-    }
 }
