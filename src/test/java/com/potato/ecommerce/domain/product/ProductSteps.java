@@ -16,7 +16,7 @@ public class ProductSteps {
     public static ProductEntity createProductWithStockAndPrice(int stock, Long price) {
         StoreEntity store = StoreSteps.createStore(passwordEncoder);
         ProductCategoryEntity productCategory = new ProductCategoryEntity();
-        return ProductEntity.builder()
+        return com.potato.ecommerce.domain.product.entity.ProductEntity.builder()
             .store(store)
             .productCategory(productCategory)
             .name("name")
@@ -45,7 +45,7 @@ public class ProductSteps {
         return new ProductRequest(productCategoryId, name, description, price, stock, null);
     }
 
-    static ProductEntity createProduct() {
+    public static ProductEntity createProduct() {
         String name = "name";
         String description = "description";
         Long price = 1000L;
@@ -63,7 +63,7 @@ public class ProductSteps {
 
     static ProductEntity createProductWithStoreAndCategory(final ProductRequest productRequest,
         final StoreEntity store, final ProductCategoryEntity productCategory) {
-        return ProductEntity.builder()
+        return com.potato.ecommerce.domain.product.entity.ProductEntity.builder()
             .store(store)
             .productCategory(productCategory)
             .name(productRequest.getName())
