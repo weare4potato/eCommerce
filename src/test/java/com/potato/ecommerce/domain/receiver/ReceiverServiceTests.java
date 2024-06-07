@@ -4,7 +4,6 @@ package com.potato.ecommerce.domain.receiver;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.spy;
 
 import com.potato.ecommerce.domain.member.MemberSteps;
 import com.potato.ecommerce.domain.member.entity.MemberEntity;
@@ -45,7 +44,8 @@ public class ReceiverServiceTests {
         // Arrange
         final ReceiverForm receiverForm = ReceiverSteps.createReceiverForm();
         final MemberEntity member = MemberSteps.createMember(passwordEncoder);
-        final ReceiverEntity receiver = ReceiverSteps.createReceiverWithRequestAndMember(member, receiverForm);
+        final ReceiverEntity receiver = ReceiverSteps.createReceiverWithRequestAndMember(member,
+            receiverForm);
         String subject = member.getEmail();
 
         given(memberJpaRepository.findByEmail(subject)).willReturn(Optional.of(member));
